@@ -14,62 +14,62 @@ namespace MatroskaTest
         public static List<MkvFile> ReadMkvFiles(string[] filePaths)
         {
             var lsMkvFiles = new List<MkvFile>();
-            foreach(var filePath in filePaths)
+            foreach (var filePath in filePaths)
             {
-                int voidPosition = 0;
                 List<Track> trackList = new List<Track>();
                 using (var dataStream = File.Open(filePath, FileMode.Open))
                 {
                     var reader = new EbmlReader(dataStream);
-                    //reader.ReadNext();
 
-                    if (reader.LocateElement(MatroskaElements.segment))
+                    reader.LocateElement(MatroskaElements.segment);
+                    reader.LocateElement(MatroskaElements.tracks);
+                    int tracksPosition = (int) dataStream.Position;
+                    
+                    // Loop over tracks
+                    while (reader.ReadNext())
                     {
-                        reader.EnterContainer();
-                        if (reader.LocateElement(MatroskaElements.tracks))
+                        if (reader.ElementId.EncodedValue == TrackElements.entry)
                         {
+                            var track = new Track(reader);
+
+                            // Loop over track element and put them in track
                             reader.EnterContainer();
                             while (reader.ReadNext())
                             {
-                                if (reader.ElementId.EncodedValue == TrackElements.entry)
-                                {
-                                    var track = new Track(reader);
-
-                                    reader.EnterContainer();
-                                    while (reader.ReadNext())
-                                    {
-                                        track.applyElement(dataStream);
-                                    }
-                                    reader.LeaveContainer();
-
-                                    trackList.Add(track);
-                                }
+                                track.applyElement(dataStream);
                             }
-                        }
-                        reader.LeaveContainer();
-                        if (reader.LocateElement(MatroskaElements.voidElement))
-                        {
-                            voidPosition = (int)dataStream.Position;
+                            reader.LeaveContainer();
+
+                            trackList.Add(track);
                         }
                     }
-                }
-                lsMkvFiles.Add(new MkvFile(filePath, trackList, voidPosition));
-            }
-           
+                    reader.LeaveContainer();
+                    
+                    // Store position of void element, this is the padding and may be adjusted
+                    //  when changing the track default flag
+                    reader.LocateElement(MatroskaElements.voidElement);
+                    int voidPosition = (int) dataStream.Position;
 
+                    lsMkvFiles.Add(new MkvFile(filePath, trackList, voidPosition, tracksPosition));
+                }
+            }
             return lsMkvFiles;
         }
 
-        public static void WriteMkvFile(string filePath, List<Track> trackList, int voidPosition)
+        public static void WriteMkvFile(string filePath, List<Track> trackList, int voidPosition, int tracksPosition)
         {
             using (var memoryStream = new MemoryStream())
             using (var dataStream = File.Open(filePath, FileMode.Open))
             {
-                // Copy file contents to memory
-                dataStream.CopyTo(memoryStream);
-                List<byte> lsBytes = new List<byte>(memoryStream.ToArray());
+                int beginPosition = tracksPosition - 1; // Position of length of Tracks element
+                int endPosition = voidPosition + 100;
+                byte[] bytes = new byte[endPosition - beginPosition];
+                
+                dataStream.Seek(beginPosition, SeekOrigin.Begin);
+                dataStream.Read(bytes, 0, bytes.Length);
+                List<byte> lsBytes = new List<byte>(bytes);
 
-                int offset = 0;
+                int offset = 0 - beginPosition;
 
                 trackList
                     .Where(x => x.type == TrackTypeEnum.audio || x.type == TrackTypeEnum.subtitle)
@@ -77,7 +77,7 @@ namespace MatroskaTest
                     .ToList()
                     .ForEach((Track t) =>
                     {
-                        byte defaultFlag = (byte)(t.flagDefault == true ? 0x1 : 0x0);
+                        byte defaultFlag = (byte) (t.flagDefault == true ? 0x1 : 0x0);
                         if (t.flagDefaultByteNumber != 0)
                         {
                             lsBytes[offset + t.flagDefaultByteNumber] = defaultFlag;
@@ -87,7 +87,8 @@ namespace MatroskaTest
                             // Change length of TrackEntry element 0xAE
                             lsBytes[offset + t.trackLengthByteNumber] += 0x3;
 
-                            lsBytes.InsertRange(offset + t.flagTypebytenumber + 1, new byte[] { 0x88, 0x81, defaultFlag });
+                            lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
+                                new byte[] {0x88, 0x81, defaultFlag});
                             offset += 3;
                         }
 
@@ -98,14 +99,18 @@ namespace MatroskaTest
                     });
 
                 // Change length of Tracks element at 0x1654AE6B
-                lsBytes[trackList[0].trackLengthByteNumber - 2] += Convert.ToByte(offset);
+                lsBytes[0] += Convert.ToByte(beginPosition + offset);
 
                 // (change padding) Change void length after Tracks element and remove those bytes
-                lsBytes[offset + voidPosition - 1] -= Convert.ToByte(offset);
-                lsBytes.RemoveRange(offset + voidPosition, offset);
+                lsBytes[offset + voidPosition - 1] -= Convert.ToByte(beginPosition + offset);
+                if (lsBytes.GetRange(offset + voidPosition, beginPosition + offset).Any(b => b != 0))
+                {
+                    throw new Exception("Void is not long enough");
+                }
+                lsBytes.RemoveRange(offset + voidPosition, beginPosition + offset);
 
                 // Write modiefied changes to file
-                dataStream.Seek(0, SeekOrigin.Begin);
+                dataStream.Seek(beginPosition, SeekOrigin.Begin);
                 dataStream.Write(lsBytes.ToArray(), 0, lsBytes.Count);
             }
         }

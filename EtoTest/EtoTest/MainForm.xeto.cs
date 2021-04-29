@@ -18,6 +18,7 @@ namespace EtoTest
         DropDown dropdownSubtitles;
         Button btnApply;
         MkvFilesContainer mkvContainer;
+        private bool needsReload = false;
 
         public MainForm()
         {
@@ -26,6 +27,11 @@ namespace EtoTest
         }
 
         private void FilePickerSelectionDone(object sender, EventArgs e)
+        {
+            this.LoadFiles();
+        }
+
+        private void LoadFiles()
         {
             if (string.IsNullOrWhiteSpace(filePicker.FilePath)) return;
             this.listbox.Items.Clear();
@@ -59,13 +65,12 @@ namespace EtoTest
             this.dropdownAudio.Items.Clear();
             this.dropdownAudio.Items.AddRange(lsAudioTracks.ToEnoListItems());
             this.dropdownAudio.SelectedKey = lsAudioTracks
-               .FirstOrDefault(x => x.flagDefault || x.flagForced)
-               ?.number.ToString();
+                .FirstOrDefault(x => x.flagDefault || x.flagForced)
+                ?.number.ToString();
             if (this.dropdownAudio.SelectedKey is null)
                 this.dropdownAudio.SelectedKey = lsAudioTracks[0].number.ToString();
             if (this.dropdownSubtitles.SelectedKey is null)
                 this.dropdownSubtitles.SelectedKey = lsSubtitleTracks[0].number.ToString();
-
         }
 
         protected void BtnApplyClicked(object sender, EventArgs e)
@@ -76,6 +81,7 @@ namespace EtoTest
                 t.flagDefault = this.isSelectedTrack(t);
             });
             this.btnApply.Enabled = true;
+            this.LoadFiles();
         }
 
         private bool isSelectedTrack(Track t)
