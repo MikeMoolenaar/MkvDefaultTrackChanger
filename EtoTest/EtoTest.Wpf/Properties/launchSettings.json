@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "EtoTest.WinForms": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

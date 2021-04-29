@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Form
+	xmlns="http://schema.picoe.ca/eto.forms" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="My Eto Form"
+	MinimumSize="300,200"
+	Padding="10"
+	>
+	<StackLayout Spacing="20" HorizontalContentAlignment="Center">
+		<FilePicker FileAction="OpenFile" x:Name="filePicker" FilePathChanged="FilePickerSelectionDone"></FilePicker>
+		<ListBox x:Name="listbox"></ListBox>
+		<StackLayout HorizontalContentAlignment="Center">
+			<Label>Audio</Label>
+			<DropDown Width="150" x:Name="dropdownAudio"></DropDown>
+		</StackLayout>
+		<StackLayout HorizontalContentAlignment="Center">
+			<Label>Subtitles</Label>
+			<DropDown Width="150" x:Name="dropdownSubtitles"></DropDown>
+		</StackLayout>
+		<Button x:Name="btnApply" Click="BtnApplyClicked">Apply</Button>
+	</StackLayout>
+
+	<Form.Menu>
+		<MenuBar>
+			<MenuBar.QuitItem>
+				<ButtonMenuItem Text="Quit" Shortcut="CommonModifier+Q" Click="HandleQuit" />
+			</MenuBar.QuitItem>
+			<MenuBar.AboutItem>
+				<ButtonMenuItem Text="About..." Click="HandleAbout" />
+			</MenuBar.AboutItem>
+		</MenuBar>
+	</Form.Menu>
+</Form>

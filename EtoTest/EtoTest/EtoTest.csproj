@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.5.9" />
+    <PackageReference Include="Eto.Serialization.Xaml" Version="2.5.9" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\MatroskaTest\Matroska.csproj" />
+  </ItemGroup>
+  
+</Project>
