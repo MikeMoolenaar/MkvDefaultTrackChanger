@@ -16,6 +16,7 @@ namespace EtoTest
         ListBox listbox;
         DropDown dropdownAudio;
         DropDown dropdownSubtitles;
+        CheckBox chCopyBeforeChange;
         Button btnApply;
         MkvFilesContainer mkvContainer;
         private bool needsReload = false;
@@ -45,10 +46,10 @@ namespace EtoTest
             this.mkvContainer = new MkvFilesContainer(filePaths);
             if (this.mkvContainer.lsMkFilesRejected.Count > 0)
             {
-                string rejectedFiles = Environment.NewLine;
+                string rejectedFiles = Environment.NewLine + Environment.NewLine;
                 this.mkvContainer.lsMkFilesRejected.ForEach((x) =>
                 {
-                    rejectedFiles += x.filePath + Environment.NewLine;
+                    rejectedFiles += Path.GetFileName(x.filePath) + Environment.NewLine + Environment.NewLine;
                 });
                 MessageBox.Show("The following files were rejected: " + rejectedFiles, MessageBoxType.Warning);
             }
@@ -75,6 +76,13 @@ namespace EtoTest
 
         protected void BtnApplyClicked(object sender, EventArgs e)
         {
+            if (this.chCopyBeforeChange.Checked == true)
+            {
+                var filePath = mkvContainer.lsMkvFiles[0].filePath;
+                string dir = Path.GetDirectoryName(filePath);
+                File.Copy(filePath, $"{dir}\\Copy.mkv", true);
+            }
+            
             this.btnApply.Enabled = false;
             this.mkvContainer.WriteChanges((Track t) =>
             {

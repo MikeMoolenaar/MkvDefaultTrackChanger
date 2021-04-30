@@ -17,6 +17,7 @@
 			<Label>Subtitles</Label>
 			<DropDown Width="150" x:Name="dropdownSubtitles"></DropDown>
 		</StackLayout>
+		<CheckBox x:Name="chCopyBeforeChange" Checked="true">Make a copy before change</CheckBox>
 		<Button x:Name="btnApply" Click="BtnApplyClicked">Apply</Button>
 	</StackLayout>
 
