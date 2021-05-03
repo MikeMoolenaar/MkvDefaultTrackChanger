@@ -14,8 +14,8 @@ namespace Matroska.Test.Helpers
             p.StartInfo.FileName = "./etotest/mkvalidator.exe";
             p.StartInfo.Arguments = filePath;
             p.Start();
-            p.WaitForExit();
             string output = p.StandardError.ReadToEnd();
+            p.Close();
 
             if (!output.Contains("the file appears to be valid"))
             {
