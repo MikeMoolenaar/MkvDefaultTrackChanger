@@ -17,13 +17,14 @@ namespace MatroskaTest
 
             // Read mkv and change default track
             ReadMkvFiles();
-            int voidPosition = lsMkvFiles[0].voidPosition;
+            /*
+            int voidPosition = lsMkvFiles[0].beginPosition;
             int tracksPosition = lsMkvFiles[0].tracksPosition;
             List<Track> trackList = lsMkvFiles[0].tracks;
             // Write to mkv
             MatroskaLib.WriteMkvFile(CopyFilePath, trackList, voidPosition, tracksPosition);
             // Read mkv again
-            ReadMkvFiles();
+            ReadMkvFiles();*/
         }
 
         private static void ReadMkvFiles()

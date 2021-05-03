@@ -20,8 +20,7 @@ namespace Matroska.Test
         }
 
         [Theory]
-        [InlineData("etotest/[HorribleSubs] 3D Kanojo Real Girl 2 - 1 [1080p].mkv")]
-        
+        [InlineData("etotest/[HorribleSubs] 3D Kanojo Real Girl - 12 [1080p].mkv")]
         public void ReadMkvFilesTest(string file)
         {
             string[] filePaths = {file};
@@ -30,30 +29,42 @@ namespace Matroska.Test
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
             Assert.Single(lsMkvFiles);
-            Assert.Equal(5074, lsMkvFiles[0].voidPosition);
+            Assert.Equal(5074, lsMkvFiles[0].beginPosition);
             Assert.Equal(3, lsTracks.Count);
-            lsTracks[0].Should().BeEquivalentTo(new { flagDefault = false, flagForced = false, language = "und" });
-            lsTracks[1].Should().BeEquivalentTo(new { flagDefault = false, flagForced = false, language = "jpn" });
-            lsTracks[2].Should().BeEquivalentTo(new { flagDefault = false, flagForced = true, language = "eng" });
+            lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "und"});
+            lsTracks[1].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "jpn"});
+            lsTracks[2].Should().BeEquivalentTo(new {flagDefault = false, flagForced = true, language = "eng"});
         }
 
         [Theory]
-        [InlineData("etotest/[HorribleSubs] 3D Kanojo Real Girl 2 - 1 [1080p].mkv")]
-        public void WriteMkvFile(string file)
+        [InlineData("etotest/[HorribleSubs] 3D Kanojo Real Girl - 12 [1080p].mkv")]
+        public void WriteMkvFileTest(string file)
         {
             File.Copy(file, testFilePath, true);
-            List<MkvFile> lsMkvFiles = MatroskaLib.ReadMkvFiles(new [] {testFilePath});
+            List<MkvFile> lsMkvFiles = MatroskaLib.ReadMkvFiles(new[] {testFilePath});
             lsMkvFiles[0].tracks[1].flagDefault = true;
             lsMkvFiles[0].tracks[2].flagDefault = true;
-            
-            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].tracks, lsMkvFiles[0].voidPosition, lsMkvFiles[0].tracksPosition);
-            lsMkvFiles = MatroskaLib.ReadMkvFiles(new [] {testFilePath});
+
+            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].tracks, lsMkvFiles[0].beginPosition,
+                lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition);
+            lsMkvFiles = MatroskaLib.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
-            
+
             Assert.Equal(3, lsTracks.Count);
-            lsTracks[0].Should().BeEquivalentTo(new { flagDefault = false, flagForced = false, language = "und" });
-            lsTracks[1].Should().BeEquivalentTo(new { flagDefault = true, flagForced = false, language = "jpn" });
-            lsTracks[2].Should().BeEquivalentTo(new { flagDefault = true, flagForced = false, language = "eng" });
+            lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "und"});
+            lsTracks[1].Should().BeEquivalentTo(new {flagDefault = true, flagForced = false, language = "jpn"});
+            lsTracks[2].Should().BeEquivalentTo(new {flagDefault = true, flagForced = false, language = "eng"});
+            MkvValidator.Validate(testFilePath);
+        }
+
+        [Theory]
+        [InlineData("etotest/[ASW] Wonder Egg Priority - S01E03 [1080p HEVC].mkv")]
+        public void ReadMkvFileWithoutVoidTest(string file)
+        {
+            File.Copy(file, testFilePath, true);
+            List<MkvFile> lsMkvFiles = MatroskaLib.ReadMkvFiles(new[] {testFilePath});
+            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].tracks, lsMkvFiles[0].beginPosition,
+                lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
             MkvValidator.Validate(testFilePath);
         }
     }

@@ -3,7 +3,7 @@ using System;
 
 namespace NEbml.Matroska
 {
-	internal static class ReaderExtensions
+	public static class ReaderExtensions
 	{
 		public static void LocateElement(this EbmlReader reader, ulong descriptor)
 		{
@@ -16,7 +16,7 @@ namespace NEbml.Matroska
 				}
 			}
 
-			throw new Exception($"Cannot find descriptor {descriptor}");
+			throw new Exception($"Cannot find descriptor 0x{descriptor:X}");
 		}
 	}
 }

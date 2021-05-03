@@ -20,6 +20,7 @@ namespace MatroskaTest
     {
         public const ulong tracks = 0x1654ae6b;
         public const ulong segment = 0x18538067;
+        public const ulong attachments = 0x1941a469;
         public const ulong voidElement = 0xEC;
     }
 
@@ -61,7 +62,6 @@ namespace MatroskaTest
             {
                 case TrackElements.number:
                     this.trackLengthByteNumber = (int)datastream.Position - 3;
-
                     this.number = this._reader.ReadUInt();
                     break;
                 case TrackElements.name:

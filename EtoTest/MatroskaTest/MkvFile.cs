@@ -8,15 +8,20 @@ namespace MatroskaTest
     {
         public string filePath;
         public List<Track> tracks;
-        public int voidPosition;
+        public int beginPosition;
+        public int endPosition;
         public int tracksPosition;
+        public int beginHeaderPosition;
 
-        public MkvFile(string filePath, List<Track> tracks, int voidPosition, int tracksPosition)
+        public MkvFile(string filePath, List<Track> tracks, int beginPosition, int endPosition, int tracksPosition,
+            int beginHeaderPosition = 0)
         {
             this.filePath = filePath;
             this.tracks = tracks;
-            this.voidPosition = voidPosition;
+            this.beginPosition = beginPosition;
+            this.endPosition = endPosition;
             this.tracksPosition = tracksPosition;
+            this.beginHeaderPosition = beginHeaderPosition;
         }
 
         public int CompareTo(MkvFile other)
