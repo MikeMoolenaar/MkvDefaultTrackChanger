@@ -21,6 +21,8 @@ namespace MatroskaTest
         public const ulong tracks = 0x1654ae6b;
         public const ulong segment = 0x18538067;
         public const ulong voidElement = 0xEC;
+        public const ulong attachmentsElement = 0x1941A469;
+        public const ulong clusterElement = 0x1F43B675;
     }
 
     public enum TrackTypeEnum

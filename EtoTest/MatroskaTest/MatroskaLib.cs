@@ -52,8 +52,16 @@ namespace MatroskaTest
                     {
                         reader.LocateElement(MatroskaElements.voidElement);
                         voidPosition = (int) dataStream.Position;
+                        
+                        // This will throw an exception if it cannot be found after the void element,
+                        //  that means the void that is found is not the right one after the Tracks element
+                        reader.LeaveContainer();
+                        reader.LocateElement(MatroskaElements.attachmentsElement);
                     }
-                    catch (Exception e) { }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Mkv file not supported");
+                    }
                     
 
                     lsMkvFiles.Add(new MkvFile(filePath, trackList, voidPosition, tracksPosition));
@@ -72,6 +80,7 @@ namespace MatroskaTest
             {
                 if (needToRewriteFile)
                 {
+                    // TODO doesn't work yet if void element after Tracks element doesn't exist
                     // Copy file contents to memory
                     dataStream.CopyTo(memoryStream);
                     lsBytes = new List<byte>(memoryStream.ToArray());
@@ -88,7 +97,7 @@ namespace MatroskaTest
                 else
                 {
                     int beginPosition = tracksPosition - 1; // Position of length of Tracks element
-                    int endPosition = voidPosition + 100;
+                    int endPosition = voidPosition + ComputeNeededSpace(trackList);
                     byte[] bytes = new byte[endPosition - beginPosition];
 
                     dataStream.Seek(beginPosition, SeekOrigin.Begin);
@@ -117,34 +126,40 @@ namespace MatroskaTest
             }
         }
 
-        private static void ApplyFlags(List<Track> trackList)
-        {
+        private static List<Track> GetRelevantTracks(List<Track> trackList) =>
             trackList
                 .Where(x => x.type == TrackTypeEnum.audio || x.type == TrackTypeEnum.subtitle)
-                .Where(x => x is not TrackDisable) // Maybe isn't needed?
-                .ToList()
-                .ForEach((Track t) =>
+                .Where(x => x is not TrackDisable)
+                .ToList();
+
+        private static int ComputeNeededSpace(List<Track> trackList) =>
+            GetRelevantTracks(trackList)
+                .Count(t => t.flagDefaultByteNumber == 0 && t.flagTypebytenumber != 0) * 3;
+
+        private static void ApplyFlags(List<Track> trackList)
+        {
+            foreach (Track t in GetRelevantTracks(trackList))
+            {
+                byte defaultFlag = (byte) (t.flagDefault == true ? 0x1 : 0x0);
+                if (t.flagDefaultByteNumber != 0)
                 {
-                    byte defaultFlag = (byte) (t.flagDefault == true ? 0x1 : 0x0);
-                    if (t.flagDefaultByteNumber != 0)
-                    {
-                        lsBytes[offset + t.flagDefaultByteNumber] = defaultFlag;
-                    }
-                    else if (t.flagTypebytenumber != 0)
-                    {
-                        // Change length of TrackEntry element 0xAE
-                        lsBytes[offset + t.trackLengthByteNumber] += 0x3;
+                    lsBytes[offset + t.flagDefaultByteNumber] = defaultFlag;
+                }
+                else if (t.flagTypebytenumber != 0)
+                {
+                    // Change length of TrackEntry element 0xAE
+                    lsBytes[offset + t.trackLengthByteNumber] += 0x3;
 
-                        lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
-                            new byte[] {0x88, 0x81, defaultFlag});
-                        offset += 3;
-                    }
+                    lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
+                        new byte[] {0x88, 0x81, defaultFlag});
+                    offset += 3;
+                }
 
-                    if (t.flagForcedByteNumber != 0)
-                    {
-                        lsBytes[offset + t.flagForcedByteNumber] = 0x0;
-                    }
-                });
+                if (t.flagForcedByteNumber != 0)
+                {
+                    lsBytes[offset + t.flagForcedByteNumber] = 0x0;
+                }
+            }
         }
     }
 }

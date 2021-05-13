@@ -58,13 +58,14 @@ namespace Matroska.Test
         }
         
         [Theory]
-        [InlineData("etotest/[ASW] Wonder Egg Priority - S01E03 [1080p HEVC].mkv")]
+        [InlineData("etotest/[ASW] Wonder Egg Priority - S01E05 [1080p HEVC].mkv")] // No void element
+        [InlineData("etotest/[ASW] Zombieland Saga S2 - 05 [1080p HEVC].mkv")] // Hex value like void, but it's not the right one
         public void ReadMkvFileWithoutVoidTest(string file)
         {
-            File.Copy(file, testFilePath, true);
-            List<MkvFile> lsMkvFiles = MatroskaLib.ReadMkvFiles(new[] {testFilePath});
-            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].tracks, lsMkvFiles[0].voidPosition, lsMkvFiles[0].tracksPosition);
-            MkvValidator.Validate(testFilePath);
+            Action act = () => MatroskaLib.ReadMkvFiles(new[] {file});
+            
+            Exception exception = Assert.Throws<Exception>(act);
+            Assert.Equal("Mkv file not supported", exception.Message);
         }
     }
 }
