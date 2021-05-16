@@ -101,6 +101,7 @@ namespace MatroskaTest
                     reader.LocateElement(MatroskaElements.attachments);
                     int endPosition = (int) reader.ElementPosition - 1;
 
+                    // TODO way to many parameters, put in seperate object
                     lsMkvFiles.Add(new MkvFile(filePath, trackList, seekList, seekHeadCheckSum, tracksCheckSum, voidPosition, endPosition,
                         tracksPosition, beginHeaderPosition));
                 }
@@ -135,10 +136,10 @@ namespace MatroskaTest
                     else if (t.flagTypebytenumber != 0)
                     {
                         // Change length of TrackEntry element 0xAE
-                        lsBytes[offset + t.trackLengthByteNumber] += 0x3; // TODO make this dynamic, should generate 2 bytes if the size is 2
+                        lsBytes[offset + t.trackLengthByteNumber] += 0x3; // TODO make this dynamic in seperate function, should generate 2 bytes if the size is 2
                         if (lsBytes[offset + t.trackLengthByteNumber - 2] == 0x0)
                         {
-                            // TODO This won't work if Length is not 8 bytes in total
+                            // TODO This won't work if Length is not 8 bytes in total, can be removed if a seperate function is made
                             lsBytes[offset + t.trackLengthByteNumber - 1] = 0x0;
                         }
 

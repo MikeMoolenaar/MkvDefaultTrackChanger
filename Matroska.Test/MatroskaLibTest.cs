@@ -63,7 +63,7 @@ namespace Matroska.Test
         {
             File.Copy(file, testFilePath, true);
             List<MkvFile> lsMkvFiles = MatroskaLib.ReadMkvFiles(new[] {testFilePath});
-            lsMkvFiles[0].tracks[2].flagDefault = true;
+            lsMkvFiles[0].tracks[2].flagDefault = false;
             MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
                 lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
             MkvValidator.Validate(testFilePath);
