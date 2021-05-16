@@ -18,10 +18,18 @@ namespace MatroskaTest
 
     public class MatroskaElements
     {
+        public const ulong seekHead = 0x114D9B74;
+        public const ulong seekEntry = 0x4DBB;
+        public const ulong seekID = 0x53AB;
+        public const ulong seekPosition = 0x53AC;
+
+        public const ulong segmentInfo = 0x1549A966;
         public const ulong tracks = 0x1654ae6b;
         public const ulong segment = 0x18538067;
         public const ulong attachments = 0x1941a469;
+        
         public const ulong voidElement = 0xEC;
+        public const ulong checkSum = 0xBF;
     }
 
     public enum TrackTypeEnum

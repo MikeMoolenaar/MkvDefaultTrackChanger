@@ -15,9 +15,9 @@ namespace MatroskaTest
             this.lsMkvFiles.Add(lsMkvFiles[0]);
             for (int i = 1; i < lsMkvFiles.Count; i++)
             {
-                if (lsMkvFiles[0].CompareTo(lsMkvFiles[i]) == 0) 
+                if (lsMkvFiles[0].CompareTo(lsMkvFiles[i]) == 0)
                     this.lsMkvFiles.Add(lsMkvFiles[i]);
-                else 
+                else
                     this.lsMkFilesRejected.Add(lsMkvFiles[i]);
             }
         }
@@ -27,7 +27,9 @@ namespace MatroskaTest
             foreach (MkvFile file in lsMkvFiles)
             {
                 file.tracks.ForEach(setDefaultIfSelected);
-                MatroskaLib.WriteMkvFile(file.filePath, file.tracks, file.beginPosition, file.endPosition, file.tracksPosition);
+                MatroskaLib.WriteMkvFile(file.filePath, file.seekList, file.tracks, file.seekHeadCheckSum,
+                    file.seekHeadCheckSum, file.voidPosition, file.endPosition, file.tracksPosition,
+                    file.beginHeaderPosition);
             }
         }
 

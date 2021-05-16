@@ -18,5 +18,18 @@ namespace NEbml.Matroska
 
 			throw new Exception($"Cannot find descriptor 0x{descriptor:X}");
 		}
+
+		public static bool TryLocateElement(this EbmlReader reader, ulong descriptor)
+		{
+			try
+			{
+				ReaderExtensions.LocateElement(reader, descriptor);
+				return true;
+			}
+			catch (Exception _)
+			{
+				return false;
+			}
+		}
 	}
 }

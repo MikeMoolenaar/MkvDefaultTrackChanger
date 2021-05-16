@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
+using Matroska;
 
 namespace MatroskaTest
 {
@@ -8,17 +9,26 @@ namespace MatroskaTest
     {
         public string filePath;
         public List<Track> tracks;
-        public int beginPosition;
+        public List<Seek> seekList;
+        public int? seekHeadCheckSum;
+        public int? tracksCheckSum;
+        public int voidPosition;
         public int endPosition;
         public int tracksPosition;
         public int beginHeaderPosition;
 
-        public MkvFile(string filePath, List<Track> tracks, int beginPosition, int endPosition, int tracksPosition,
+        public MkvFile(string filePath, List<Track> tracks, List<Seek> seekList, int? seekHeadCheckSum,
+            int? tracksCheckSum, int voidPosition,
+            int endPosition,
+            int tracksPosition,
             int beginHeaderPosition = 0)
         {
             this.filePath = filePath;
             this.tracks = tracks;
-            this.beginPosition = beginPosition;
+            this.seekList = seekList;
+            this.seekHeadCheckSum = seekHeadCheckSum;
+            this.tracksCheckSum = tracksCheckSum;
+            this.voidPosition = voidPosition;
             this.endPosition = endPosition;
             this.tracksPosition = tracksPosition;
             this.beginHeaderPosition = beginHeaderPosition;

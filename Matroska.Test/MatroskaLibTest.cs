@@ -29,7 +29,7 @@ namespace Matroska.Test
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
             Assert.Single(lsMkvFiles);
-            Assert.Equal(5074, lsMkvFiles[0].beginPosition);
+            Assert.Equal(136, lsMkvFiles[0].voidPosition);
             Assert.Equal(3, lsTracks.Count);
             lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "und"});
             lsTracks[1].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "jpn"});
@@ -45,8 +45,8 @@ namespace Matroska.Test
             lsMkvFiles[0].tracks[1].flagDefault = true;
             lsMkvFiles[0].tracks[2].flagDefault = true;
 
-            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].tracks, lsMkvFiles[0].beginPosition,
-                lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition);
+            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
+                lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
             lsMkvFiles = MatroskaLib.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
@@ -58,12 +58,13 @@ namespace Matroska.Test
         }
 
         [Theory]
-        [InlineData("etotest/[ASW] Wonder Egg Priority - S01E03 [1080p HEVC].mkv")]
+        [InlineData("etotest/[ASW] Wonder Egg Priority - S01E05 [1080p HEVC].mkv")]
         public void ReadMkvFileWithoutVoidTest(string file)
         {
             File.Copy(file, testFilePath, true);
             List<MkvFile> lsMkvFiles = MatroskaLib.ReadMkvFiles(new[] {testFilePath});
-            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].tracks, lsMkvFiles[0].beginPosition,
+            lsMkvFiles[0].tracks[2].flagDefault = true;
+            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
                 lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
             MkvValidator.Validate(testFilePath);
         }
