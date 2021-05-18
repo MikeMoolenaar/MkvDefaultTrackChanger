@@ -69,7 +69,6 @@ namespace MatroskaTest
             switch (this._reader.ElementId.EncodedValue)
             {
                 case TrackElements.number:
-                    this.trackLengthByteNumber = (int)datastream.Position - 3;
                     this.number = this._reader.ReadUInt();
                     break;
                 case TrackElements.name:

@@ -62,7 +62,7 @@ namespace MatroskaTest
                     int beginHeaderPosition = (int) reader.ElementPosition;
 
                     reader.LocateElement(MatroskaElements.tracks);
-                    int tracksPosition = (int) dataStream.Position - 1;
+                    int tracksPosition = (int) dataStream.Position;
 
                     // Loop over tracks
                     try
@@ -76,7 +76,7 @@ namespace MatroskaTest
                             else if (reader.ElementId.EncodedValue == TrackElements.entry)
                             {
                                 var track = new Track(reader);
-
+                                track.trackLengthByteNumber = (int)dataStream.Position;
                                 // Loop over track element and put them in track
                                 reader.EnterContainer();
                                 while (reader.ReadNext())
@@ -136,12 +136,7 @@ namespace MatroskaTest
                     else if (t.flagTypebytenumber != 0)
                     {
                         // Change length of TrackEntry element 0xAE
-                        lsBytes[offset + t.trackLengthByteNumber] += 0x3; // TODO make this dynamic in seperate function, should generate 2 bytes if the size is 2
-                        if (lsBytes[offset + t.trackLengthByteNumber - 2] == 0x0)
-                        {
-                            // TODO This won't work if Length is not 8 bytes in total, can be removed if a seperate function is made
-                            lsBytes[offset + t.trackLengthByteNumber - 1] = 0x0;
-                        }
+                        ChangeLength(lsBytes, offset + t.trackLengthByteNumber, TrackElements.entry, 3);
 
                         lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
                             new byte[] {0x88, 0x81, defaultFlag});
@@ -154,8 +149,8 @@ namespace MatroskaTest
                     }
                 }
 
-                // Change length of Tracks element TODO: make dynamic
-                lsBytes[tracksPosition] += Convert.ToByte(offset);
+                // Change length of Tracks element
+                ChangeLength(lsBytes, tracksPosition, MatroskaElements.tracks, offset);
 
                 // Remove some void data so it fits in the file without re-writing the entire file
                 lsBytes.RemoveRange(beginHeaderPosition - offset, offset);
@@ -194,7 +189,7 @@ namespace MatroskaTest
             lsBytes.InsertRange(checkSumPosition, new byte[] { 0xEC, 0x84, 0x0, 0x0, 0x0, 0x0 });
         }
 
-        private static void ChangeVoidLength(List<byte> lsBytes, int voidPosition)
+        public static void ChangeVoidLength(List<byte> lsBytes, int voidPosition)
         {
             // Remove existing length
             lsBytes.RemoveRange(voidPosition + 1, 8);
@@ -209,6 +204,54 @@ namespace MatroskaTest
 
             List<byte> voidLengthBytes = BitConverter.GetBytes(zeroCount | 1UL << (7*8)).Reverse().ToList();
             lsBytes.InsertRange(voidPosition + 1, voidLengthBytes);
+        }
+
+        public static void ChangeLength(List<byte> lsBytes, int position, ulong elementId, int newAdition)
+        {
+            // position must be +1 position right of length
+            // Convert elementId to bytes TODO: make seperate method
+            List<byte> elementIdBytes = BitConverter.GetBytes(elementId).Reverse().ToList();
+            int endPositionPadding;
+            for (endPositionPadding = 0; endPositionPadding < elementIdBytes.Count; endPositionPadding++)
+            {
+                if (elementIdBytes[endPositionPadding] != 0x0) break;
+            }
+            elementIdBytes.RemoveRange(0, endPositionPadding);
+            
+            List<byte> lsLengthBytes = new();
+            for (int i = position-1; i >= 0; i--)
+            {
+                lsLengthBytes.Add(lsBytes[i]);
+                if (lsBytes.GetRange(i - elementIdBytes.Count, elementIdBytes.Count).SequenceEqual(elementIdBytes))
+                {
+                    break;
+                }
+            }
+            lsLengthBytes.Reverse();
+            
+            // Convert length byte array to int
+            ulong ret = 0;
+            for (int i=0; i<8 && i<lsLengthBytes.Count; i++) {
+                ret <<= 8;
+                ret |= (ulong)lsLengthBytes[i] & 0xFF;
+            }
+
+            // Apply addition
+            ret += Convert.ToUInt32(newAdition);
+
+            // Convert new length to bytes and strip bytes: TODO make seperate function
+            List<byte> lsNewBytes = BitConverter.GetBytes(ret).ToList();
+            for (endPositionPadding = lsNewBytes.Count; endPositionPadding > 0; endPositionPadding--)
+            {
+                if (lsNewBytes[endPositionPadding - 1] != 0x0) break;
+            }
+            lsNewBytes.RemoveRange(endPositionPadding, lsNewBytes.Count - endPositionPadding);
+            lsNewBytes.Reverse();
+            if (lsNewBytes.Count != lsLengthBytes.Count) throw new Exception("Doesn't fit in array :(");
+                
+            // Replace old length with new length bytes
+            lsBytes.RemoveRange(position - lsNewBytes.Count, lsNewBytes.Count);
+            lsBytes.InsertRange(position - lsNewBytes.Count, lsNewBytes);
         }
     }
 }
