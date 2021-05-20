@@ -21,7 +21,7 @@ namespace MatroskaTest
             int? tracksCheckSum, int voidPosition,
             int endPosition,
             int tracksPosition,
-            int beginHeaderPosition = 0)
+            int beginHeaderPosition)
         {
             this.filePath = filePath;
             this.tracks = tracks;

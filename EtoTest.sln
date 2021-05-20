@@ -13,11 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtoTest.WinForms", "EtoTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Matroska", "EtoTest\MatroskaTest\Matroska.csproj", "{05D33ED4-34BD-4550-9711-DD5351F3A0AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteWritingTest", "ByteWritingTest\ByteWritingTest.csproj", "{0658F92C-7C90-4656-82C2-10A7758E10A8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matroska.Test", "Matroska.Test\Matroska.Test.csproj", "{2713B750-7CAE-4B15-921E-E5548184C11A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidTest", "VoidTest\VoidTest.csproj", "{58DCAD80-A7DD-4050-A1F1-23B5E17FE124}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoidTest", "VoidTest\VoidTest.csproj", "{AAD70A58-2AA2-4044-A06D-C67261C8AA68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,18 +43,14 @@ Global
 		{05D33ED4-34BD-4550-9711-DD5351F3A0AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05D33ED4-34BD-4550-9711-DD5351F3A0AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05D33ED4-34BD-4550-9711-DD5351F3A0AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0658F92C-7C90-4656-82C2-10A7758E10A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0658F92C-7C90-4656-82C2-10A7758E10A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0658F92C-7C90-4656-82C2-10A7758E10A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0658F92C-7C90-4656-82C2-10A7758E10A8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2713B750-7CAE-4B15-921E-E5548184C11A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2713B750-7CAE-4B15-921E-E5548184C11A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2713B750-7CAE-4B15-921E-E5548184C11A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2713B750-7CAE-4B15-921E-E5548184C11A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58DCAD80-A7DD-4050-A1F1-23B5E17FE124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58DCAD80-A7DD-4050-A1F1-23B5E17FE124}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58DCAD80-A7DD-4050-A1F1-23B5E17FE124}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58DCAD80-A7DD-4050-A1F1-23B5E17FE124}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAD70A58-2AA2-4044-A06D-C67261C8AA68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAD70A58-2AA2-4044-A06D-C67261C8AA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAD70A58-2AA2-4044-A06D-C67261C8AA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAD70A58-2AA2-4044-A06D-C67261C8AA68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

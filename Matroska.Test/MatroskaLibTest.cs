@@ -37,7 +37,7 @@ namespace Matroska.Test
         }
 
         [Theory]
-        [InlineData("etotest/[HorribleSubs] 3D Kanojo Real Girl - 12 [1080p].mkv")]
+        [InlineData("etotest/[HorribleSubs] 3D Kanojo Real Girl - 12 [1080p].mkv")] // Both voids, default track elements not present
         public void WriteMkvFileTest(string file)
         {
             File.Copy(file, testFilePath, true);
@@ -58,7 +58,7 @@ namespace Matroska.Test
         }
 
         [Theory]
-        [InlineData("etotest/[ASW] Wonder Egg Priority - S01E05 [1080p HEVC].mkv")]
+        [InlineData("etotest/[ASW] Wonder Egg Priority - S01E05 [1080p HEVC].mkv")] // Only first void and checksum elements
         public void ReadMkvFileWithoutVoidTest(string file)
         {
             File.Copy(file, testFilePath, true);
@@ -66,47 +66,24 @@ namespace Matroska.Test
             lsMkvFiles[0].tracks[2].flagDefault = false;
             MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
                 lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
+            MatroskaLib.ReadMkvFiles(new[] {testFilePath});
+            MkvValidator.Validate(testFilePath);
+        }
+
+        [Theory]
+        [InlineData("etotest/[HorribleSubs] Blend S - 01 [1080p].mkv")] // Only second void
+        [InlineData("etotest/[AnimacitySubs] BNA Brand New Animal 04v3 [1080p].mkv")] // Only second void and need to change length of void
+        public void ReadMkvFileWithOnlySecondVoid(string file)
+        {
+            File.Copy(file, testFilePath, true);
+            List<MkvFile> lsMkvFiles = MatroskaLib.ReadMkvFiles(new[] {testFilePath});
+            lsMkvFiles[0].tracks[2].flagDefault = true;
+            MatroskaLib.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
+                lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
+            MatroskaLib.ReadMkvFiles(new[] {testFilePath});
             MkvValidator.Validate(testFilePath);
         }
         
-        [Theory]
-        [MemberData(nameof(Data))]
-
-        public void TestChangeLength(List<byte> inputData, List<byte> expectedData, int position, int newAddition)
-        {
-            MatroskaLib.ChangeLength(inputData, position, 0xAE, newAddition);
-            Assert.Equal(inputData, expectedData);
-        }
         
-        public static IEnumerable<object[]> Data() {
-            yield return new object[]
-            {
-                new List<byte>{ 0x6B, 0x2D, 0xAE, 0xBB, 0xD7, 0x81, 0x02 }, 
-                new List<byte>{ 0x6B, 0x2D, 0xAE, 0xBE, 0xD7, 0x81, 0x02 },
-                4,
-                3
-            };
-            yield return new object[]
-            {
-                new List<byte>{ 0x81, 0x02, 0xAE, 0x42, 0x83, 0xD7, 0x81, 0x03 }, 
-                new List<byte>{ 0x81, 0x02, 0xAE, 0x42, 0x87, 0xD7, 0x81, 0x03 }, 
-                5,
-                4
-            };
-            yield return new object[]
-            {
-                new List<byte>{ 0x81, 0x02, 0xAE, 0x42, 0x83, 0xD7, 0x81, 0x03 }, 
-                new List<byte>{ 0x81, 0x02, 0xAE, 0x42, 0x87, 0xD7, 0x81, 0x03 }, 
-                5,
-                4
-            };
-            yield return new object[]
-            {
-                new List<byte>{ 0x00, 0x00, 0xAE, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0, 0x3A, 0xD7, 81 }, 
-                new List<byte>{ 0x00, 0x00, 0xAE, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0, 0x3D, 0xD7, 81 },
-                11,
-                3
-            };
-        }
     }
 }

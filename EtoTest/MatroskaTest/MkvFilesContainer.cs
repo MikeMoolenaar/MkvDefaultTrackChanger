@@ -28,7 +28,7 @@ namespace MatroskaTest
             {
                 file.tracks.ForEach(setDefaultIfSelected);
                 MatroskaLib.WriteMkvFile(file.filePath, file.seekList, file.tracks, file.seekHeadCheckSum,
-                    file.seekHeadCheckSum, file.voidPosition, file.endPosition, file.tracksPosition,
+                    file.tracksCheckSum, file.voidPosition, file.endPosition, file.tracksPosition,
                     file.beginHeaderPosition);
             }
         }

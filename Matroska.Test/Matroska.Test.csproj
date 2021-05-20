@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\EtoTest\EtoTest.Gtk\EtoTest.Gtk.csproj" />
       <ProjectReference Include="..\EtoTest\MatroskaTest\Matroska.csproj" />
     </ItemGroup>
 
