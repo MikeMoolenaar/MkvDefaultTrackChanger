@@ -26,8 +26,7 @@ namespace MatroskaTest
         public const ulong segmentInfo = 0x1549A966;
         public const ulong tracks = 0x1654ae6b;
         public const ulong segment = 0x18538067;
-        public const ulong attachments = 0x1941a469;
-        
+
         public const ulong voidElement = 0xEC;
         public const ulong checkSum = 0xBF;
     }
@@ -55,8 +54,8 @@ namespace MatroskaTest
         public int flagForcedByteNumber { get; set; }
         public int flagTypebytenumber { get; set; }
         public TrackTypeEnum type { get; set; }
-        
-        public string? name { get; set; }
+
+        public string? name { get; set; } = "";
         public string language { get; set; } = "eng";
 
         public Track(EbmlReader reader)
@@ -94,12 +93,12 @@ namespace MatroskaTest
 
         public override string ToString()
         {
-            return $"{this.number} ({this.language ?? "eng"}) default={this.flagDefault}\t forced={this.flagForced}\t {this.name}";
+            return $"{this.number} ({this.language }) default={this.flagDefault}\t forced={this.flagForced}\t {this.name}";
         }
 
         public virtual string ToUiString()
         {
-            return $"({this.language ?? "eng"}) {this.name}";
+            return $"({this.language}) {this.name}";
         }
     }
 

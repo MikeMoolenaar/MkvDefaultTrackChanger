@@ -3,21 +3,23 @@
 	xmlns="http://schema.picoe.ca/eto.forms" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="My Eto Form"
-	MinimumSize="300,200"
+	MinimumSize="300,450"
+  	Size="300, 450"
 	Padding="10"
 	>
 	<StackLayout Spacing="20" HorizontalContentAlignment="Center">
 		<FilePicker FileAction="OpenFile" x:Name="filePicker" FilePathChanged="FilePickerSelectionDone"></FilePicker>
-		<ListBox x:Name="listbox"></ListBox>
+		<Label x:Name="lblFilesSelected" Text=" "></Label>
+    
 		<StackLayout HorizontalContentAlignment="Center">
 			<Label>Audio</Label>
-			<DropDown Width="150" x:Name="dropdownAudio"></DropDown>
+			<DropDown x:Name="dropdownAudio" Width="150">
+      </DropDown>
 		</StackLayout>
 		<StackLayout HorizontalContentAlignment="Center">
 			<Label>Subtitles</Label>
-			<DropDown Width="150" x:Name="dropdownSubtitles"></DropDown>
+			<DropDown x:Name="dropdownSubtitles" Width="150"></DropDown>
 		</StackLayout>
-		<CheckBox x:Name="chCopyBeforeChange" Checked="true">Make a copy before change</CheckBox>
 		<Button x:Name="btnApply" Click="BtnApplyClicked">Apply</Button>
 	</StackLayout>
 

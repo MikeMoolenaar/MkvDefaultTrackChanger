@@ -8,13 +8,13 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="6.0.0-alpha0002" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0-release-20210429-01" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="1.3.0">
+        <PackageReference Include="coverlet.collector" Version="3.0.3">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -23,6 +23,29 @@
     <ItemGroup>
       <ProjectReference Include="..\EtoTest\EtoTest.Gtk\EtoTest.Gtk.csproj" />
       <ProjectReference Include="..\EtoTest\MatroskaTest\Matroska.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\TestMkvFiles\mkv files\TestFile1_MkvToolNix.mkv">
+        <Link>mkv files\TestFile1_MkvToolNix.mkv</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\TestMkvFiles\mkv files\TestFile2_MkvToolNix.mkv">
+        <Link>mkv files\TestFile2_MkvToolNix.mkv</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\TestMkvFiles\mkv files\TestFile3_HandBrake.mkv">
+        <Link>mkv files\TestFile3_HandBrake.mkv</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\TestMkvFiles\mkv files\TestFile4_MkvProEdit.mkv">
+        <Link>mkv files\TestFile4_MkvProEdit.mkv</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\TestMkvFiles\mkv files\TestFile5_MkvProEdit.mkv">
+        <Link>mkv files\TestFile5_MkvProEdit.mkv</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

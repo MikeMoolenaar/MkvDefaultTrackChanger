@@ -13,10 +13,9 @@ namespace EtoTest
     public class MainForm : Form
     {
         FilePicker filePicker;
-        ListBox listbox;
+        Label lblFilesSelected;
         DropDown dropdownAudio;
         DropDown dropdownSubtitles;
-        CheckBox chCopyBeforeChange;
         Button btnApply;
         MkvFilesContainer mkvContainer;
         private bool needsReload = false;
@@ -35,13 +34,9 @@ namespace EtoTest
         private void LoadFiles()
         {
             if (string.IsNullOrWhiteSpace(filePicker.FilePath)) return;
-            this.listbox.Items.Clear();
 
             string[] filePaths = filePicker.FilePath.Split('|');
-            foreach (var filename in filePaths)
-            {
-                this.listbox.Items.Add(filename);
-            }
+            this.lblFilesSelected.Text = $"{filePaths.Length} files selected";
 
             this.mkvContainer = new MkvFilesContainer(filePaths);
             if (this.mkvContainer.lsMkFilesRejected.Count > 0)
@@ -76,13 +71,6 @@ namespace EtoTest
 
         protected void BtnApplyClicked(object sender, EventArgs e)
         {
-            if (this.chCopyBeforeChange.Checked == true)
-            {
-                var filePath = mkvContainer.lsMkvFiles[0].filePath;
-                string dir = Path.GetDirectoryName(filePath);
-                File.Copy(filePath, $"{dir}\\Copy.mkv", true);
-            }
-            
             this.btnApply.Enabled = false;
             this.mkvContainer.WriteChanges((Track t) =>
             {

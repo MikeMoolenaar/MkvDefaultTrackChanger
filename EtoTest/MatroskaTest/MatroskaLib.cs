@@ -60,7 +60,7 @@ namespace MatroskaTest
 
                     int beginHeaderPosition = 0;
                     int tracksPosition = 0;
-                    if (seekList.First(x => x.seekID == MatroskaElements.tracks).seekPosition < (ulong) voidPosition)
+                    if (seekList.FirstOrDefault(x => x.seekID == MatroskaElements.tracks)?.seekPosition < (ulong) voidPosition)
                     {
                         // Void is after track element, read file again and go to tracks element
                         dataStream.Position = 0;
@@ -74,7 +74,10 @@ namespace MatroskaTest
                         reader.ReadNext();
                         beginHeaderPosition = (int) reader.ElementPosition;
 
-                        reader.LocateElement(MatroskaElements.tracks);
+                        if (reader.ElementId.EncodedValue != MatroskaElements.tracks)
+                            reader.LocateElement(MatroskaElements.tracks);
+                        else 
+                            reader.EnterContainer();
                         tracksPosition = (int) dataStream.Position;
                     }
                     
@@ -151,7 +154,8 @@ namespace MatroskaTest
 
                     if (t.flagForcedByteNumber != 0)
                     {
-                        lsBytes[offset + t.flagForcedByteNumber] = 0x0;
+                        int correction = t.flagForcedByteNumber < t.flagTypebytenumber ? 3 : 0;
+                        lsBytes[offset + t.flagForcedByteNumber - correction] = 0x0;
                     }
                 }
 
