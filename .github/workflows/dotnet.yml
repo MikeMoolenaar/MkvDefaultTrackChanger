@@ -22,4 +22,6 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: 
+        copy "TestMkvFiles/mkv files/*" "Matroska.Test/bin/Debug/net5.0/mkv files" && \
+        dotnet test --no-build --verbosity normal
