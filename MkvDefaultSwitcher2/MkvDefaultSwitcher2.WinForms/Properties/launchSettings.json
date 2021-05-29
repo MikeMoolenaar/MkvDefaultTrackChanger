@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MkvDefaultSwitcher2.WinForms": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
