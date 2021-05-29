@@ -6,10 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="NEbml" Version="0.10.1" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\EtoTest\MatroskaTest\Matroska.csproj" />
     </ItemGroup>
 
