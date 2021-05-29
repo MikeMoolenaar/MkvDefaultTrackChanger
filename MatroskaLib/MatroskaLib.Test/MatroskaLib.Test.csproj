@@ -13,23 +13,23 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\TestMkvFiles\mkv files\TestFile1_MkvToolNix.mkv">
+      <Content Include="..\..\TestMkvFiles\mkv files\TestFile1_MkvToolNix.mkv">
         <Link>mkv files\TestFile1_MkvToolNix.mkv</Link>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="..\TestMkvFiles\mkv files\TestFile2_MkvToolNix.mkv">
+      <Content Include="..\..\TestMkvFiles\mkv files\TestFile2_MkvToolNix.mkv">
         <Link>mkv files\TestFile2_MkvToolNix.mkv</Link>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="..\TestMkvFiles\mkv files\TestFile3_HandBrake.mkv">
+      <Content Include="..\..\TestMkvFiles\mkv files\TestFile3_HandBrake.mkv">
         <Link>mkv files\TestFile3_HandBrake.mkv</Link>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="..\TestMkvFiles\mkv files\TestFile4_MkvProEdit.mkv">
+      <Content Include="..\..\TestMkvFiles\mkv files\TestFile4_MkvProEdit.mkv">
         <Link>mkv files\TestFile4_MkvProEdit.mkv</Link>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="..\TestMkvFiles\mkv files\TestFile5_MkvProEdit.mkv">
+      <Content Include="..\..\TestMkvFiles\mkv files\TestFile5_MkvProEdit.mkv">
         <Link>mkv files\TestFile5_MkvProEdit.mkv</Link>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

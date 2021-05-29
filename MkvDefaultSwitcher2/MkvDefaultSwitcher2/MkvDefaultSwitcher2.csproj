@@ -11,7 +11,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\MatroskaLib\MatroskaLib.csproj" />
+    <ProjectReference Include="..\..\MatroskaLib\MatroskaLib\MatroskaLib.csproj" />
   </ItemGroup>
   
 </Project>
