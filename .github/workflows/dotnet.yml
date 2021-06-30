@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ Align_left_to_first_void ]
+    branches: [ main ]
   pull_request:
-    branches: [ Align_left_to_first_void ]
+    branches: [ main ]
 
 jobs:
   build:
