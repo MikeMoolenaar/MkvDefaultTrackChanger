@@ -47,7 +47,7 @@ namespace MatroskaLib
 
         public static void ChangeLength(List<byte> lsBytes, int position, List<byte> lsLengthBytes, int newAdition)
         {
-            var ret = FromBytesToUlong(lsLengthBytes);
+            ulong ret = FromBytesToUlong(lsLengthBytes);
 
             // Apply addition or negative
             if (newAdition > 0)
@@ -91,11 +91,11 @@ namespace MatroskaLib
                 zeroCount++;
             }
 
-            List<byte> voidLengthBytes = GetlengthBytes(zeroCount, 8);
+            List<byte> voidLengthBytes = GetLengthBytes(zeroCount, 8);
             lsBytes.InsertRange(voidPosition + 1, voidLengthBytes);
         }
 
-        public static List<byte> GetlengthBytes(uint value, int maxLength) => 
+        public static List<byte> GetLengthBytes(uint value, int maxLength) => 
             ToBytes(value | 1UL << (7 * maxLength));
         
         public static void ReplaceHashWithVoid(List<byte> lsBytes, int checkSumPosition)
