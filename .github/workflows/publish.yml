@@ -25,7 +25,7 @@ jobs:
       run: dotnet publish MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/MkvDefaultSwitcher2.WinForms.csproj --configuration Release  -r win-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=true -p:Version=${{ github.event.inputs.version }}
     - name: Zip releases
       run: |
-        powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher2.WinForms.exe $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher2-V${{ github.event.inputs.version }}.exe
+        powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher2.WinForms.exe MkvDefaultSwitcher2-V${{ github.event.inputs.version }}.exe
         powershell Compress-Archive $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher2-V${{ github.event.inputs.version }}.exe ./MkvDefaultSwitcher2-windows-V${{ github.event.inputs.version }}.zip
     - name: Create Draft Release
       id: create_release
