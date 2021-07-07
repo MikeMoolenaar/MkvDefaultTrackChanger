@@ -3,6 +3,10 @@ name: .NET
 on:
   push:
     branches: [ main ]
+    paths:
+    - 'MatroskaLib/**'
+    - 'MkvDefaultSwitcher2/**'
+    - 'TestMkvFiles/**'
   pull_request:
     branches: [ main ]
 
