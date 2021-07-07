@@ -8,7 +8,7 @@ on:
         required: true
         default: ''
 env:
-  PUBLISH_WIN_PATH: ./MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/bin/Release/net5.0-windows/win-x64/publish/
+  PUBLISH_WIN_PATH: ./MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/bin/Release/net5.0-windows/win-x64/publish
 jobs:
   build:
     runs-on: windows-latest
