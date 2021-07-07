@@ -22,8 +22,8 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows
-      run: dotnet publish MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/MkvDefaultSwitcher2.WinForms.csproj --configuration Release  -r win-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True /p:IncludeNativeLibrariesForSelfExtract=true \
-          /property:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/MkvDefaultSwitcher2.WinForms.csproj --configuration Release  -r win-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=true \
+          -p:Version=${{ github.event.inputs.version }}
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
