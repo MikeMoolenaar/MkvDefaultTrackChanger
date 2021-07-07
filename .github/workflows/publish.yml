@@ -31,6 +31,7 @@ jobs:
       with:
         tag_name: V${{ github.event.inputs.version }}
         release_name: V${{ github.event.inputs.version }}
+        body: <TODO>
         draft: true
         prerelease: false
     - uses: actions/upload-release-asset@v1.0.1
