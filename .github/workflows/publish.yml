@@ -22,8 +22,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows
-      run: dotnet publish MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/MkvDefaultSwitcher2.WinForms.csproj --configuration Release  -r win-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=true \
-          -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/MkvDefaultSwitcher2.WinForms.csproj --configuration Release  -r win-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=true -p:Version=${{ github.event.inputs.version }}
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
@@ -34,7 +33,6 @@ jobs:
         release_name: V${{ github.event.inputs.version }}
         draft: true
         prerelease: false
-
     - uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,3 +41,8 @@ jobs:
         asset_path: ./MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/bin/Release/net5.0-windows/win-x64/publish/MkvDefaultSwitcher2.WinForms.exe
         asset_name: MkvDefaultSwitcher2-win.exe
         asset_content_type: application/octet-stream
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ steps.create_release.outputs.id }}
