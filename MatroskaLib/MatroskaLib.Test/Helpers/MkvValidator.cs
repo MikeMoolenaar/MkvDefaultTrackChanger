@@ -9,7 +9,6 @@ namespace MatroskaLib.Test.Helpers
         public static string outputRemoveRegex = @"(^At least one output file must be specified)|(^\[(.*)\] )";
         public static void Validate(string filePath)
         {
-            
             Process p = new Process();
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardError = true;
