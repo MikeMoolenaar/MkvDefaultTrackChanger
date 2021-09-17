@@ -1,4 +1,4 @@
-name: .NET
+name: Build & test
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
 
     runs-on: windows-latest
 
