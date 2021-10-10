@@ -4,6 +4,7 @@ using System;
 using MatroskaLib;
 using System.Linq;
 using System.IO;
+using Eto.Drawing;
 
 // TODO add support for changing multiple files and 
 // TODO make styling pretty, also add a progressbar
@@ -16,6 +17,7 @@ namespace MkvDefaultSwitcher2
         DropDown dropdownAudio;
         DropDown dropdownSubtitles;
         Button btnApply;
+        Label lblStatus;
         MkvFilesContainer mkvContainer;
         private bool needsReload = false;
 
@@ -66,6 +68,9 @@ namespace MkvDefaultSwitcher2
                 this.dropdownAudio.SelectedKey = lsAudioTracks[0].number.ToString();
             if (this.dropdownSubtitles.SelectedKey is null)
                 this.dropdownSubtitles.SelectedKey = lsSubtitleTracks[0].number.ToString();
+            
+            this.btnApply.Enabled = true;
+            this.lblStatus.Text = "";
         }
 
         protected void BtnApplyClicked(object sender, EventArgs e)
@@ -77,6 +82,7 @@ namespace MkvDefaultSwitcher2
             });
             this.btnApply.Enabled = true;
             this.LoadFiles();
+            this.lblStatus.Text = "Done!";
         }
 
         private bool isSelectedTrack(Track t)
@@ -87,12 +93,18 @@ namespace MkvDefaultSwitcher2
 
         protected void HandleAbout(object sender, EventArgs e)
         {
-            new AboutDialog().ShowDialog(this);
-        }
-
-        protected void HandleQuit(object sender, EventArgs e)
-        {
-            Application.Instance.Quit();
+            var aboutDialog = new AboutDialog()
+            {
+                // TODO logo
+                // Logo = 
+                Website = new Uri("https://github.com/MikeYaye/MkvDefaultTrackSwitcher"),
+                ProgramDescription = "MkvDefaultSwitcher2 is a small application to change the default subtitle/audio tracks in MKV video files",
+                License = @"This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.",
+                Developers = new []{ "Mike Moolenaar" }
+            };
+            aboutDialog.ShowDialog(this);
         }
     }
 }

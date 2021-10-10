@@ -10,7 +10,7 @@ namespace MkvDefaultSwitcher2.GtkSharp
         public static void Main(string[] args)
         {
             var platform = new Eto.GtkSharp.Platform();
-            platform.Add<FilePicker.IHandler>(() => new FilePickerHandler());
+            platform.Add<FilePicker.IHandler>(() => new CustomFilePickerHandler());
             new Application(platform).Run(new MainForm());
         }
     }

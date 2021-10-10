@@ -9,25 +9,22 @@
 	>
 	<StackLayout Spacing="20" HorizontalContentAlignment="Center">
 		<FilePicker FileAction="OpenFile" x:Name="filePicker" FilePathChanged="FilePickerSelectionDone"></FilePicker>
-		<Label x:Name="lblFilesSelected" Text=" "></Label>
+		<Label x:Name="lblFilesSelected" Text=""></Label>
     
 		<StackLayout HorizontalContentAlignment="Center">
 			<Label>Audio</Label>
-			<DropDown x:Name="dropdownAudio" Width="150">
-      </DropDown>
+			<DropDown x:Name="dropdownAudio" Width="200"></DropDown>
 		</StackLayout>
 		<StackLayout HorizontalContentAlignment="Center">
 			<Label>Subtitles</Label>
-			<DropDown x:Name="dropdownSubtitles" Width="150"></DropDown>
+			<DropDown x:Name="dropdownSubtitles" Width="200"></DropDown>
 		</StackLayout>
-		<Button x:Name="btnApply" Click="BtnApplyClicked">Apply</Button>
+		<Button x:Name="btnApply" Enabled="false" Click="BtnApplyClicked">Apply</Button>
+		<Label x:Name="lblStatus" Text=""></Label>
 	</StackLayout>
 
 	<Form.Menu>
 		<MenuBar>
-			<MenuBar.QuitItem>
-				<ButtonMenuItem Text="Quit" Shortcut="CommonModifier+Q" Click="HandleQuit" />
-			</MenuBar.QuitItem>
 			<MenuBar.AboutItem>
 				<ButtonMenuItem Text="About..." Click="HandleAbout" />
 			</MenuBar.AboutItem>

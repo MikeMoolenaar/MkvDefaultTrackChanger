@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace MkvDefaultSwitcher2.GtkSharp
 {
-    public class FilePickerHandler : GtkControl<Gtk.EventBox, FilePicker, FilePicker.ICallback>, FilePicker.IHandler
+    public class CustomFilePickerHandler : GtkControl<Gtk.EventBox, FilePicker, FilePicker.ICallback>, FilePicker.IHandler
 	{
 		FileAction action;
 		Gtk.FileChooserButton filebutton;
@@ -17,7 +17,7 @@ namespace MkvDefaultSwitcher2.GtkSharp
 		Gtk.Button savebutton;
 		Gtk.Button selectFilesButton;
 
-		public FilePickerHandler()
+		public CustomFilePickerHandler()
 		{
 			Control = new Gtk.EventBox();
 			action = FileAction.OpenFile;
@@ -221,7 +221,7 @@ namespace MkvDefaultSwitcher2.GtkSharp
 
 		protected class FilePickerConnector : GtkControlConnector
 		{
-			public new FilePickerHandler Handler => (FilePickerHandler)base.Handler;
+			public new CustomFilePickerHandler Handler => (CustomFilePickerHandler)base.Handler;
 
 			public virtual void HandleSelectionChanged(object sender, EventArgs e) => Handler?.Filebutton_SelectionChanged(sender, e);
 

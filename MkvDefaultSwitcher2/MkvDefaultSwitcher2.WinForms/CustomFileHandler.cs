@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Eto;
 
-namespace MkvDefaultSwitcher2.CustomControls
+namespace MkvDefaultSwitcher2.WinForms
 {
     public class CustomFileHandler : ThemedControlHandler<StackLayout, FilePicker, FilePicker.ICallback>, FilePicker.IHandler
     {

@@ -1,6 +1,5 @@
 ﻿using Eto.Forms;
 using System;
-using MkvDefaultSwitcher2.CustomControls;
 using swf = System.Windows.Forms;
 
 namespace MkvDefaultSwitcher2.WinForms
