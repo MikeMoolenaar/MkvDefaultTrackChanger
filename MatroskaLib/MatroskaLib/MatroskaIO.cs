@@ -58,7 +58,7 @@ namespace MatroskaLib
                     reader.LeaveContainer();
 
                     int beginHeaderPosition = 0;
-                    int tracksPosition = 0;
+                    int tracksPosition;
                     if (seekList.FirstOrDefault(x => x.seekID == MatroskaElements.tracks)?.seekPosition < (ulong) voidPosition)
                     {
                         // Void is after track element, read file again and go to tracks element
@@ -91,11 +91,12 @@ namespace MatroskaLib
                         {
                             var track = new Track(reader);
                             track.trackLengthByteNumber = (int)dataStream.Position;
+                            
                             // Loop over track element and put them in track
                             reader.EnterContainer();
                             while (reader.ReadNext())
                             {
-                                track.applyElement(dataStream);
+                                track.ApplyElement(dataStream);
                             }
 
                             reader.LeaveContainer();
@@ -104,12 +105,11 @@ namespace MatroskaLib
                         }
                     }
                     
-
                     reader.LeaveContainer();
                     reader.ReadNext();
                     int endPosition = beginHeaderPosition != 0 ? (int) reader.ElementPosition : voidPosition + 8 + 1;
 
-                    // TODO way to many parameters, put in seperate object
+                    // TODO way too many parameters, put in seperate object
                     lsMkvFiles.Add(new MkvFile(filePath, trackList, seekList, seekHeadCheckSum, tracksCheckSum, voidPosition, endPosition,
                         tracksPosition, beginHeaderPosition));
                 }
@@ -132,25 +132,26 @@ namespace MatroskaLib
 
                 int offset = 0;
                 foreach (Track t in trackList
-                        .Where(x => x.type == TrackTypeEnum.audio || x.type == TrackTypeEnum.subtitle)
+                        .Where(x => x.type is TrackTypeEnum.audio or TrackTypeEnum.subtitle)
                         .Where(x => x is not TrackDisable) // Maybe isn't needed?
                 )
                 {
-                    byte defaultFlag = (byte) (t.flagDefault == true ? 0x1 : 0x0);
-                    if (t.flagDefaultByteNumber != 0)
+                    byte defaultFlag = (byte) (t.flagDefault ? 0x1 : 0x0);
+                    if (t.flagDefaultByteNumber != 0) 
                     {
+                        // Default flag is present, change it
                         lsBytes[offset + t.flagDefaultByteNumber] = defaultFlag;
                     }
-                    else if (t.flagTypebytenumber != 0)
+                    else if (t.flagTypebytenumber != 0) 
                     {
-                        // Change length of TrackEntry element 0xAE
+                        // Default flag is not present, add it after the track entry element
                         ByteHelper.ChangeLength(lsBytes, offset + t.trackLengthByteNumber, TrackElements.entry, 3);
-
                         lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
                             new byte[] {0x88, 0x81, defaultFlag});
                         offset += 3;
                     }
-
+                    
+                    // Set forced flag to 0 if present
                     if (t.flagForcedByteNumber != 0)
                     {
                         int correction = t.flagForcedByteNumber < t.flagTypebytenumber ? 3 : 0;
@@ -174,7 +175,7 @@ namespace MatroskaLib
                     {
                         int desiredLength = Convert.ToInt32(lsBytes[s.seekPositionByteNumber - 1] - 0x80);
                         List<byte> lsNewBytes = ByteHelper.ToBytes(s.seekPosition - (ulong)offset);
-                        if (desiredLength != lsNewBytes.Count) throw new Exception("Doesn't fit in array :(");
+                        if (desiredLength != lsNewBytes.Count) throw new Exception("New seekposition doesn't fit into existing element");
 
                         lsBytes.RemoveRange(s.seekPositionByteNumber, lsNewBytes.Count);
                         lsBytes.InsertRange(s.seekPositionByteNumber, lsNewBytes);
@@ -184,7 +185,6 @@ namespace MatroskaLib
                         ByteHelper.ReplaceHashWithVoid(lsBytes, seekHeadCheckSum.Value);
                     if (tracksCheckSum.HasValue) 
                         ByteHelper.ReplaceHashWithVoid(lsBytes, tracksCheckSum.Value - offset);
-
                 }
                 else if (beginHeaderPosition == 0 && offset != 0)
                 {

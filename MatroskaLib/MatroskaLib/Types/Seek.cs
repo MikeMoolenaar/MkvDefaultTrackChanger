@@ -8,10 +8,9 @@ namespace MatroskaLib
         private readonly EbmlReader _reader;
         
         
-        public ulong seekID { get; set; }
-        public ulong seekPosition { get; set; }
-        public ulong seekpositionLength { get; set; }
-        public int seekPositionByteNumber { get; set; }
+        public ulong seekID { get; private set; }
+        public ulong seekPosition { get; private set; }
+        public int seekPositionByteNumber { get; private set; }
 
         public Seek(EbmlReader reader)
         {

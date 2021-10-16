@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form
+	xmlns="http://schema.picoe.ca/eto.forms" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="MkvDefaultSwitcher2"
+	MinimumSize="370,500"
+  	Size="370,500"
+	Padding="10"
+	>
+	<StackLayout Spacing="20" HorizontalContentAlignment="Center">
+		<Label x:Name="lblTitle" Text="An error occured!"></Label>
+		<LinkButton Text="Create issue" Click="BtnCreateIssueClicked"></LinkButton>
+		<Label Text="You can report this error by creating an issue on GitHub, please copy and paste the below box-contained text in the issue description."></Label>
+		<Label Text="DISCLAIMER: The text includes basic info about your OS, tracks of the MKV file and about where the error occured in the codebase. It does not include the filename(s). By creating an issue you consent to sharing the below text publicly on the internet."></Label>
+		
+		<TextArea Width="320" Height="150" Wrap="false" x:Name="txaExceptionMessage" ReadOnly="true"></TextArea>
+		
+		<Button x:Name="btnClose" Click="BtnCloseClicked">Close</Button>
+	</StackLayout>
+</Form>

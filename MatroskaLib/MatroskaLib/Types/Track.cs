@@ -1,6 +1,7 @@
 ﻿using System;
 using NEbml.Core;
 using System.IO;
+using System.Text.Json.Serialization;
 
 namespace MatroskaLib
 {
@@ -31,6 +32,7 @@ namespace MatroskaLib
         public const ulong checkSum = 0xBF;
     }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TrackTypeEnum
     {
         video = 1,
@@ -44,7 +46,7 @@ namespace MatroskaLib
     }
     public class Track
     {
-        private EbmlReader _reader;
+        private EbmlReader _reader { get; }
         public int trackLengthByteNumber { get; set; }
 
         public ulong number { get; set; }
@@ -63,7 +65,7 @@ namespace MatroskaLib
             this._reader = reader;
         }
 
-        public void applyElement(FileStream datastream)
+        public void ApplyElement(FileStream datastream)
         {
             switch (this._reader.ElementId.EncodedValue)
             {

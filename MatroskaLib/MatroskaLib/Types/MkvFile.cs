@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using MatroskaLib;
 
 namespace MatroskaLib
 {
     public class MkvFile : IComparable<MkvFile>
     {
-        public string filePath;
-        public List<Track> tracks;
-        public List<Seek> seekList;
-        public int? seekHeadCheckSum;
-        public int? tracksCheckSum;
-        public int voidPosition;
-        public int endPosition;
-        public int tracksPosition;
-        public int beginHeaderPosition;
+        [JsonIgnore] public string filePath { get; }
+        public List<Track> tracks { get; }
+        public List<Seek> seekList { get; }
+        public int? seekHeadCheckSum { get; }
+        public int? tracksCheckSum { get; }
+        public int voidPosition { get; }
+        public int endPosition { get; }
+        public int tracksPosition { get; }
+        public int beginHeaderPosition { get; }
 
         public MkvFile(string filePath, List<Track> tracks, List<Seek> seekList, int? seekHeadCheckSum,
             int? tracksCheckSum, int voidPosition,
@@ -44,6 +46,11 @@ namespace MatroskaLib
                     return -1;
             }
             return 0;
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true});
         }
     }
 }
