@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
     - 'MatroskaLib/**'
-    - 'MkvDefaultSwitcher2/**'
+    - 'MkvDefaultSwitcher/**'
     - 'TestMkvFiles/**'
   pull_request:
     branches: [ main ]
