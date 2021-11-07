@@ -103,12 +103,11 @@ namespace MkvDefaultSwitcher
             {
                 // TODO logo
                 // Logo = 
-                Website = new Uri("https://github.com/MikeYaye/MkvDefaultTrackSwitcher"),
+                Website = new Uri("https://github.com/MikeMoolenaar/MkvDefaultTrackSwitcher"),
                 ProgramDescription =
                     @"MkvDefaultSwitcher is a small application to change the default subtitle and/or audio tracks in MKV video files. ",
-                License = @"This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at http://mozilla.org/MPL/2.0/.",
+                License = @"Copyright (C) 2021 Mike Moolenaar
+MkvDefaultTrackSwitcher is licensed under the terms of the GNU General Public License version 3. A copy of this license can be obtained from <https://www.gnu.org/licenses/gpl-3.0.html>.",
                 Developers = new[] {"Mike Moolenaar"}
             };
             aboutDialog.ShowDialog(this);
