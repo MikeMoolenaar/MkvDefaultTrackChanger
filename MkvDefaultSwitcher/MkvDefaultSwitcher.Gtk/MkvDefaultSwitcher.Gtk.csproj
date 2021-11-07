@@ -3,10 +3,11 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>MkvDefaultSwitcher.Gtk</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MkvDefaultSwitcher2\MkvDefaultSwitcher2.csproj" />
+    <ProjectReference Include="..\MkvDefaultSwitcher\MkvDefaultSwitcher.csproj" />
   </ItemGroup>
 
   <ItemGroup>

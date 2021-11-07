@@ -26,7 +26,7 @@ namespace MatroskaLib
             }
             lsValue.RemoveRange(0, endPositionPadding);
         }
-        
+
         public static void ChangeLength(List<byte> lsBytes, int position, ulong elementId, int newAdition)
         {
             List<byte> elementIdBytes = ToBytes(elementId);

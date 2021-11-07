@@ -1,15 +1,16 @@
 ﻿using Eto.Forms;
 using System;
 
-namespace MkvDefaultSwitcher2.Mac
+
+namespace MkvDefaultSwitcher.GtkSharp
 {
     class MainClass
     {
         [STAThread]
         public static void Main(string[] args)
         {
-            var platform = new Eto.Mac.Platform();
-            platform.Add<OpenFileDialog.IHandler>(() => new CustomFileDialogHandler());
+            var platform = new Eto.GtkSharp.Platform();
+            platform.Add<FilePicker.IHandler>(() => new CustomFilePickerHandler());
             new Application(platform).Run(new MainForm());
         }
     }

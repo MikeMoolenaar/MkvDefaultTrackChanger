@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MatroskaLib;
 
+// Program to crawl through all MKV files and get the track count. 
+// Crawls through specified folder and its subfolders.
 namespace MkvReadCrawler
 {
     class Program
@@ -37,7 +39,7 @@ namespace MkvReadCrawler
                 Console.WriteLine($"{x++}/{mkvFiles.Length} {Path.GetFileName(mkvFile)}");
             });
             
-            File.WriteAllText("Output2.txt", mainStringBuilder.ToString());
+            File.WriteAllText("OutputkvDefault.txt", mainStringBuilder.ToString());
             Console.WriteLine("Done!");
         }
     }

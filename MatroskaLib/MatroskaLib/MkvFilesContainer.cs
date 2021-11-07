@@ -40,6 +40,7 @@ namespace MatroskaLib
                 .tracks
                 .Where(x => x.type == TrackTypeEnum.subtitle)
                 .ToList();
+
             lsAudioTracks.Insert(0, new TrackDisable());
             return lsAudioTracks;
         }

@@ -3,7 +3,7 @@ using System.Linq;
 using Eto.Forms;
 using MatroskaLib;
 
-namespace MkvDefaultSwitcher2
+namespace MkvDefaultSwitcher
 {
     public static class CustomExtensions
     {

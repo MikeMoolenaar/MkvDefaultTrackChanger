@@ -5,10 +5,12 @@
     <TargetFramework>net5.0</TargetFramework>
 
     <RuntimeIdentifiers>osx-x64</RuntimeIdentifiers>
+
+    <RootNamespace>MkvDefaultSwitcher.Mac</RootNamespace>
   </PropertyGroup>
 	
   <ItemGroup>
-    <ProjectReference Include="..\MkvDefaultSwitcher2\MkvDefaultSwitcher2.csproj" />
+    <ProjectReference Include="..\MkvDefaultSwitcher\MkvDefaultSwitcher.csproj" />
   </ItemGroup>
 	
   <ItemGroup>

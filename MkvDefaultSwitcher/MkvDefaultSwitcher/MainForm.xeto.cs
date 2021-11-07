@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using MatroskaLib;
 using System.Linq;
 using System.IO;
-using Eto.Drawing;
 
-namespace MkvDefaultSwitcher2
+namespace MkvDefaultSwitcher
 {
     public class MainForm : Form
     {
@@ -36,7 +35,7 @@ namespace MkvDefaultSwitcher2
                 HandleException(exception);
             }
         }
-
+        
         private void LoadFiles()
         {
             if (string.IsNullOrWhiteSpace(filePicker.FilePath)) return;
@@ -81,10 +80,7 @@ namespace MkvDefaultSwitcher2
             try
             {
                 this.btnApply.Enabled = false;
-                this.mkvContainer.WriteChanges((Track t) =>
-                {
-                    t.flagDefault = this.IsSelectedTrack(t);
-                });
+                this.mkvContainer.WriteChanges((Track t) => { t.flagDefault = this.IsSelectedTrack(t); });
                 this.btnApply.Enabled = true;
                 this.LoadFiles();
                 this.lblStatus.Text = "Done!";
@@ -108,11 +104,12 @@ namespace MkvDefaultSwitcher2
                 // TODO logo
                 // Logo = 
                 Website = new Uri("https://github.com/MikeYaye/MkvDefaultTrackSwitcher"),
-                ProgramDescription = "MkvDefaultSwitcher2 is a small application to change the default subtitle/audio tracks in MKV video files",
+                ProgramDescription =
+                    @"MkvDefaultSwitcher is a small application to change the default subtitle and/or audio tracks in MKV video files. ",
                 License = @"This Source Code Form is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.",
-                Developers = new []{ "Mike Moolenaar" }
+                Developers = new[] {"Mike Moolenaar"}
             };
             aboutDialog.ShowDialog(this);
         }

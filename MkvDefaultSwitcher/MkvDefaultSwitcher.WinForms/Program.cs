@@ -2,7 +2,7 @@
 using System;
 using swf = System.Windows.Forms;
 
-namespace MkvDefaultSwitcher2.WinForms
+namespace MkvDefaultSwitcher.WinForms
 {
 
     class MainClass
