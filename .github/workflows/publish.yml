@@ -8,8 +8,8 @@ on:
         required: true
         default: ''
 env:
-  PUBLISH_WIN_PATH: ./MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/bin/Release/net5.0-windows/win-x64/publish
-  PUBLISH_LINUX_PATH: ./MkvDefaultSwitcher2/MkvDefaultSwitcher2.Gtk/bin/Release/net5.0/linux-x64/publish
+  PUBLISH_WIN_PATH: ./MkvDefaultSwitcher/MkvDefaultSwitcher.WinForms/bin/Release/net5.0-windows/win-x64/publish
+  PUBLISH_LINUX_PATH: ./MkvDefaultSwitcher/MkvDefaultSwitcher.Gtk/bin/Release/net5.0/linux-x64/publish
 jobs:
   build:
     runs-on: windows-latest
@@ -23,15 +23,15 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows
-      run: dotnet publish MkvDefaultSwitcher2/MkvDefaultSwitcher2.WinForms/MkvDefaultSwitcher2.WinForms.csproj --configuration Release  -r win-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=true -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultSwitcher/MkvDefaultSwitcher.WinForms/MkvDefaultSwitcher.WinForms.csproj --configuration Release  -r win-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Linux
-      run: dotnet publish MkvDefaultSwitcher2/MkvDefaultSwitcher2.Gtk/MkvDefaultSwitcher2.Gtk.csproj --configuration Release -r linux-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:TrimMode=CopyUsed -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultSwitcher/MkvDefaultSwitcher.Gtk/MkvDefaultSwitcher.Gtk.csproj --configuration Release -r linux-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:TrimMode=CopyUsed -p:Version=${{ github.event.inputs.version }}
     - name: Zip releases
       run: |
-        powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher2.WinForms.exe MkvDefaultSwitcher2-V${{ github.event.inputs.version }}.exe
-        powershell Compress-Archive $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher2-V${{ github.event.inputs.version }}.exe ./MkvDefaultSwitcher2-windows-V${{ github.event.inputs.version }}.zip
-        powershell Rename-Item $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher2.Gtk MkvDefaultSwitcher2-V${{ github.event.inputs.version }}.Gtk
-        powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher2-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultSwitcher2-linux-V${{ github.event.inputs.version }}.zip
+        powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher.WinForms.exe MkvDefaultSwitcher-V${{ github.event.inputs.version }}.exe
+        powershell Compress-Archive $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.exe ./MkvDefaultSwitcher-windows-V${{ github.event.inputs.version }}.zip
+        powershell Rename-Item $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher.Gtk MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Gtk
+        powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultSwitcher-linux-V${{ github.event.inputs.version }}.zip
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
@@ -49,8 +49,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultSwitcher2-windows-V${{ github.event.inputs.version }}.zip
-        asset_name: MkvDefaultSwitcher2-windows-V${{ github.event.inputs.version }}.zip
+        asset_path: ./MkvDefaultSwitcher-windows-V${{ github.event.inputs.version }}.zip
+        asset_name: MkvDefaultSwitcher-windows-V${{ github.event.inputs.version }}.zip
         asset_content_type: application/zip
     - name: Upload release Linux
       uses: actions/upload-release-asset@v1.0.1
@@ -58,6 +58,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultSwitcher2-linux-V${{ github.event.inputs.version }}.zip
-        asset_name: MkvDefaultSwitcher2-linux-V${{ github.event.inputs.version }}.zip
+        asset_path: ./MkvDefaultSwitcher-linux-V${{ github.event.inputs.version }}.zip
+        asset_name: MkvDefaultSwitcher-linux-V${{ github.event.inputs.version }}.zip
         asset_content_type: application/zip
