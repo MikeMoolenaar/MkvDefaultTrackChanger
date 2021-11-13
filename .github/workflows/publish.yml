@@ -10,6 +10,7 @@ on:
 env:
   PUBLISH_WIN_PATH: ./MkvDefaultSwitcher/MkvDefaultSwitcher.WinForms/bin/Release/net5.0-windows/win-x64/publish
   PUBLISH_LINUX_PATH: ./MkvDefaultSwitcher/MkvDefaultSwitcher.Gtk/bin/Release/net5.0/linux-x64/publish
+  PUBLISH_MAC_PATH: ./MkvDefaultSwitcher/MkvDefaultSwitcher.Mac/bin/Release/net5.0/osx-x64/publish
 jobs:
   build:
     runs-on: windows-latest
@@ -26,12 +27,16 @@ jobs:
       run: dotnet publish MkvDefaultSwitcher/MkvDefaultSwitcher.WinForms/MkvDefaultSwitcher.WinForms.csproj --configuration Release  -r win-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Linux
       run: dotnet publish MkvDefaultSwitcher/MkvDefaultSwitcher.Gtk/MkvDefaultSwitcher.Gtk.csproj --configuration Release -r linux-x64 -p:PublishSingleFile=true --self-contained true -p:PublishTrimmed=True -p:TrimMode=CopyUsed -p:Version=${{ github.event.inputs.version }}
+    - name: Build Mac
+      run: dotnet publish MkvDefaultSwitcher.Mac/MkvDefaultSwitcher.Mac.csproj --configuration Release  -r osx-x64 -p:PublishSingleFile=true --self-contained true -p:Version=${{ github.event.inputs.version }}
     - name: Zip releases
       run: |
         powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher.WinForms.exe MkvDefaultSwitcher-V${{ github.event.inputs.version }}.exe
-        powershell Compress-Archive $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.exe ./MkvDefaultSwitcher-windows-V${{ github.event.inputs.version }}.zip
+        powershell Compress-Archive $env:PUBLISH_WIN_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.exe ./MkvDefaultSwitcher-Windows-V${{ github.event.inputs.version }}.zip
         powershell Rename-Item $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher.Gtk MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Gtk
-        powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultSwitcher-linux-V${{ github.event.inputs.version }}.zip
+        powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultSwitcher-Linux-V${{ github.event.inputs.version }}.zip
+        powershell Rename-Item $env:PUBLISH_MAC_PATH/MkvDefaultSwitcher.Mac.app MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Mac.App
+        powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Mac.App ./MkvDefaultSwitcher-MacOS-V${{ github.event.inputs.version }}.zip
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
@@ -49,8 +54,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultSwitcher-windows-V${{ github.event.inputs.version }}.zip
-        asset_name: MkvDefaultSwitcher-windows-V${{ github.event.inputs.version }}.zip
+        asset_path: ./MkvDefaultSwitcher-Windows-V${{ github.event.inputs.version }}.zip
+        asset_name: MkvDefaultSwitcher-Windows-V${{ github.event.inputs.version }}.zip
         asset_content_type: application/zip
     - name: Upload release Linux
       uses: actions/upload-release-asset@v1.0.1
@@ -58,6 +63,16 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultSwitcher-linux-V${{ github.event.inputs.version }}.zip
-        asset_name: MkvDefaultSwitcher-linux-V${{ github.event.inputs.version }}.zip
+        asset_path: ./MkvDefaultSwitcher-Linux-V${{ github.event.inputs.version }}.zip
+        asset_name: MkvDefaultSwitcher-Linux-V${{ github.event.inputs.version }}.zip
         asset_content_type: application/zip
+    - name: Upload release Mac
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./MkvDefaultSwitcher-MacOS-V${{ github.event.inputs.version }}.zip
+        asset_name: MkvDefaultSwitcher-MacOS-V${{ github.event.inputs.version }}.zip
+        asset_content_type: application/zip
+
