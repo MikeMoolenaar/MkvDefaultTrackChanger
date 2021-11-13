@@ -36,7 +36,7 @@ jobs:
         powershell Rename-Item $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher.Gtk MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Gtk
         powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultSwitcher-Linux-V${{ github.event.inputs.version }}.zip
         powershell Rename-Item $env:PUBLISH_MAC_PATH/MkvDefaultSwitcher.Mac.app MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Mac.app
-        powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Mac.app ./MkvDefaultSwitcher-MacOS-V${{ github.event.inputs.version }}.zip
+        powershell Compress-Archive $env:PUBLISH_MAC_PATH/MkvDefaultSwitcher-V${{ github.event.inputs.version }}.Mac.app ./MkvDefaultSwitcher-MacOS-V${{ github.event.inputs.version }}.zip
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
