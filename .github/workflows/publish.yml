@@ -36,6 +36,7 @@ jobs:
         powershell Rename-Item $env:PUBLISH_LINUX_PATH/MkvDefaultTrackChanger.Gtk MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Gtk
         powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
         powershell Rename-Item $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger.Mac.app ./MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
+        powershell Compress-Archive $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
@@ -71,6 +72,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
-        asset_name: MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
-        asset_content_type: application/octet-stream
+        asset_path: ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
+        asset_name: MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
+        asset_content_type: application/zip
