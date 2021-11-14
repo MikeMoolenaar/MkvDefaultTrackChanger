@@ -1,3 +1,4 @@
+[![Build & test](https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/actions/workflows/dotnet.yml/badge.svg)](https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/actions/workflows/dotnet.yml)
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 # MkvDefaultTrackChanger
 Small application to change the default subtitle and audio tracks in
