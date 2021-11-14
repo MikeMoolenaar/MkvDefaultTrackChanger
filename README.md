@@ -13,8 +13,8 @@ and the settings of the video player (VLC, for example, can show the subtitle in
 by default).
 
 This program aims to make editing the default audio and/or subtitle track
-in (multiple) MKV files easy. It can edit multiple files provided they
-have the same audio and subtitle tracks, through the contents of these files can naturally
+in MKV files easy. It can edit multiple files provided they
+have the same audio and subtitle tracks, though the contents of these files can naturally
 be different.
 
 ## Demo
@@ -29,13 +29,14 @@ and extract the ZIP archive to start using the application.
 The ZIP file for Linux contains the GTK application which you must run from the command
 line, for example:
 ```sh
-unzip MkvDefaultTrackChanger-linux-V1.zip
+unzip MkvDefaultTrackChanger-Linux-V1.0.zip
+chmod +x MkvDefaultTrackChanger-V1.0.Gtk
 ./MkvDefaultTrackChanger-V1.0.Gtk
 ```
 
 ## Credits
 The following packages were used to make creating this application possible. I would
-like to sincirely thank their authors, contributors and other involved developers.
+like to sincerely thank their authors, contributors and other involved developers.
 - [Eto.Forms](https://github.com/picoe/Eto) ([licence](https://github.com/picoe/Eto/blob/develop/LICENSE.txt))  
   GUI framework which makes it possible to create applications for multiple platforms.
 - [NEbml](https://github.com/OlegZee/NEbml) ([licence](https://github.com/OlegZee/NEbml/blob/master/LICENSE))  
@@ -46,5 +47,5 @@ Feel free to create an [issue](https://github.com/MikeMoolenaar/MkvDefaultTrackC
 
 
 ## License
-Copright (C) 2020 Mike Moolenaar  
+Copright (C) 2021 Mike Moolenaar  
 Licenced under the [GNU General Public Licence v3](https://www.gnu.org/licenses/gpl-3.0.html).
