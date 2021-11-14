@@ -37,7 +37,7 @@ The following packages were used to make creating this application possible. I w
 like to sincirely thank their authors, contributors and other involved developers.
 - [Eto.Forms](https://github.com/picoe/Eto) ([licence](https://github.com/picoe/Eto/blob/develop/LICENSE.txt))  
   GUI framework which makes it possible to create applications for multiple platforms.
-- [Awesome README](https://github.com/OlegZee/NEbml) ([licence](https://github.com/OlegZee/NEbml/blob/master/LICENSE))  
+- [NEbml](https://github.com/OlegZee/NEbml) ([licence](https://github.com/OlegZee/NEbml/blob/master/LICENSE))  
   Reader and writer for the EBML markup language that MKV uses.
 
 ## Support
