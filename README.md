@@ -18,11 +18,12 @@ have the same audio and subtitle tracks, through the contents of these files can
 be different.
 
 ## Demo
-
+![Demo](https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/blob/main/Assets/Animation.gif?raw=true)  
+Aditional screenshots for each platform: [Linux](https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/blob/main/Assets/Screenshot%20linux.jpg?raw=true), [MacOS](https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/blob/main/Assets/Screenshot%20mac.png?raw=true) and [Windows](https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/blob/main/Assets/Screenshot%20windows.jpg?raw=true)
 
 ## Download
-Go to the releases page to download the latest release for your platform. Download
-and extract the ZIP archibe to start using the application
+Go to the [releases page](https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases) to download the latest version for your platform. Download
+and extract the ZIP archive to start using the application.
 
 ### Additional instructions for linux
 The ZIP file for Linux contains the GTK application which you must run from the command
