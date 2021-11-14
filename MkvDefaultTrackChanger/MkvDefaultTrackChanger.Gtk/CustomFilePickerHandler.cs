@@ -4,7 +4,6 @@ using Eto.GtkSharp.Forms;
 using System;
 using System.Collections.Generic;
 
-
 namespace MkvDefaultTrackChanger.GtkSharp
 {
     public class CustomFilePickerHandler : GtkControl<Gtk.EventBox, FilePicker, FilePicker.ICallback>, FilePicker.IHandler

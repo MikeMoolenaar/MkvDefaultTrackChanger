@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>MkvDefaultTrackChanger.Gtk</RootNamespace>
+    <RootNamespace>MkvDefaultTrackChanger.GtkSharp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

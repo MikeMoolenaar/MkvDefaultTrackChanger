@@ -1,7 +1,6 @@
 ﻿using Eto.Forms;
 using System;
 
-
 namespace MkvDefaultTrackChanger.GtkSharp
 {
     class MainClass
