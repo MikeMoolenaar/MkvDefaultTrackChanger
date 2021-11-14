@@ -35,8 +35,9 @@ jobs:
         powershell Compress-Archive $env:PUBLISH_WIN_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.exe ./MkvDefaultTrackChanger-Windows-V${{ github.event.inputs.version }}.zip
         powershell Rename-Item $env:PUBLISH_LINUX_PATH/MkvDefaultTrackChanger.Gtk MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Gtk
         powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
-        powershell Rename-Item $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger.Mac.app ./MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
-        powershell Compress-Archive $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
+      # TODO: Fix MacOS archive not working  (it extracts to a folder instead of a .app file)
+      #  powershell Rename-Item $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger.Mac.app ./MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
+      #  powershell Compress-Archive $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
@@ -45,7 +46,7 @@ jobs:
       with:
         tag_name: V${{ github.event.inputs.version }}
         release_name: V${{ github.event.inputs.version }}
-        body: TODO
+        body: TODO add description and rebuild MacOS locally
         draft: true
         prerelease: false
     - name: Upload release Windows
@@ -66,12 +67,12 @@ jobs:
         asset_path: ./MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
         asset_name: MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
         asset_content_type: application/zip
-    - name: Upload release Mac
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
-        asset_name: MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
-        asset_content_type: application/zip
+    #- name: Upload release Mac
+    #  uses: actions/upload-release-asset@v1.0.1
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #  with:
+    #    upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #    asset_path: ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
+    #    asset_name: MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
+    #    asset_content_type: application/zip
