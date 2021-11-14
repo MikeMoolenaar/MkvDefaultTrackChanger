@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "MkvDefaultSwitcher.WinForms": {
+    "MkvDefaultTrackChanger.WinForms": {
       "commandName": "Project",
       "nativeDebugging": true
     }

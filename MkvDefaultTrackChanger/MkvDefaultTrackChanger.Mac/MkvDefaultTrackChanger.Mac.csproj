@@ -6,11 +6,11 @@
 
     <RuntimeIdentifiers>osx-x64</RuntimeIdentifiers>
 
-    <RootNamespace>MkvDefaultSwitcher.Mac</RootNamespace>
+    <RootNamespace>MkvDefaultTrackChanger.Mac</RootNamespace>
   </PropertyGroup>
 	
   <ItemGroup>
-    <ProjectReference Include="..\MkvDefaultSwitcher\MkvDefaultSwitcher.csproj" />
+    <ProjectReference Include="..\MkvDefaultTrackChanger\MkvDefaultTrackChanger.csproj" />
   </ItemGroup>
 	
   <ItemGroup>

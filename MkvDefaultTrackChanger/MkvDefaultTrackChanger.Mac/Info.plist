@@ -3,9 +3,9 @@
 <plist version="1.0">
   <dict>
     <key>CFBundleName</key>
-    <string>MkvDefaultSwitcher</string>
+    <string>MkvDefaultTrackChanger</string>
     <key>CFBundleIdentifier</key>
-    <string>com.mikemoolenaar.MkvDefaultSwitcher</string>
+    <string>com.mikemoolenaar.MkvDefaultTrackChanger</string>
     <key>CFBundleShortVersionString</key>
     <string>1.0</string>
     <key>LSMinimumSystemVersion</key>

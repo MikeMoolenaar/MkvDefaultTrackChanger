@@ -6,7 +6,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using Eto.Serialization.Xaml;
 
-namespace MkvDefaultSwitcher
+namespace MkvDefaultTrackChanger
 {
     public class ErrorForm : Form
     {
@@ -41,7 +41,7 @@ namespace MkvDefaultSwitcher
         
         protected void BtnCreateIssueClicked(object sender, EventArgs e)
         {
-            Application.Instance.Open("https://github.com/MikeMoolenaar/MkvDefaultSwitcher/issues/new");
+            Application.Instance.Open("https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/issues/new");
         }
     }
 }

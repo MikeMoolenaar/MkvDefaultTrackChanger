@@ -6,7 +6,7 @@ using MatroskaLib;
 using System.Linq;
 using System.IO;
 
-namespace MkvDefaultSwitcher
+namespace MkvDefaultTrackChanger
 {
     public class MainForm : Form
     {
@@ -103,11 +103,12 @@ namespace MkvDefaultSwitcher
             {
                 // TODO logo
                 // Logo = 
-                Website = new Uri("https://github.com/MikeMoolenaar/MkvDefaultTrackSwitcher"),
+                Website = new Uri("https://github.com/MikeMoolenaar/MkvDefaultTrackChanger"),
+                WebsiteLabel = "Github page",
                 ProgramDescription =
-                    @"MkvDefaultSwitcher is a small application to change the default subtitle and/or audio tracks in MKV video files. ",
+                    @"MkvDefaultTrackChanger is a small application to change the default subtitle and/or audio tracks in MKV video files. ",
                 License = @"Copyright (C) 2021 Mike Moolenaar
-MkvDefaultTrackSwitcher is licensed under the terms of the GNU General Public License version 3. A copy of this license can be obtained from <https://www.gnu.org/licenses/gpl-3.0.html>.",
+MkvDefaultTrackChanger is licensed under the terms of the GNU General Public License version 3. A copy of this license can be obtained from <https://www.gnu.org/licenses/gpl-3.0.html>.",
                 Developers = new[] {"Mike Moolenaar"}
             };
             aboutDialog.ShowDialog(this);

@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvReadCrawler", "MkvReadCrawler\MkvReadCrawler.csproj", "{AAD70A58-2AA2-4044-A06D-C67261C8AA68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvDefaultSwitcher", "MkvDefaultSwitcher\MkvDefaultSwitcher\MkvDefaultSwitcher.csproj", "{F93374A6-5EEC-46C5-B55A-C22CE8090878}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvDefaultTrackChanger", "MkvDefaultTrackChanger\MkvDefaultTrackChanger\MkvDefaultTrackChanger.csproj", "{F93374A6-5EEC-46C5-B55A-C22CE8090878}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvDefaultSwitcher.Gtk", "MkvDefaultSwitcher\MkvDefaultSwitcher.Gtk\MkvDefaultSwitcher.Gtk.csproj", "{F208CE7F-5D40-4020-B3B4-646F87DB84EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvDefaultTrackChanger.Gtk", "MkvDefaultTrackChanger\MkvDefaultTrackChanger.Gtk\MkvDefaultTrackChanger.Gtk.csproj", "{F208CE7F-5D40-4020-B3B4-646F87DB84EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvDefaultSwitcher.Mac", "MkvDefaultSwitcher\MkvDefaultSwitcher.Mac\MkvDefaultSwitcher.Mac.csproj", "{E72100AB-2569-413F-AA60-DCA2803612C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvDefaultTrackChanger.Mac", "MkvDefaultTrackChanger\MkvDefaultTrackChanger.Mac\MkvDefaultTrackChanger.Mac.csproj", "{E72100AB-2569-413F-AA60-DCA2803612C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvDefaultSwitcher.WinForms", "MkvDefaultSwitcher\MkvDefaultSwitcher.WinForms\MkvDefaultSwitcher.WinForms.csproj", "{2B473915-271F-43D8-99AE-4920C2156719}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvDefaultTrackChanger.WinForms", "MkvDefaultTrackChanger\MkvDefaultTrackChanger.WinForms\MkvDefaultTrackChanger.WinForms.csproj", "{2B473915-271F-43D8-99AE-4920C2156719}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatroskaLib.Test", "MatroskaLib\MatroskaLib.Test\MatroskaLib.Test.csproj", "{6302A45A-FA62-4437-83B7-2652897C4D17}"
 EndProject

@@ -1,7 +1,7 @@
 using Eto.Forms;
 using Eto.Mac.Forms;
 
-namespace MkvDefaultSwitcher.Mac
+namespace MkvDefaultTrackChanger.Mac
 {
     using MonoMac.AppKit;
     using MonoMac.Foundation;

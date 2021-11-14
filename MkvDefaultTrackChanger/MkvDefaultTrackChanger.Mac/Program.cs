@@ -1,7 +1,7 @@
 ﻿using Eto.Forms;
 using System;
 
-namespace MkvDefaultSwitcher.Mac
+namespace MkvDefaultTrackChanger.Mac
 {
     class MainClass
     {

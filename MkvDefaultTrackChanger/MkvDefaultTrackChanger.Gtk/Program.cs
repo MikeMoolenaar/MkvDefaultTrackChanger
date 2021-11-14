@@ -2,7 +2,7 @@
 using System;
 
 
-namespace MkvDefaultSwitcher.GtkSharp
+namespace MkvDefaultTrackChanger.GtkSharp
 {
     class MainClass
     {

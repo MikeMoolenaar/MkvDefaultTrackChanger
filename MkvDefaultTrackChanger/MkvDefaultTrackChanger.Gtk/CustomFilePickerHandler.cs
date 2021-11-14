@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace MkvDefaultSwitcher.GtkSharp
+namespace MkvDefaultTrackChanger.GtkSharp
 {
     public class CustomFilePickerHandler : GtkControl<Gtk.EventBox, FilePicker, FilePicker.ICallback>, FilePicker.IHandler
 	{
