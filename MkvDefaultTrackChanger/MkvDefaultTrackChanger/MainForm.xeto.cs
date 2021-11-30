@@ -10,37 +10,44 @@ namespace MkvDefaultTrackChanger
 {
     public class MainForm : Form
     {
-        FilePicker filePicker;
         Label lblFilesSelected;
         DropDown dropdownAudio;
         DropDown dropdownSubtitles;
         Button btnApply;
         Label lblStatus;
+        
         MkvFilesContainer mkvContainer;
+        OpenFileDialog fileDialog;
 
         public MainForm()
         {
             XamlReader.Load(this);
-            filePicker.Filters.Add(new FileFilter("MKV files", "*.mkv"));
+            
+            fileDialog = new OpenFileDialog();
+            fileDialog.Filters.Add(new FileFilter("MKV files", "*.mkv"));
+            fileDialog.MultiSelect = true;
         }
 
-        private void FilePickerSelectionDone(object sender, EventArgs e)
+        private void BtnBrowseFilesClick(object sender, EventArgs e)
         {
-            try
+            var dialogResult = fileDialog.ShowDialog(this);
+            
+            if (dialogResult == DialogResult.Ok)
             {
-                this.LoadFiles();
-            }
-            catch (Exception exception)
-            {
-                HandleException(exception);
+                try
+                {
+                    this.LoadFiles();
+                }
+                catch (Exception exception)
+                {
+                    HandleException(exception);
+                }
             }
         }
         
         private void LoadFiles()
         {
-            if (string.IsNullOrWhiteSpace(filePicker.FilePath)) return;
-
-            string[] filePaths = filePicker.FilePath.Split('|');
+            string[] filePaths = fileDialog.Filenames.ToArray();
             this.lblFilesSelected.Text = $"{filePaths.Length} files selected";
 
             this.mkvContainer = new MkvFilesContainer(filePaths);

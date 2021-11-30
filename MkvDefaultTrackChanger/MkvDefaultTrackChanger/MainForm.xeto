@@ -8,7 +8,7 @@
 	Padding="10"
 	>
 	<StackLayout Spacing="20" HorizontalContentAlignment="Center">
-		<FilePicker FileAction="OpenFile" x:Name="filePicker" FilePathChanged="FilePickerSelectionDone"></FilePicker>
+		<Button x:Name="btnBrowse" Click="BtnBrowseFilesClick">Browse files</Button>
 		<Label x:Name="lblFilesSelected" Text=""></Label>
     
 		<StackLayout HorizontalContentAlignment="Center">

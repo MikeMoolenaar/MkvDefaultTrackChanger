@@ -1,5 +1,5 @@
-﻿using Eto.Forms;
-using System;
+﻿using System;
+using Eto.Forms;
 
 namespace MkvDefaultTrackChanger.GtkSharp
 {
@@ -9,7 +9,6 @@ namespace MkvDefaultTrackChanger.GtkSharp
         public static void Main(string[] args)
         {
             var platform = new Eto.GtkSharp.Platform();
-            platform.Add<FilePicker.IHandler>(() => new CustomFilePickerHandler());
             new Application(platform).Run(new MainForm());
         }
     }
