@@ -9,7 +9,6 @@ namespace MkvDefaultTrackChanger.Mac
         public static void Main(string[] args)
         {
             var platform = new Eto.Mac.Platform();
-            platform.Add<OpenFileDialog.IHandler>(() => new CustomFileDialogHandler());
             new Application(platform).Run(new MainForm());
         }
     }
