@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using FluentAssertions;
@@ -34,9 +35,9 @@ namespace MatroskaLib.Test
             List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
-            Assert.Single(lsMkvFiles);
-            Assert.Equal(119, lsMkvFiles[0].voidPosition);
-            Assert.Equal(3, lsTracks.Count);
+            lsMkvFiles.Should().HaveCount(1);
+            lsMkvFiles[0].voidPosition.Should().Be(119);
+            lsTracks.Should().HaveCount(3);
             lsTracks[0].Should().BeEquivalentTo(new {number = 1, flagDefault = false, flagForced = true, language = "eng", name = "English main", type = TrackTypeEnum.subtitle});
             lsTracks[1].Should().BeEquivalentTo(new {number = 2, flagDefault = false, flagForced = false, language = "und", type = TrackTypeEnum.video});
             lsTracks[2].Should().BeEquivalentTo(new {number = 3, flagDefault = false, flagForced = false, language = "jpn", type = TrackTypeEnum.audio});
@@ -56,7 +57,7 @@ namespace MatroskaLib.Test
             lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
-            Assert.Equal(3, lsTracks.Count);
+            lsTracks.Should().HaveCount(3);
             lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "eng", name = "English main", type = TrackTypeEnum.subtitle});
             lsTracks[1].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "und", type = TrackTypeEnum.video});
             lsTracks[2].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "jpn", type = TrackTypeEnum.audio});
@@ -71,10 +72,10 @@ namespace MatroskaLib.Test
 
             List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
             List<Track> lsTracks = lsMkvFiles[0].tracks;
-
-            Assert.Single(lsMkvFiles);
-            Assert.Equal(119, lsMkvFiles[0].voidPosition);
-            Assert.Equal(5, lsTracks.Count);
+            
+            lsMkvFiles.Should().HaveCount(1);
+            lsMkvFiles[0].voidPosition.Should().Be(119);
+            lsTracks.Should().HaveCount(5);
             lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "fre", name = "French commentary", type = TrackTypeEnum.audio});
             lsTracks[1].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "eng", name = "", type = TrackTypeEnum.audio});
             lsTracks[2].Should().BeEquivalentTo(new {flagDefault = false, flagForced = true, language = "eng", name = "English main", type = TrackTypeEnum.subtitle});
@@ -96,7 +97,7 @@ namespace MatroskaLib.Test
             lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
-            Assert.Equal(5, lsTracks.Count);
+            lsTracks.Should().HaveCount(5);
             lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "fre", name = "French commentary", type = TrackTypeEnum.audio});
             lsTracks[1].Should().BeEquivalentTo(new {flagDefault = true, flagForced = false, language = "eng", name = "", type = TrackTypeEnum.audio});
             lsTracks[2].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "eng", name = "English main", type = TrackTypeEnum.subtitle});
@@ -113,10 +114,10 @@ namespace MatroskaLib.Test
 
             List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
             List<Track> lsTracks = lsMkvFiles[0].tracks;
-
-            Assert.Single(lsMkvFiles);
-            Assert.Equal(123, lsMkvFiles[0].voidPosition);
-            Assert.Equal(4, lsTracks.Count);
+            
+            lsMkvFiles.Should().HaveCount(1);
+            lsMkvFiles[0].voidPosition.Should().Be(123);
+            lsTracks.Should().HaveCount(4);
             lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "und", name = "", type = TrackTypeEnum.video});
             lsTracks[1].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "und", name = "Stereo", type = TrackTypeEnum.audio});
             lsTracks[2].Should().BeEquivalentTo(new {flagDefault = false, flagForced = true, language = "eng", name = "", type = TrackTypeEnum.subtitle});
@@ -137,7 +138,7 @@ namespace MatroskaLib.Test
             lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
-            Assert.Equal(4, lsTracks.Count);
+            lsTracks.Should().HaveCount(4);
             lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "und", name = "", type = TrackTypeEnum.video});
             lsTracks[1].Should().BeEquivalentTo(new {flagDefault = true, flagForced = false, language = "und", name = "Stereo", type = TrackTypeEnum.audio});
             lsTracks[2].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "eng", name = "", type = TrackTypeEnum.subtitle});
@@ -155,9 +156,8 @@ namespace MatroskaLib.Test
             List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
-            Assert.Single(lsMkvFiles);
-            //Assert.Equal(390, lsMkvFiles[0].voidPosition);
-            Assert.Equal(3, lsTracks.Count);
+            lsMkvFiles.Should().HaveCount(1);
+            lsTracks.Should().HaveCount(3);
             lsTracks[0].Should().BeEquivalentTo(new {number = 1, flagDefault = false, flagForced = false, language = "eng", name = "English main", type = TrackTypeEnum.subtitle});
             lsTracks[1].Should().BeEquivalentTo(new {number = 2, flagDefault = false, flagForced = false, language = "und", type = TrackTypeEnum.video});
             lsTracks[2].Should().BeEquivalentTo(new {number = 3, flagDefault = false, flagForced = false, language = "jpn", type = TrackTypeEnum.audio});
@@ -178,7 +178,7 @@ namespace MatroskaLib.Test
             lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
-            Assert.Equal(3, lsTracks.Count);
+            lsTracks.Should().HaveCount(3);
             lsTracks[0].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "eng", name = "English main", type = TrackTypeEnum.subtitle});
             lsTracks[1].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "und", type = TrackTypeEnum.video});
             lsTracks[2].Should().BeEquivalentTo(new {flagDefault = false, flagForced = false, language = "jpn", type = TrackTypeEnum.audio});
