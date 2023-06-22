@@ -36,7 +36,7 @@ namespace MkvDefaultTrackChanger
 
         protected void BtnCloseClicked(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
         
         protected void BtnCreateIssueClicked(object sender, EventArgs e)

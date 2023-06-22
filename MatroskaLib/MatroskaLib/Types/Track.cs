@@ -60,48 +60,42 @@ namespace MatroskaLib
         public string? name { get; set; } = "";
         public string language { get; set; } = "eng";
 
-        public Track(EbmlReader reader)
-        {
-            this._reader = reader;
-        }
+        public Track(EbmlReader reader) => 
+            _reader = reader;
 
-        public void ApplyElement(FileStream datastream)
+        public void ApplyElement(FileStream fileStream)
         {
-            switch (this._reader.ElementId.EncodedValue)
+            switch (_reader.ElementId.EncodedValue)
             {
                 case TrackElements.number:
-                    this.number = this._reader.ReadUInt();
+                    number = _reader.ReadUInt();
                     break;
                 case TrackElements.name:
-                    this.name = this._reader.ReadUtf();
+                    name = _reader.ReadUtf();
                     break;
                 case TrackElements.flagForced:
-                    this.flagForcedByteNumber = (int)datastream.Position;
-                    this.flagForced = this._reader.ReadUInt() == 1;
+                    flagForcedByteNumber = (int)fileStream.Position;
+                    flagForced = _reader.ReadUInt() == 1;
                     break;
                 case TrackElements.flagDefault:
-                    this.flagDefaultByteNumber = (int)datastream.Position;
-                    this.flagDefault = this._reader.ReadUInt() == 1;
+                    flagDefaultByteNumber = (int)fileStream.Position;
+                    flagDefault = _reader.ReadUInt() == 1;
                     break;
                 case TrackElements.language:
-                    this.language = this._reader.ReadUtf();
+                    language = _reader.ReadUtf();
                     break;
                 case TrackElements.type:
-                    this.flagTypebytenumber = (int)datastream.Position;
-                    this.type = (TrackTypeEnum)this._reader.ReadUInt();
+                    flagTypebytenumber = (int)fileStream.Position;
+                    type = (TrackTypeEnum)_reader.ReadUInt();
                     break;
             }
         }
 
-        public override string ToString()
-        {
-            return $"{this.number} ({this.language }) default={this.flagDefault}\t forced={this.flagForced}\t {this.name}";
-        }
+        public override string ToString() => 
+            $"{number} ({language }) default={flagDefault}\t forced={flagForced}\t {name}";
 
-        public virtual string ToUiString()
-        {
-            return $"({this.language}) {this.name}";
-        }
+        public virtual string ToUiString() => 
+            $"({language}) {name}";
     }
 
     public class TrackDisable : Track

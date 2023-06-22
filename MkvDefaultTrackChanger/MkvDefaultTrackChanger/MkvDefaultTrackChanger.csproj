@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.6.0" />
-    <PackageReference Include="Eto.Serialization.Xaml" Version="2.6.0" />
+    <PackageReference Include="Eto.Forms" Version="2.7.4" />
+    <PackageReference Include="Eto.Serialization.Xaml" Version="2.7.4" />
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\MatroskaLib\MatroskaLib\MatroskaLib.csproj" />
+    <ProjectReference Include="../../MatroskaLib\MatroskaLib\MatroskaLib.csproj" />
   </ItemGroup>
   
 </Project>

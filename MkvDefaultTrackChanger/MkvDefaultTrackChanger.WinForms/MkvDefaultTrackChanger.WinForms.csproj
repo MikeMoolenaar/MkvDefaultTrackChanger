@@ -2,16 +2,15 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-Windows</TargetFramework>
+    <TargetFramework>net6.0-Windows</TargetFramework>
     <RootNamespace>MkvDefaultTrackChanger.WinForms</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Eto.Platform.Windows" Version="2.6.0" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\MkvDefaultTrackChanger\MkvDefaultTrackChanger.csproj" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <PackageReference Include="Eto.Platform.Windows" Version="2.7.4" />
+  </ItemGroup>
 </Project>

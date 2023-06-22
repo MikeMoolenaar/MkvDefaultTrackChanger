@@ -12,7 +12,7 @@ namespace MatroskaLib
 
         public MkvFilesContainer(string[] filePaths)
         {
-            var lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
+            var lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
             this.lsMkvFiles.Add(lsMkvFiles[0]);
             for (int i = 1; i < lsMkvFiles.Count; i++)
             {
@@ -28,7 +28,7 @@ namespace MatroskaLib
             foreach (MkvFile file in lsMkvFiles)
             {
                 file.tracks.ForEach(setDefaultIfSelected);
-                MatroskaIO.WriteMkvFile(file.filePath, file.seekList, file.tracks, file.seekHeadCheckSum,
+                MatroskaWriter.WriteMkvFile(file.filePath, file.seekList, file.tracks, file.seekHeadCheckSum,
                     file.tracksCheckSum, file.voidPosition, file.endPosition, file.tracksPosition,
                     file.beginHeaderPosition);
             }
@@ -36,7 +36,7 @@ namespace MatroskaLib
 
         public List<Track> GetSubtitleTracks()
         {
-            var lsAudioTracks = this.lsMkvFiles.First()
+            var lsAudioTracks = lsMkvFiles.First()
                 .tracks
                 .Where(x => x.type == TrackTypeEnum.subtitle)
                 .ToList();
@@ -47,15 +47,13 @@ namespace MatroskaLib
 
         public List<Track> GetAudioTracks()
         {
-            return this.lsMkvFiles.First()
+            return lsMkvFiles.First()
                 .tracks
                 .Where(x => x.type == TrackTypeEnum.audio)
                 .ToList();
         }
 
-        public override string ToString()
-        {
-            return this.lsMkvFiles.Any() ? this.lsMkvFiles.First().ToString() : "No MKV files.";
-        }
+        public override string ToString() => 
+            lsMkvFiles.Any() ? lsMkvFiles.First().ToString() : "No MKV files.";
     }
 }

@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Xunit;
-using Xunit.Abstractions;
 using FluentAssertions;
 using MatroskaLib.Test.Helpers;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace MatroskaLib.Test
 {
@@ -32,7 +30,7 @@ namespace MatroskaLib.Test
         {
             string[] filePaths = {file};
             
-            List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
+            List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
             lsMkvFiles.Should().HaveCount(1);
@@ -48,13 +46,13 @@ namespace MatroskaLib.Test
         public void WriteTestFile1(string file)
         {
             File.Copy(file, testFilePath, true);
-            List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
+            List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] {testFilePath});
             lsMkvFiles[0].tracks[0].flagDefault = false;
             lsMkvFiles[0].tracks[2].flagDefault = false;
 
-            MatroskaIO.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
+            MatroskaWriter.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
                 lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
-            lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
+            lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
             lsTracks.Should().HaveCount(3);
@@ -70,7 +68,7 @@ namespace MatroskaLib.Test
         {
             string[] filePaths = {file};
 
-            List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
+            List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
             List<Track> lsTracks = lsMkvFiles[0].tracks;
             
             lsMkvFiles.Should().HaveCount(1);
@@ -88,13 +86,13 @@ namespace MatroskaLib.Test
         public void WriteTestFile2(string file)
         {
             File.Copy(file, testFilePath, true);
-            List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
+            List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] {testFilePath});
             lsMkvFiles[0].tracks[1].flagDefault = true;
             lsMkvFiles[0].tracks[3].flagDefault = true;
 
-            MatroskaIO.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
+            MatroskaWriter.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
                 lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
-            lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
+            lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
             lsTracks.Should().HaveCount(5);
@@ -112,7 +110,7 @@ namespace MatroskaLib.Test
         {
             string[] filePaths = {file};
 
-            List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
+            List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
             List<Track> lsTracks = lsMkvFiles[0].tracks;
             
             lsMkvFiles.Should().HaveCount(1);
@@ -129,13 +127,13 @@ namespace MatroskaLib.Test
         public void WriteTestFile3(string file)
         {
             File.Copy(file, testFilePath, true);
-            List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
+            List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] {testFilePath});
             lsMkvFiles[0].tracks[1].flagDefault = true;
             lsMkvFiles[0].tracks[3].flagDefault = true;
 
-            MatroskaIO.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
+            MatroskaWriter.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
                 lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
-            lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
+            lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
             lsTracks.Should().HaveCount(4);
@@ -153,7 +151,7 @@ namespace MatroskaLib.Test
         {
             string[] filePaths = {file};
 
-            List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(filePaths);
+            List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
             lsMkvFiles.Should().HaveCount(1);
@@ -169,13 +167,13 @@ namespace MatroskaLib.Test
         public void WriteTestFile4(string file)
         {
             File.Copy(file, testFilePath, true);
-            List<MkvFile> lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
+            List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] {testFilePath});
             lsMkvFiles[0].tracks[0].flagDefault = false;
             lsMkvFiles[0].tracks[2].flagDefault = false;
 
-            MatroskaIO.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
+            MatroskaWriter.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
                 lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
-            lsMkvFiles = MatroskaIO.ReadMkvFiles(new[] {testFilePath});
+            lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] {testFilePath});
             List<Track> lsTracks = lsMkvFiles[0].tracks;
 
             lsTracks.Should().HaveCount(3);
