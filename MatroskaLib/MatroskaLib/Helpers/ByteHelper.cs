@@ -9,10 +9,10 @@ namespace MatroskaLib
         public static List<byte> ToBytes(ulong value, bool removePaddingZeroes = true)
         {
             List<byte> lsBytes = BitConverter.GetBytes(value).ToList();
-            
-            if (BitConverter.IsLittleEndian) 
+
+            if (BitConverter.IsLittleEndian)
                 lsBytes.Reverse();
-            if (removePaddingZeroes) 
+            if (removePaddingZeroes)
                 RemoveLeftZeroes(lsBytes);
             return lsBytes;
         }
@@ -30,9 +30,9 @@ namespace MatroskaLib
         public static void ChangeLength(List<byte> lsBytes, int position, ulong elementId, int newAdition)
         {
             List<byte> elementIdBytes = ToBytes(elementId);
-            
+
             List<byte> lsLengthBytes = new();
-            for (int i = position-1; i >= 0; i--)
+            for (int i = position - 1; i >= 0; i--)
             {
                 lsLengthBytes.Add(lsBytes[i]);
                 if (lsBytes.GetRange(i - elementIdBytes.Count, elementIdBytes.Count).SequenceEqual(elementIdBytes))
@@ -52,17 +52,17 @@ namespace MatroskaLib
             // Apply addition or negative
             if (newAdition > 0)
                 ret += Convert.ToUInt32(newAdition);
-            else 
+            else
                 ret -= Convert.ToUInt32(newAdition * -1);
 
             // Convert new length to bytes and strip bytes
             List<byte> lsNewBytes = ToBytes(ret);
             if (lsNewBytes.Count != lsLengthBytes.Count) throw new Exception("New length doesn't fit into existing length element");
-                
+
             // Replace old length with new length bytes
             lsBytes.RemoveRange(position, lsNewBytes.Count);
             lsBytes.InsertRange(position, lsNewBytes);
-            
+
         }
 
         public static ulong FromBytesToUlong(List<byte> lsLengthBytes)
@@ -72,7 +72,7 @@ namespace MatroskaLib
             for (int i = 0; i < 8 && i < lsLengthBytes.Count; i++)
             {
                 ret <<= 8;
-                ret |= (ulong) lsLengthBytes[i] & 0xFF;
+                ret |= (ulong)lsLengthBytes[i] & 0xFF;
             }
 
             return ret;
@@ -95,9 +95,9 @@ namespace MatroskaLib
             lsBytes.InsertRange(voidPosition + 1, voidLengthBytes);
         }
 
-        public static List<byte> GetLengthBytes(uint value, int maxLength) => 
+        public static List<byte> GetLengthBytes(uint value, int maxLength) =>
             ToBytes(value | 1UL << (7 * maxLength));
-        
+
         public static void ReplaceHashWithVoid(List<byte> lsBytes, int checkSumPosition)
         {
             lsBytes.RemoveRange(checkSumPosition, 6);

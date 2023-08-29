@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using MatroskaLib.Types;
 using NEbml.Core;
 using NEbml.Matroska;
 
@@ -21,7 +22,7 @@ public static class MatroskaReader
 
             int? seekHeadCheckSum = _ReadSeekHead(reader, fileStream, seekList);
             int voidPosition = _LocateVoidElement(reader);
-            
+
             (int tracksPosition, int beginHeaderPosition) = _DetermineTracksPosition(ref reader, fileStream, seekList, voidPosition);
             int? tracksCheckSum = _ReadTracks(reader, fileStream, trackList);
 
@@ -39,16 +40,16 @@ public static class MatroskaReader
     {
         int? seekHeadCheckSum = null;
 
-        reader.LocateElement(MatroskaElements.segment);
-        reader.LocateElement(MatroskaElements.seekHead);
+        reader.LocateElement(MatroskaElements.Segment);
+        reader.LocateElement(MatroskaElements.SeekHead);
 
         while (reader.ReadNext())
         {
-            if (reader.ElementId.EncodedValue == MatroskaElements.checkSum)
+            if (reader.ElementId.EncodedValue == MatroskaElements.CheckSum)
             {
                 seekHeadCheckSum = (int)reader.ElementPosition;
             }
-            else if (reader.ElementId.EncodedValue == MatroskaElements.seekEntry)
+            else if (reader.ElementId.EncodedValue == MatroskaElements.SeekEntry)
             {
                 var seek = new Seek(reader);
 
@@ -59,18 +60,18 @@ public static class MatroskaReader
                 }
                 reader.LeaveContainer();
 
-                if (seekList.All(x => x.seekID != seek.seekID))
+                if (seekList.All(x => x.seekId != seek.seekId))
                     seekList.Add(seek);
             }
         }
         reader.LeaveContainer();
-        
+
         return seekHeadCheckSum;
     }
 
     private static int _LocateVoidElement(EbmlReader reader)
     {
-        reader.LocateElement(MatroskaElements.voidElement);
+        reader.LocateElement(MatroskaElements.VoidElement);
         var voidPosition = (int)reader.ElementPosition;
         reader.LeaveContainer();
         return voidPosition;
@@ -80,21 +81,21 @@ public static class MatroskaReader
     {
         int beginHeaderPosition = 0;
 
-        if (seekList.FirstOrDefault(x => x.seekID == MatroskaElements.tracks)?.seekPosition < (ulong)voidPosition)
+        if (seekList.FirstOrDefault(x => x.seekId == MatroskaElements.Tracks)?.seekPosition < (ulong)voidPosition)
         {
             // Void is after track element, read file again and go to tracks element
             fileStream.Position = 0;
             reader = new EbmlReader(fileStream);
-            reader.LocateElement(MatroskaElements.segment);
-            reader.LocateElement(MatroskaElements.tracks);
+            reader.LocateElement(MatroskaElements.Segment);
+            reader.LocateElement(MatroskaElements.Tracks);
         }
         else
         {
             reader.ReadNext();
             beginHeaderPosition = (int)reader.ElementPosition;
 
-            if (reader.ElementId.EncodedValue != MatroskaElements.tracks)
-                reader.LocateElement(MatroskaElements.tracks);
+            if (reader.ElementId.EncodedValue != MatroskaElements.Tracks)
+                reader.LocateElement(MatroskaElements.Tracks);
             else
                 reader.EnterContainer();
         }
@@ -107,11 +108,11 @@ public static class MatroskaReader
 
         while (reader.ReadNext())
         {
-            if (reader.ElementId.EncodedValue == MatroskaElements.checkSum)
+            if (reader.ElementId.EncodedValue == MatroskaElements.CheckSum)
             {
                 tracksCheckSum = (int)reader.ElementPosition;
             }
-            else if (reader.ElementId.EncodedValue == TrackElements.entry)
+            else if (reader.ElementId.EncodedValue == TrackElements.Entry)
             {
                 var track = new Track(reader)
                 {
@@ -124,20 +125,20 @@ public static class MatroskaReader
                     track.ApplyElement(fileStream);
                 }
                 reader.LeaveContainer();
-                
+
                 trackList.Add(track);
             }
         }
         reader.LeaveContainer();
-        
+
         return tracksCheckSum;
     }
 
     private static int _DetermineEndPosition(EbmlReader reader, int beginHeaderPosition, int voidPosition)
     {
         reader.ReadNext();
-        return beginHeaderPosition != 0 ? 
-            (int)reader.ElementPosition : 
+        return beginHeaderPosition != 0 ?
+            (int)reader.ElementPosition :
             voidPosition + 9;
     }
 }

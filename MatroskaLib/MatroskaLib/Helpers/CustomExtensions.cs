@@ -1,22 +1,22 @@
-﻿using NEbml.Core;
 using System;
+using NEbml.Core;
 
 namespace NEbml.Matroska
 {
-	public static class CustomExtensions
-	{
-		public static void LocateElement(this EbmlReader reader, ulong descriptor)
-		{
-			while (reader.ReadNext())
-			{
-				if (reader.ElementId.EncodedValue == descriptor)
-				{
-					reader.EnterContainer();
-					return;
-				}
-			}
+    public static class CustomExtensions
+    {
+        public static void LocateElement(this EbmlReader reader, ulong descriptor)
+        {
+            while (reader.ReadNext())
+            {
+                if (reader.ElementId.EncodedValue == descriptor)
+                {
+                    reader.EnterContainer();
+                    return;
+                }
+            }
 
-			throw new Exception($"Cannot find descriptor 0x{descriptor:X}");
-		}
-	}
+            throw new Exception($"Cannot find descriptor 0x{descriptor:X}");
+        }
+    }
 }

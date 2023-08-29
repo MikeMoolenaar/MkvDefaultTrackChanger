@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MatroskaLib.Types;
 
 namespace MatroskaLib;
 
@@ -13,18 +14,18 @@ public static class MatroskaWriter
     {
         using var dataStream = File.Open(filePath, FileMode.Open);
         dataStream.Seek(0, SeekOrigin.Begin);
-        
+
         byte[] bytes = new byte[endPosition];
         dataStream.Read(bytes, 0, bytes.Length);
         List<byte> lsBytes = new List<byte>(bytes);
 
         int offset = 0;
         _ChangeTrackElements(trackList, lsBytes, ref offset);
-        ByteHelper.ChangeLength(lsBytes, tracksPosition, MatroskaElements.tracks, offset);
-        
-        _ChangeVoidLengthAndHeaders(seekList, seekHeadCheckSum, tracksCheckSum, voidPosition, beginHeaderPosition, 
+        ByteHelper.ChangeLength(lsBytes, tracksPosition, MatroskaElements.Tracks, offset);
+
+        _ChangeVoidLengthAndHeaders(seekList, seekHeadCheckSum, tracksCheckSum, voidPosition, beginHeaderPosition,
             offset, lsBytes);
-        
+
         // Write modified changes to file
         dataStream.Seek(0, SeekOrigin.Begin);
         dataStream.Write(lsBytes.ToArray(), 0, lsBytes.Count);
@@ -37,7 +38,7 @@ public static class MatroskaWriter
                      .Where(x => x is not TrackDisable) // Maybe isn't needed?
                 )
         {
-            byte defaultFlag = (byte) (t.flagDefault ? 0x1 : 0x0);
+            byte defaultFlag = (byte)(t.flagDefault ? 0x1 : 0x0);
             if (t.flagDefaultByteNumber != 0)
             {
                 // Default flag is present, change it
@@ -46,9 +47,9 @@ public static class MatroskaWriter
             else if (t.flagTypebytenumber != 0)
             {
                 // Default flag is not present, add it after the track entry element
-                ByteHelper.ChangeLength(lsBytes, offset + t.trackLengthByteNumber, TrackElements.entry, 3);
+                ByteHelper.ChangeLength(lsBytes, offset + t.trackLengthByteNumber, TrackElements.Entry, 3);
                 lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
-                    new byte[] {0x88, 0x81, defaultFlag});
+                    new byte[] { 0x88, 0x81, defaultFlag });
                 offset += 3;
             }
 
@@ -73,10 +74,10 @@ public static class MatroskaWriter
             // In the Segment Information part, change the position of the tracks and segmentinfo
             //  elements as they have been changed.
             foreach (var s in seekList.Where(s =>
-                         s.seekID is MatroskaElements.tracks or MatroskaElements.segmentInfo))
+                         s.seekId is MatroskaElements.Tracks or MatroskaElements.SegmentInfo))
             {
                 int desiredLength = Convert.ToInt32(lsBytes[s.seekPositionByteNumber - 1] - 0x80);
-                List<byte> lsNewBytes = ByteHelper.ToBytes(s.seekPosition - (ulong) offset);
+                List<byte> lsNewBytes = ByteHelper.ToBytes(s.seekPosition - (ulong)offset);
                 if (desiredLength != lsNewBytes.Count)
                     throw new Exception("New seekposition doesn't fit into existing element");
 

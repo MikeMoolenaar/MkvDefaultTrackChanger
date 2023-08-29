@@ -1,57 +1,58 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <IsPackable>false</IsPackable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="6.10.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-        <PackageReference Include="xunit" Version="2.4.2" />
-        <PackageReference Include="xunit.runner.console" Version="2.4.2">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="3.2.0">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="coverlet.msbuild" Version="3.2.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="6.10.0"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0"/>
+    <PackageReference Include="xunit" Version="2.4.2"/>
+    <PackageReference Include="xunit.runner.console" Version="2.4.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.2.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\..\TestMkvFiles\mkv files\TestFile1_MkvToolNix.mkv">
-        <Link>mkv files\TestFile1_MkvToolNix.mkv</Link>
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="..\..\TestMkvFiles\mkv files\TestFile2_MkvToolNix.mkv">
-        <Link>mkv files\TestFile2_MkvToolNix.mkv</Link>
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="..\..\TestMkvFiles\mkv files\TestFile3_HandBrake.mkv">
-        <Link>mkv files\TestFile3_HandBrake.mkv</Link>
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="..\..\TestMkvFiles\mkv files\TestFile4_MkvProEdit.mkv">
-        <Link>mkv files\TestFile4_MkvProEdit.mkv</Link>
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="..\..\TestMkvFiles\mkv files\TestFile5_MkvProEdit.mkv">
-        <Link>mkv files\TestFile5_MkvProEdit.mkv</Link>
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\TestMkvFiles\mkv files\TestFile1_MkvToolNix.mkv">
+      <Link>mkv files\TestFile1_MkvToolNix.mkv</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\TestMkvFiles\mkv files\TestFile2_MkvToolNix.mkv">
+      <Link>mkv files\TestFile2_MkvToolNix.mkv</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\TestMkvFiles\mkv files\TestFile3_HandBrake.mkv">
+      <Link>mkv files\TestFile3_HandBrake.mkv</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\TestMkvFiles\mkv files\TestFile4_MkvProEdit.mkv">
+      <Link>mkv files\TestFile4_MkvProEdit.mkv</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\TestMkvFiles\mkv files\TestFile5_MkvProEdit.mkv">
+      <Link>mkv files\TestFile5_MkvProEdit.mkv</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\MatroskaLib\MatroskaLib.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MatroskaLib\MatroskaLib.csproj"/>
+  </ItemGroup>
 
 </Project>
