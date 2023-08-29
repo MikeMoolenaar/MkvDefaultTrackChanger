@@ -28,9 +28,7 @@ public class MkvFilesContainer
         foreach (MkvFile file in MkvFiles)
         {
             file.tracks.ForEach(setDefaultIfSelected);
-            MatroskaWriter.WriteMkvFile(file.filePath, file.seekList, file.tracks, file.seekHeadCheckSum,
-                file.tracksCheckSum, file.voidPosition, file.endPosition, file.tracksPosition,
-                file.beginHeaderPosition);
+            MatroskaWriter.WriteMkvFile(file);
         }
     }
 

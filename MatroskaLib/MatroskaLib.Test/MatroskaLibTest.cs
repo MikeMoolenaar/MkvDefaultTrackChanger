@@ -51,8 +51,7 @@ public class MatroskaLibTest
         lsMkvFiles[0].tracks[0].flagDefault = false;
         lsMkvFiles[0].tracks[2].flagDefault = false;
 
-        MatroskaWriter.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
-            lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
+        MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
         lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] { testFilePath });
         List<Track> lsTracks = lsMkvFiles[0].tracks;
 
@@ -91,8 +90,7 @@ public class MatroskaLibTest
         lsMkvFiles[0].tracks[1].flagDefault = true;
         lsMkvFiles[0].tracks[3].flagDefault = true;
 
-        MatroskaWriter.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
-            lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
+        MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
         lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] { testFilePath });
         List<Track> lsTracks = lsMkvFiles[0].tracks;
 
@@ -132,8 +130,7 @@ public class MatroskaLibTest
         lsMkvFiles[0].tracks[1].flagDefault = true;
         lsMkvFiles[0].tracks[3].flagDefault = true;
 
-        MatroskaWriter.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
-            lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
+        MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
         lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] { testFilePath });
         List<Track> lsTracks = lsMkvFiles[0].tracks;
 
@@ -172,8 +169,7 @@ public class MatroskaLibTest
         lsMkvFiles[0].tracks[0].flagDefault = false;
         lsMkvFiles[0].tracks[2].flagDefault = false;
 
-        MatroskaWriter.WriteMkvFile(testFilePath, lsMkvFiles[0].seekList, lsMkvFiles[0].tracks, lsMkvFiles[0].seekHeadCheckSum, lsMkvFiles[0].tracksCheckSum, lsMkvFiles[0].voidPosition,
-            lsMkvFiles[0].endPosition, lsMkvFiles[0].tracksPosition, lsMkvFiles[0].beginHeaderPosition);
+        MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
         lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] { testFilePath });
         List<Track> lsTracks = lsMkvFiles[0].tracks;
 

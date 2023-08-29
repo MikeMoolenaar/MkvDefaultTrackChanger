@@ -8,22 +8,20 @@ namespace MatroskaLib;
 
 public static class MatroskaWriter
 {
-    public static void WriteMkvFile(string filePath, List<Seek> seekList, List<Track> trackList,
-        int? seekHeadCheckSum, int? tracksCheckSum, int voidPosition,
-        int endPosition, int tracksPosition, int beginHeaderPosition)
+    public static void WriteMkvFile(MkvFile mkfFile)
     {
-        using var dataStream = File.Open(filePath, FileMode.Open);
+        using var dataStream = File.Open(mkfFile.filePath, FileMode.Open);
         dataStream.Seek(0, SeekOrigin.Begin);
 
-        byte[] bytes = new byte[endPosition];
+        byte[] bytes = new byte[mkfFile.endPosition];
         dataStream.Read(bytes, 0, bytes.Length);
         List<byte> lsBytes = new List<byte>(bytes);
 
         int offset = 0;
-        _ChangeTrackElements(trackList, lsBytes, ref offset);
-        ByteHelper.ChangeLength(lsBytes, tracksPosition, MatroskaElements.Tracks, offset);
+        _ChangeTrackElements(mkfFile.tracks, lsBytes, ref offset);
+        ByteHelper.ChangeLength(lsBytes, mkfFile.tracksPosition, MatroskaElements.Tracks, offset);
 
-        _ChangeVoidLengthAndHeaders(seekList, seekHeadCheckSum, tracksCheckSum, voidPosition, beginHeaderPosition,
+        _ChangeVoidLengthAndHeaders(mkfFile.seekList, mkfFile.seekHeadCheckSum, mkfFile.tracksCheckSum, mkfFile.voidPosition, mkfFile.beginHeaderPosition,
             offset, lsBytes);
 
         // Write modified changes to file
@@ -31,9 +29,9 @@ public static class MatroskaWriter
         dataStream.Write(lsBytes.ToArray(), 0, lsBytes.Count);
     }
 
-    private static void _ChangeTrackElements(List<Track> trackList, List<byte> lsBytes, ref int offset)
+    private static void _ChangeTrackElements(List<Track> tracks, List<byte> lsBytes, ref int offset)
     {
-        foreach (Track t in trackList
+        foreach (Track t in tracks
                      .Where(x => x.type is TrackTypeEnum.audio or TrackTypeEnum.subtitle)
                      .Where(x => x is not TrackDisable) // Maybe isn't needed?
                 )
