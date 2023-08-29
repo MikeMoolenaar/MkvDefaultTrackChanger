@@ -32,17 +32,15 @@ public class MainForm : Form
     private void BtnBrowseFilesClick(object sender, EventArgs e)
     {
         var dialogResult = fileDialog.ShowDialog(this);
+        if (dialogResult != DialogResult.Ok) return;
 
-        if (dialogResult == DialogResult.Ok)
+        try
         {
-            try
-            {
-                LoadFiles();
-            }
-            catch (Exception exception)
-            {
-                HandleException(exception);
-            }
+            LoadFiles();
+        }
+        catch (Exception exception)
+        {
+            HandleException(exception);
         }
     }
 
