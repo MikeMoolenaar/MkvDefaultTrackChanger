@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace MatroskaLib.Test.Helpers;
@@ -23,13 +24,12 @@ public static class MkvValidator
         {
             throw new Exception("ffmpeg's mkv validation produced errors:" + Environment.NewLine + output);
         }
-
-        /*
+        
         p = new Process();
         p.StartInfo.UseShellExecute = false;
         p.StartInfo.RedirectStandardError = true;
         p.StartInfo.CreateNoWindow = true;
-        p.StartInfo.FileName = "./mkvalidator.exe";
+        p.StartInfo.FileName = "mkvalidator";
         p.StartInfo.Arguments = "\"" + filePath + "\"";
         p.Start();
         output = p.StandardError.ReadToEnd();
@@ -40,6 +40,6 @@ public static class MkvValidator
             output = output.Replace(".", "").Trim();
             string errors = string.Join("\n", output.Split("\r\n").Where(x => x.Contains("ERR"))).Trim();
             throw new Exception(errors + "\r\n" + output);
-        }*/
+        }
     }
 }

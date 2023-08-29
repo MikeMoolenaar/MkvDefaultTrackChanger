@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-Windows</TargetFramework>
+    <TargetFramework>net7.0-Windows</TargetFramework>
     <RootNamespace>MkvDefaultTrackChanger.WinForms</RootNamespace>
   </PropertyGroup>
   
