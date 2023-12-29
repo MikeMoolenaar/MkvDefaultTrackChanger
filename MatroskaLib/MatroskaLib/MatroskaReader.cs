@@ -14,7 +14,7 @@ public static class MatroskaReader
         var mkvFiles = new List<MkvFile>();
         foreach (var filePath in filePaths)
         {
-            var trackList = new List<Track>();
+            var tracks = new List<Track>();
             var seekList = new List<Seek>();
 
             using var fileStream = File.Open(filePath, FileMode.Open);
@@ -24,12 +24,22 @@ public static class MatroskaReader
             int voidPosition = _LocateVoidElement(reader);
 
             (int tracksPosition, int beginHeaderPosition) = _DetermineTracksPosition(ref reader, fileStream, seekList, voidPosition);
-            int? tracksCheckSum = _ReadTracks(reader, fileStream, trackList);
+            int? tracksCheckSum = _ReadTracks(reader, fileStream, tracks);
 
             int endPosition = _DetermineEndPosition(reader, beginHeaderPosition, voidPosition);
             
-            mkvFiles.Add(new MkvFile(filePath, trackList, seekList, seekHeadCheckSum, tracksCheckSum, voidPosition, endPosition,
-                tracksPosition, beginHeaderPosition));
+            mkvFiles.Add(new MkvFile
+            {
+                filePath = filePath,
+                beginHeaderPosition = beginHeaderPosition,
+                endPosition = endPosition,
+                seekHeadCheckSum = seekHeadCheckSum,
+                seekList = seekList,
+                tracks = tracks,
+                tracksCheckSum = tracksCheckSum,
+                tracksPosition = tracksPosition,
+                voidPosition = voidPosition
+            });
         }
 
         return mkvFiles;

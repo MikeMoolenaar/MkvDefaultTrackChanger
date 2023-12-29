@@ -8,32 +8,15 @@ namespace MatroskaLib.Types;
 
 public class MkvFile : IComparable<MkvFile>
 {
-    [JsonIgnore] public string filePath { get; }
-    public List<Track> tracks { get; }
-    public List<Seek> seekList { get; }
-    public int? seekHeadCheckSum { get; }
-    public int? tracksCheckSum { get; }
-    public int voidPosition { get; }
-    public int endPosition { get; }
-    public int tracksPosition { get; }
-    public int beginHeaderPosition { get; }
-
-    public MkvFile(string filePath, List<Track> tracks, List<Seek> seekList, int? seekHeadCheckSum,
-        int? tracksCheckSum, int voidPosition,
-        int endPosition,
-        int tracksPosition,
-        int beginHeaderPosition)
-    {
-        this.filePath = filePath;
-        this.tracks = tracks;
-        this.seekList = seekList;
-        this.seekHeadCheckSum = seekHeadCheckSum;
-        this.tracksCheckSum = tracksCheckSum;
-        this.voidPosition = voidPosition;
-        this.endPosition = endPosition;
-        this.tracksPosition = tracksPosition;
-        this.beginHeaderPosition = beginHeaderPosition;
-    }
+    [JsonIgnore] public required string filePath { get; init; }
+    public required List<Track> tracks { get; init; }
+    public required List<Seek> seekList { get; init; }
+    public required int? seekHeadCheckSum { get; init; }
+    public required int? tracksCheckSum { get; init; }
+    public required int voidPosition { get; init; }
+    public required int endPosition { get; init; }
+    public required int tracksPosition { get; init; }
+    public required int beginHeaderPosition { get; init; }
 
     public int CompareTo(MkvFile? other)
     {
@@ -51,8 +34,10 @@ public class MkvFile : IComparable<MkvFile>
         return 0;
     }
 
-    public override string ToString()
-    {
-        return JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
-    }
+    public override string ToString() => 
+        JsonSerializer.Serialize(this, SourceGeneratedMkvFile.Default.MkvFile);
 }
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(MkvFile))]
+internal partial class SourceGeneratedMkvFile : JsonSerializerContext { }

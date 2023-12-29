@@ -31,7 +31,7 @@ public static class MatroskaElements
     public const ulong CheckSum = 0xBF;
 }
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<TrackTypeEnum>))]
 public enum TrackTypeEnum
 {
     video = 1,
