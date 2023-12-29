@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-Windows</TargetFramework>
+    <TargetFramework>net8.0-Windows</TargetFramework>
     <RootNamespace>MkvDefaultTrackChanger.WinForms</RootNamespace>
   </PropertyGroup>
   
@@ -11,6 +11,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Windows" Version="2.7.4" />
+    <PackageReference Include="Eto.Platform.Windows" Version="2.8.2" />
   </ItemGroup>
 </Project>
