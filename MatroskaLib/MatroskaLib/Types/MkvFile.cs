@@ -6,9 +6,9 @@ using System.Text.Json.Serialization;
 
 namespace MatroskaLib.Types;
 
-public class MkvFile : IComparable<MkvFile>
+public record MkvFile : IComparable<MkvFile>
 {
-    [JsonIgnore] public required string filePath { get; init; }
+    public required string filePath { get; init; }
     public required List<Track> tracks { get; init; }
     public required List<Seek> seekList { get; init; }
     public required int? seekHeadCheckSum { get; init; }
@@ -35,7 +35,7 @@ public class MkvFile : IComparable<MkvFile>
     }
 
     public override string ToString() => 
-        JsonSerializer.Serialize(this, SourceGeneratedMkvFile.Default.MkvFile);
+        JsonSerializer.Serialize(this with { filePath = string.Empty }, SourceGeneratedMkvFile.Default.MkvFile);
 }
 
 [JsonSourceGenerationOptions(WriteIndented = true)]
