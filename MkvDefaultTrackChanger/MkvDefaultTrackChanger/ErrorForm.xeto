@@ -3,8 +3,8 @@
 	xmlns="http://schema.picoe.ca/eto.forms" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="MkvDefaultTrackChanger"
-	MinimumSize="370,500"
-  	Size="370,500"
+	MinimumSize="370,530"
+  	Size="370,530"
 	Padding="10"
 	>
 	<StackLayout Spacing="20" HorizontalContentAlignment="Center">

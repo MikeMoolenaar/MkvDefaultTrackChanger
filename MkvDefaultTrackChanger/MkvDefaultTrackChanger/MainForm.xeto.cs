@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using Eto.Forms;
 using Eto.Serialization.Xaml;
 using MatroskaLib;
@@ -19,6 +20,7 @@ public class MainForm : Form
 
     MkvFilesContainer mkvContainer;
     OpenFileDialog fileDialog;
+    private (string audio, string subtitles)? appliedConfig;
 
     public MainForm()
     {
@@ -37,6 +39,10 @@ public class MainForm : Form
         try
         {
             LoadFiles();
+            
+            btnApply.Enabled = true;
+            lblStatus.Text = string.Empty;
+            appliedConfig = null;
         }
         catch (Exception exception)
         {
@@ -47,9 +53,6 @@ public class MainForm : Form
     private void LoadFiles()
     {
         string[] filePaths = fileDialog.Filenames.ToArray();
-
-        string files = filePaths.Length == 1 ? "file" : "files";
-        lblFilesSelected.Text = $"{filePaths.Length} {files} selected";
 
         mkvContainer = new MkvFilesContainer(filePaths);
         if (mkvContainer.MkFilesRejected.Count > 0)
@@ -67,9 +70,9 @@ public class MainForm : Form
 
         FillDropdown(dropdownSubtitles, lsSubtitleTracks);
         FillDropdown(dropdownAudio, lsAudioTracks);
-
-        btnApply.Enabled = true;
-        lblStatus.Text = "";
+        
+        string files = filePaths.Length == 1 ? "file" : "files";
+        lblFilesSelected.Text = $"{filePaths.Length} {files} selected";
     }
 
     private void FillDropdown(DropDown dropDown, List<Track> lsTracks)
@@ -88,21 +91,37 @@ public class MainForm : Form
         try
         {
             btnApply.Enabled = false;
-            mkvContainer.WriteChanges((Track t) => { t.flagDefault = IsSelectedTrack(t); });
-            btnApply.Enabled = true;
+            mkvContainer.WriteChanges(track =>
+            {
+                string key = track.number.ToString();
+                track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
+            });
+            
             LoadFiles();
+            
+            appliedConfig = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
             lblStatus.Text = "Done!";
         }
         catch (Exception exception)
         {
             HandleException(exception);
+            btnApply.Enabled = true;
         }
     }
 
-    private bool IsSelectedTrack(Track t)
+    private void OnDropdownSelectionChanged(object? sender, EventArgs e)
     {
-        string key = t.number.ToString();
-        return dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
+        if (appliedConfig != (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey))
+        {
+            btnApply.Enabled = true;
+            lblStatus.Text = string.Empty;
+        }
+        else
+        {
+            btnApply.Enabled = false;
+            lblStatus.Text = "Done!";
+        }
+       
     }
 
     protected void HandleAbout(object sender, EventArgs e)
