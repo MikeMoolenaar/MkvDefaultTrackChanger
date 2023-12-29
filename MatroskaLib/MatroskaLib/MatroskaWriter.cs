@@ -31,10 +31,7 @@ public static class MatroskaWriter
 
     private static void _ChangeTrackElements(List<Track> tracks, List<byte> lsBytes, ref int offset)
     {
-        foreach (Track t in tracks
-                     .Where(x => x.type is TrackTypeEnum.audio or TrackTypeEnum.subtitle)
-                     .Where(x => x is not TrackDisable) // Maybe isn't needed?
-                )
+        foreach (Track t in tracks.Where(x => x.type is TrackTypeEnum.audio or TrackTypeEnum.subtitle))
         {
             byte defaultFlag = (byte)(t.flagDefault ? 0x1 : 0x0);
             if (t.flagDefaultByteNumber != 0)

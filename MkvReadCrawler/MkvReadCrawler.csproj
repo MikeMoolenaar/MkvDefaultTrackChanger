@@ -8,5 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\MatroskaLib\MatroskaLib\MatroskaLib.csproj"/>
   </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
+  </ItemGroup>
 
 </Project>
