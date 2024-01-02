@@ -8,7 +8,7 @@ on:
     - 'MkvDefaultTrackChanger/**'
     - 'TestMkvFiles/**'
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
   build-and-test:
