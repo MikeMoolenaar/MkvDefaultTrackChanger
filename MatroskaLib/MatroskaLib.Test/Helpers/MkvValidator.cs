@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace MatroskaLib.Test.Helpers;
@@ -29,8 +30,10 @@ public static class MkvValidator
         p.StartInfo.UseShellExecute = false;
         p.StartInfo.RedirectStandardError = true;
         p.StartInfo.CreateNoWindow = true;
-        p.StartInfo.FileName = "mkvalidator";
-        p.StartInfo.Arguments = "\"" + filePath + "\"";
+        p.StartInfo.FileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? 
+            "mkvalidator.exe" : 
+            "mkvalidator";
+        p.StartInfo.Arguments = $"\"{filePath}\"";
         p.Start();
         output = p.StandardError.ReadToEnd();
         p.Close();
