@@ -14,11 +14,11 @@
         
         <DynamicLayout Spacing="0,10">
             <Label TextAlignment="Center">Audio</Label>
-            <DropDown x:Name="dropdownAudio" Width="200" SelectedKeyChanged="OnDropdownSelectionChanged"></DropDown>
+            <DropDown x:Name="dropdownAudio" Enabled="false" Width="200" SelectedKeyChanged="OnDropdownSelectionChanged"></DropDown>
         </DynamicLayout>
         <DynamicLayout Spacing="0,10">
             <Label TextAlignment="Center">Subtitles</Label>
-            <DropDown x:Name="dropdownSubtitles" Width="200" SelectedKeyChanged="OnDropdownSelectionChanged"></DropDown>
+            <DropDown x:Name="dropdownSubtitles" Enabled="false" Width="200" SelectedKeyChanged="OnDropdownSelectionChanged"></DropDown>
         </DynamicLayout>
         
         <StackLayout Spacing="5" HorizontalContentAlignment="Center">

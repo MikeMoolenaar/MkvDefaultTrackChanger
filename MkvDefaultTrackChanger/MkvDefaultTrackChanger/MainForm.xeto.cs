@@ -81,6 +81,7 @@ public class MainForm : Form
         dropDown.SelectedKey = lsTracks
             .FirstOrDefault(x => x.flagDefault || x.flagForced)
             ?.number.ToString();
+        dropDown.Enabled = true;
         if (dropDown.SelectedKey is null)
             dropDown.SelectedKey = lsTracks[0].number.ToString();
     }
