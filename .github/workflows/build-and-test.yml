@@ -2,7 +2,7 @@ name: Build & test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
     paths:
     - 'MatroskaLib/**'
     - 'MkvDefaultTrackChanger/**'
@@ -12,22 +12,14 @@ on:
 
 jobs:
   build-and-test:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
     - uses: FedericoCarboni/setup-ffmpeg@v1
-#    - uses: actions/cache@v2
-#      with:
-#        path: ~/.nuget/packages
-#        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-#        restore-keys: |
-#          ${{ runner.os }}-nuget-
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
