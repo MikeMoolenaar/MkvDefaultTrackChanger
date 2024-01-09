@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version'     
+        description: 'Version (example: "1.1")'
         required: true
         default: ''
 env:
@@ -26,9 +26,9 @@ jobs:
     - name: Build Windows
       run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/MkvDefaultTrackChanger.WinForms.csproj --configuration Release  -r win-x64 --self-contained true -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Linux
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj --configuration Release -r linux-x64 --self-contained true -p:PublishTrimmed=True -p:TrimMode=CopyUsed -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj --configuration Release -r linux-x64 --self-contained true -p:PublishTrimmed=True -p:Version=${{ github.event.inputs.version }}
     - name: Build Mac
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/MkvDefaultTrackChanger.Mac.csproj --configuration Release  -r osx-x64 --self-contained true -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/MkvDefaultTrackChanger.Mac.csproj --configuration Release -r osx-x64 --self-contained true -p:PublishTrimmed=True -p:Version=${{ github.event.inputs.version }}
     - name: Zip releases
       run: |
         powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultTrackChanger.WinForms.exe MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.exe
@@ -37,7 +37,6 @@ jobs:
         powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
         powershell Rename-Item $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger.Mac.app ./MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
         powershell Compress-Archive $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
-      # TODO: Fix MacOS archive not working  (it extracts to a folder instead of a .app file)
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Eto.Drawing;
 using Eto.Forms;
 using Eto.Serialization.Xaml;
 using MatroskaLib;
@@ -23,6 +24,7 @@ public class MainForm : Form
 
     public MainForm()
     {
+        Icon = Icon.FromResource("MkvDefaultTrackChanger.logo.ico");
         XamlReader.Load(this);
 
         fileDialog = new OpenFileDialog();
@@ -128,21 +130,20 @@ public class MainForm : Form
     {
         var aboutDialog = new AboutDialog
         {
-            // TODO logo
-            // Logo = 
+            Logo = Icon,
             Website = new Uri("https://github.com/MikeMoolenaar/MkvDefaultTrackChanger"),
             WebsiteLabel = "Github",
             ProgramDescription =
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
 MkvDefaultTrackChanger is licensed under the terms of the GNU General Public License version 3. A copy of this license can be obtained from <https://www.gnu.org/licenses/gpl-3.0.html>.",
-            Developers = new[] { "Mike Moolenaar" }
+            Developers = ["Mike Moolenaar"]
         };
         aboutDialog.ShowDialog(this);
     }
 
     private void HandleException(Exception ex)
     {
-        new ErrorForm(ex, mkvContainer?.ToString()).Show();
+        new ErrorForm(ex, mkvContainer?.ToString(), Icon).Show();
     }
 }
