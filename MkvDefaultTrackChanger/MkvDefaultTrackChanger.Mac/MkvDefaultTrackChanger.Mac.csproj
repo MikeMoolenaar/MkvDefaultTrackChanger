@@ -8,11 +8,11 @@
   </PropertyGroup>
 	
   <ItemGroup>
-    <ProjectReference Include="..\MkvDefaultTrackChanger\MkvDefaultTrackChanger.csproj" />
-  </ItemGroup>
-	
-  <ItemGroup>
     <PackageReference Include="Eto.Platform.Mac64" Version="2.8.2" />
   </ItemGroup>
-	
+
+  <ItemGroup>
+    <ProjectReference Include="..\MkvDefaultTrackChanger\MkvDefaultTrackChanger.csproj" />
+    <Content Include="Icon.icns" />
+  </ItemGroup>
 </Project>

@@ -130,7 +130,7 @@ public class MainForm : Form
     {
         var aboutDialog = new AboutDialog
         {
-            Logo = Icon,
+            Logo = Icon.WithSize(100, 200),
             Website = new Uri("https://github.com/MikeMoolenaar/MkvDefaultTrackChanger"),
             WebsiteLabel = "Github",
             ProgramDescription =

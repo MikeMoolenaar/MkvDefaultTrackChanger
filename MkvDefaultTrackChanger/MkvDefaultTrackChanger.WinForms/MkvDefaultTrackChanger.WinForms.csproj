@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-Windows</TargetFramework>
     <RootNamespace>MkvDefaultTrackChanger.WinForms</RootNamespace>
+    <ApplicationIcon>..\MkvDefaultTrackChanger\logo.ico</ApplicationIcon>
   </PropertyGroup>
   
   <ItemGroup>
@@ -12,5 +13,11 @@
   
   <ItemGroup>
     <PackageReference Include="Eto.Platform.Windows" Version="2.8.2" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\MkvDefaultTrackChanger\logo.ico">
+      <Link>logo.ico</Link>
+    </None>
   </ItemGroup>
 </Project>
