@@ -47,7 +47,7 @@ jobs:
         release_name: V${{ github.event.inputs.version }}
         body: TODO add description and rebuild MacOS locally
         draft: true
-        prerelease: false
+        prerelease: true
     - name: Upload release Windows
       uses: actions/upload-release-asset@v1.0.1
       env:
