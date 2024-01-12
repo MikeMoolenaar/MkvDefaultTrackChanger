@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version (example: "1.1")'
+        description: 'Version (example: "1.1.0")'
         required: true
         default: ''
 env:
@@ -24,11 +24,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/MkvDefaultTrackChanger.WinForms.csproj --configuration Release -r win-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/MkvDefaultTrackChanger.WinForms.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Linux
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj --configuration Release -r linux-x64 --self-contained true -p:PublishTrimmed=True -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj -c Release -r linux-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Mac
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/MkvDefaultTrackChanger.Mac.csproj --configuration Release -r osx-x64 --self-contained true -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/MkvDefaultTrackChanger.Mac.csproj -c Release -r osx-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
     - name: Zip releases
       run: |
         powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultTrackChanger.WinForms.exe MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.exe
