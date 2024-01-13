@@ -1,16 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
+    <NoWarn>CS8618;CS0649</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.6.0" />
-    <PackageReference Include="Eto.Serialization.Xaml" Version="2.6.0" />
+    <PackageReference Include="Eto.Forms" Version="2.8.2" />
+    <PackageReference Include="Eto.Serialization.Xaml" Version="2.8.2" />
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\MatroskaLib\MatroskaLib\MatroskaLib.csproj" />
+    <ProjectReference Include="../../MatroskaLib\MatroskaLib\MatroskaLib.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="logo.ico">
+    </EmbeddedResource>
   </ItemGroup>
   
 </Project>

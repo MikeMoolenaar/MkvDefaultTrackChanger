@@ -1,33 +1,28 @@
 using System.IO;
 using NEbml.Core;
 
-namespace MatroskaLib
-{
-    public class Seek
-    {
-        private readonly EbmlReader _reader;
-        
-        
-        public ulong seekID { get; private set; }
-        public ulong seekPosition { get; private set; }
-        public int seekPositionByteNumber { get; private set; }
+namespace MatroskaLib.Types;
 
-        public Seek(EbmlReader reader)
+public class Seek
+{
+    private readonly EbmlReader _reader;
+    public ulong seekId { get; private set; }
+    public ulong seekPosition { get; private set; }
+    public int seekPositionByteNumber { get; private set; }
+
+    public Seek(EbmlReader reader) =>
+        _reader = reader;
+
+    public void ApplyElement(FileStream fileStream)
+    {
+        if (_reader.ElementId.EncodedValue == MatroskaElements.SeekId)
         {
-            this._reader = reader;
+            seekId = _reader.ReadUInt();
         }
-        
-        public void applyElement(FileStream datastream)
+        else if (_reader.ElementId.EncodedValue == MatroskaElements.SeekPosition)
         {
-            if (this._reader.ElementId.EncodedValue == MatroskaElements.seekID)
-            {
-                this.seekID = this._reader.ReadUInt();
-            }
-            else if (this._reader.ElementId.EncodedValue == MatroskaElements.seekPosition)
-            {
-                this.seekPositionByteNumber = (int)datastream.Position;
-                this.seekPosition = this._reader.ReadUInt();
-            }
+            seekPositionByteNumber = (int)fileStream.Position;
+            seekPosition = _reader.ReadUInt();
         }
     }
 }

@@ -1,56 +1,43 @@
-﻿using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using MatroskaLib;
 
-namespace MatroskaLib
+namespace MatroskaLib.Types;
+
+public record MkvFile : IComparable<MkvFile>
 {
-    public class MkvFile : IComparable<MkvFile>
+    public required string filePath { get; init; }
+    public required List<Track> tracks { get; init; }
+    public required List<Seek> seekList { get; init; }
+    public required int? seekHeadCheckSum { get; init; }
+    public required int? tracksCheckSum { get; init; }
+    public required int voidPosition { get; init; }
+    public required int endPosition { get; init; }
+    public required int tracksPosition { get; init; }
+    public required int beginHeaderPosition { get; init; }
+
+    public int CompareTo(MkvFile? other)
     {
-        [JsonIgnore] public string filePath { get; }
-        public List<Track> tracks { get; }
-        public List<Seek> seekList { get; }
-        public int? seekHeadCheckSum { get; }
-        public int? tracksCheckSum { get; }
-        public int voidPosition { get; }
-        public int endPosition { get; }
-        public int tracksPosition { get; }
-        public int beginHeaderPosition { get; }
+        if (other is null)
+            throw new ArgumentNullException(nameof(other));
 
-        public MkvFile(string filePath, List<Track> tracks, List<Seek> seekList, int? seekHeadCheckSum,
-            int? tracksCheckSum, int voidPosition,
-            int endPosition,
-            int tracksPosition,
-            int beginHeaderPosition)
+        for (int i = 0; i < tracks.Count; i++)
         {
-            this.filePath = filePath;
-            this.tracks = tracks;
-            this.seekList = seekList;
-            this.seekHeadCheckSum = seekHeadCheckSum;
-            this.tracksCheckSum = tracksCheckSum;
-            this.voidPosition = voidPosition;
-            this.endPosition = endPosition;
-            this.tracksPosition = tracksPosition;
-            this.beginHeaderPosition = beginHeaderPosition;
+            var track = tracks[i];
+            var trackOther = other.tracks.ElementAtOrDefault(i);
+            if (trackOther is null || track.number != trackOther.number || track.language != trackOther.language)
+                return -1;
         }
 
-        public int CompareTo(MkvFile other)
-        {
-            for (int i = 0; i < this.tracks.Count; i++)
-            {
-                var track = this.tracks[i];
-                var trackOther = other.tracks.ElementAtOrDefault(i);
-                if (trackOther is null || track.number != trackOther.number || track.language != trackOther.language)
-                    return -1;
-            }
-            return 0;
-        }
-
-        public override string ToString()
-        {
-            return JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true});
-        }
+        return 0;
     }
+
+    public override string ToString() => 
+        JsonSerializer.Serialize(this with { filePath = string.Empty }, SourceGeneratedMkvFile.Default.MkvFile);
 }
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(MkvFile))]
+internal partial class SourceGeneratedMkvFile : JsonSerializerContext { }

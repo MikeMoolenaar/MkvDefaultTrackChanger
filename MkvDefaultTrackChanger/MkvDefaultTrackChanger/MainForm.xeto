@@ -5,23 +5,27 @@
 	Title="MkvDefaultTrackChanger"
 	MinimumSize="300,450"
   	Size="300, 450"
-	Padding="10"
-	>
-	<StackLayout Spacing="20" HorizontalContentAlignment="Center">
-		<Button x:Name="btnBrowse" Click="BtnBrowseFilesClick">Browse files</Button>
-		<Label x:Name="lblFilesSelected" Text=""></Label>
-    
-		<StackLayout HorizontalContentAlignment="Center">
-			<Label>Audio</Label>
-			<DropDown x:Name="dropdownAudio" Width="200"></DropDown>
-		</StackLayout>
-		<StackLayout HorizontalContentAlignment="Center">
-			<Label>Subtitles</Label>
-			<DropDown x:Name="dropdownSubtitles" Width="200"></DropDown>
-		</StackLayout>
-		<Button x:Name="btnApply" Enabled="false" Click="BtnApplyClicked">Apply</Button>
-		<Label x:Name="lblStatus" Text=""></Label>
-	</StackLayout>
+	Padding="10">
+	<DynamicLayout Spacing="0,15" Padding="15,5,15,0">
+        <StackLayout Spacing="5" HorizontalContentAlignment="Center">
+            <Button x:Name="btnBrowse" Click="BtnBrowseFilesClick">Browse files</Button>
+            <Label x:Name="lblFilesSelected" Text=""></Label>
+        </StackLayout>
+        
+        <DynamicLayout Spacing="0,10">
+            <Label TextAlignment="Center">Audio</Label>
+            <DropDown x:Name="dropdownAudio" Enabled="false" Width="200" SelectedKeyChanged="OnDropdownSelectionChanged"></DropDown>
+        </DynamicLayout>
+        <DynamicLayout Spacing="0,10">
+            <Label TextAlignment="Center">Subtitles</Label>
+            <DropDown x:Name="dropdownSubtitles" Enabled="false" Width="200" SelectedKeyChanged="OnDropdownSelectionChanged"></DropDown>
+        </DynamicLayout>
+        
+        <StackLayout Spacing="5" HorizontalContentAlignment="Center">
+            <Button x:Name="btnApply" Enabled="false" Click="BtnApplyClicked">Apply</Button>
+            <Label x:Name="lblStatus" Text=""></Label>
+        </StackLayout>
+    </DynamicLayout>
 
 	<Form.Menu>
 		<MenuBar>
