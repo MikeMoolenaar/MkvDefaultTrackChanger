@@ -30,9 +30,9 @@ and extract the ZIP archive to start using the application.
 The ZIP file for Linux contains the GTK application which you must run from the command
 line, for example:
 ```sh
-unzip MkvDefaultTrackChanger-Linux-V1.0.zip
-chmod +x MkvDefaultTrackChanger-V1.0.Gtk
-./MkvDefaultTrackChanger-V1.0.Gtk
+unzip MkvDefaultTrackChanger-Linux-V1.1.0.zip
+chmod +x MkvDefaultTrackChanger-V1.1.0.Gtk
+./MkvDefaultTrackChanger-V1.1.0.Gtk
 ```
 
 ## Credits
