@@ -26,7 +26,7 @@ jobs:
     - name: Build Windows
       run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/MkvDefaultTrackChanger.WinForms.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Linux
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj -c Release -r linux-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj -c Release -r linux-x64 -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:PublishTrimmed=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Mac
       run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/MkvDefaultTrackChanger.Mac.csproj -c Release -r osx-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
     - name: Zip releases
