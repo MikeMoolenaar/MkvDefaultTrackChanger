@@ -13,7 +13,7 @@ The unit tests depend on ffmpeg and mkvalidator to make sure the program outputs
   If you are on a Ubuntu based distro: [use this PPA](https://launchpad.net/~hizo/+archive/ubuntu/mkv-extractor-gui) to install mkvalidator  
   Otherwise: [Download the source code](https://sourceforge.net/projects/matroska/files/mkvalidator/) and compile using make.
 
-**MacOS**
+**MacOS**  
 Use homebrew:
 ```
 brew install mkvalidator ffmpeg
