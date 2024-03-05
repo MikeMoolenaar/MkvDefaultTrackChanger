@@ -28,7 +28,7 @@ static class Program
             try
             {
                 var lsFiles = MatroskaReader.ReadMkvFiles([mkvFile]);
-                MatroskaWriter.WriteMkvFile(lsFiles[0], true);
+                MatroskaWriter.WriteMkvFile(lsFiles[0], dryRun:true);
                 stringBuilder.AppendLine("Track count:" + lsFiles[0].tracks.Count);
             }
             catch (Exception e)

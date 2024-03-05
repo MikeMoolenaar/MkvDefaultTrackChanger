@@ -8,7 +8,7 @@ namespace MatroskaLib;
 
 public static class MatroskaWriter
 {
-    public static void WriteMkvFile(MkvFile mkfFile)
+    public static void WriteMkvFile(MkvFile mkfFile, bool dryRun = false)
     {
         using var dataStream = File.Open(mkfFile.filePath, FileMode.Open);
         dataStream.Seek(0, SeekOrigin.Begin);
@@ -25,6 +25,7 @@ public static class MatroskaWriter
             offset, lsBytes);
 
         // Write modified changes to file
+        if (dryRun) return;
         dataStream.Seek(0, SeekOrigin.Begin);
         dataStream.Write(lsBytes.ToArray(), 0, lsBytes.Count);
     }
