@@ -19,7 +19,7 @@ static class Program
         var mainStringBuilder = new StringBuilder();
 
         int x = 0;
-        Parallel.For(0, mkvFiles.Length, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, i =>
+        Parallel.For(0, mkvFiles.Length, new ParallelOptions { MaxDegreeOfParallelism = 4 }, i =>
         {
             var mkvFile = mkvFiles[i];
             var stringBuilder = new StringBuilder();
@@ -27,12 +27,13 @@ static class Program
 
             try
             {
-                var lsFiles = MatroskaReader.ReadMkvFiles(new[] { mkvFile });
-                stringBuilder.AppendLine("b" + lsFiles[0].tracks.Count);
+                var lsFiles = MatroskaReader.ReadMkvFiles([mkvFile]);
+                MatroskaWriter.WriteMkvFile(lsFiles[0], dryRun:true);
+                stringBuilder.AppendLine("Track count:" + lsFiles[0].tracks.Count);
             }
             catch (Exception e)
             {
-                stringBuilder.AppendLine(e.GetType().ToString());
+                stringBuilder.AppendLine(e.ToString());
             }
             stringBuilder.AppendLine();
 
@@ -41,6 +42,6 @@ static class Program
         });
 
         File.WriteAllText("OutputkvDefault.txt", mainStringBuilder.ToString());
-        Console.WriteLine("Done!");
+        Console.WriteLine("Done! Output written to OutputkvDefault.txt.");
     }
 }
