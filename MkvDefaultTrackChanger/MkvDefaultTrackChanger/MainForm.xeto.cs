@@ -58,12 +58,15 @@ public class MainForm : Form
         mkvContainer = new MkvFilesContainer(filePaths);
         if (mkvContainer.MkFilesRejected.Count > 0)
         {
+            var sourceFile = Path.GetFileName(filePaths[0]);
+            
             string rejectedFiles = Environment.NewLine + Environment.NewLine;
             mkvContainer.MkFilesRejected.ForEach((x) =>
             {
-                rejectedFiles += Path.GetFileName(x.filePath) + Environment.NewLine + Environment.NewLine;
+                rejectedFiles += $"- {Path.GetFileName(x.file.filePath)}: {x.error} {Environment.NewLine}{Environment.NewLine}";
             });
-            MessageBox.Show("The following files were rejected: " + rejectedFiles, MessageBoxType.Warning);
+            MessageBox.Show($"The following files have different tracks or the order is different than {sourceFile}: {rejectedFiles}These files cannot be processed.", 
+                MessageBoxType.Warning);
         }
 
         var lsSubtitleTracks = mkvContainer.GetSubtitleTracks();

@@ -8,7 +8,7 @@ namespace MatroskaLib;
 public class MkvFilesContainer
 {
     public readonly List<MkvFile> MkvFiles = new();
-    public readonly List<MkvFile> MkFilesRejected = new();
+    public readonly List<(MkvFile file, string error)> MkFilesRejected = new();
 
     public MkvFilesContainer(string[] filePaths)
     {
@@ -16,10 +16,11 @@ public class MkvFilesContainer
         MkvFiles.Add(files[0]);
         for (int i = 1; i < files.Count; i++)
         {
-            if (files[0].CompareTo(files[i]) == 0)
+            string? error = files[0].CompareToGetError(files[i]);
+            if (error is null)
                 MkvFiles.Add(files[i]);
             else
-                MkFilesRejected.Add(files[i]);
+                MkFilesRejected.Add((files[i], error));
         }
     }
 
