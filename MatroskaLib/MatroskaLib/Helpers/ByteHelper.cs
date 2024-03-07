@@ -57,7 +57,8 @@ namespace MatroskaLib
 
             // Convert new length to bytes and strip bytes
             List<byte> lsNewBytes = ToBytes(ret);
-            if (lsNewBytes.Count != lsLengthBytes.Count) throw new Exception("New length doesn't fit into existing length element");
+            if (lsNewBytes.Count != lsLengthBytes.Count) 
+                throw new InvalidOperationException($"New length bytes are not the same length as the old ones. Old length: {lsLengthBytes.Count}, new length: {lsNewBytes.Count}");
 
             // Replace old length with new length bytes
             lsBytes.RemoveRange(position, lsNewBytes.Count);

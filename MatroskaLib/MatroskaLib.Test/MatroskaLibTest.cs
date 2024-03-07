@@ -13,6 +13,9 @@ namespace MatroskaLib.Test;
  *   Only first void with checksum elements
  * MkvProEdit
  *   Only second void and may need to change length of that void
+ * TestFile6_SmallSeekHead.mkv
+ *  SeekHead size of 2, which caused an exception (see github issue #10).
+ *  Do that this is not a valid mkv file accordant to MkValidator.
  */
 public class MatroskaLibTest
 {
@@ -171,5 +174,15 @@ public class MatroskaLibTest
         lsTracks[1].Should().BeEquivalentTo(new { flagDefault = false, flagForced = false, language = "und", type = TrackTypeEnum.video });
         lsTracks[2].Should().BeEquivalentTo(new { flagDefault = false, flagForced = false, language = "jpn", type = TrackTypeEnum.audio });
         MkvValidator.Validate(TestFilePath);
+    }
+
+    [Fact]
+    public void FileWithSeekHeadSizeOf2ShouldNotThrow()
+    {
+        File.Copy("mkv files/TestFile6_SmallSeekHead.mkv", TestFilePath, true);
+        List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(new[] { TestFilePath });
+        lsMkvFiles[0].tracks[0].flagDefault = false;
+        
+        MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
     }
 }
