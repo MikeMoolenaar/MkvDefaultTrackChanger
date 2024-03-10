@@ -49,6 +49,10 @@
       <Link>mkv files\TestFile5_MkvProEdit.mkv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\TestMkvFiles\mkv files\TestFile6_SmallSeekHead.mkv">
+      <Link>mkv files\TestFile6_SmallSeekHead.mkv</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="mkvalidator.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

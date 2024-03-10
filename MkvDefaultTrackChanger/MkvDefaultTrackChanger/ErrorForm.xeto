@@ -3,18 +3,24 @@
 	xmlns="http://schema.picoe.ca/eto.forms" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="MkvDefaultTrackChanger"
-	MinimumSize="370,530"
+	MinimumSize="370,570"
   	Size="370,530"
 	Padding="10"
 	>
-	<StackLayout Spacing="20" HorizontalContentAlignment="Center">
-		<Label x:Name="lblTitle" Text="An error occured!"></Label>
-		<LinkButton Text="Create issue" Click="BtnCreateIssueClicked"></LinkButton>
+	<DynamicLayout Spacing="0,15" Padding="15,5,15,0">
+	    <StackLayout Spacing="5" HorizontalContentAlignment="Center">
+            <Label x:Name="lblTitle" Text="An error occured!"></Label>
+            <LinkButton Text="Create issue" Click="BtnCreateIssueClicked"></LinkButton>
+		</StackLayout>
 		<Label Text="You can report this error by creating an issue on GitHub, please copy and paste the below box-contained text in the issue description."></Label>
 		<Label Text="DISCLAIMER: The text includes basic info about your OS, tracks of the MKV file and about where the error occured in the codebase. It does not include the filename(s). By creating an issue you consent to sharing the below text publicly on the internet."></Label>
 		
-		<TextArea Width="320" Height="150" Wrap="false" x:Name="txaExceptionMessage" ReadOnly="true"></TextArea>
+        <DynamicLayout Spacing="0,10">
+		    <TextArea Wrap="false" Height="200" x:Name="txaExceptionMessage" ReadOnly="true"></TextArea>
+		</DynamicLayout>
 		
-		<Button x:Name="btnClose" Click="BtnCloseClicked">Close</Button>
-	</StackLayout>
+		<StackLayout Spacing="5" HorizontalContentAlignment="Center">
+		    <Button x:Name="btnClose" Click="BtnCloseClicked">Close</Button>
+		</StackLayout>
+	</DynamicLayout>
 </Form>

@@ -9,6 +9,7 @@ public class Seek
     public ulong seekId { get; private set; }
     public ulong seekPosition { get; private set; }
     public int seekPositionByteNumber { get; private set; }
+    public int elementLength { get; private set; }
 
     public Seek(EbmlReader reader) =>
         _reader = reader;
@@ -23,6 +24,7 @@ public class Seek
         {
             seekPositionByteNumber = (int)fileStream.Position;
             seekPosition = _reader.ReadUInt();
+            elementLength = (int)_reader.ElementSize;
         }
     }
 }

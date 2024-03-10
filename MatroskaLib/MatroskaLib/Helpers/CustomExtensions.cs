@@ -16,7 +16,7 @@ namespace NEbml.Matroska
                 }
             }
 
-            throw new Exception($"Cannot find descriptor 0x{descriptor:X}");
+            throw new InvalidOperationException($"Cannot find descriptor 0x{descriptor:X}");
         }
     }
 }
