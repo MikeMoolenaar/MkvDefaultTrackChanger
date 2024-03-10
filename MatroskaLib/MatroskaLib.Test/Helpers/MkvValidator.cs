@@ -11,6 +11,7 @@ public static class MkvValidator
     private const string OutputRemoveRegex = @"(^At least one output file must be specified)|(^\[(.*)\] )";
     public static void Validate(string filePath)
     {
+        // Validate with ffmpeg
         Process p = new Process();
         p.StartInfo.UseShellExecute = false;
         p.StartInfo.RedirectStandardError = true;
@@ -26,6 +27,7 @@ public static class MkvValidator
             throw new Exception("ffmpeg's mkv validation produced errors:" + Environment.NewLine + output);
         }
         
+        // Validate with mkvalidator
         p = new Process();
         p.StartInfo.UseShellExecute = false;
         p.StartInfo.RedirectStandardError = true;

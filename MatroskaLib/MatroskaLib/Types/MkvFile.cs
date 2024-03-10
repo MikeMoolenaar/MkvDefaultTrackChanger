@@ -29,11 +29,11 @@ public record MkvFile
             var trackOther = other.tracks.ElementAtOrDefault(i);
             
             if (trackOther is null)
-                return $"Track at index {i} does not exist, expected {track.type}{track.language}.";
+                return $"Track at index {i} does not exist, expected {track.type} with language {track.language}.";
             if (track.number != trackOther.number)
-                return $"Track number {i} does not match. Expected {track.number}, got {trackOther.number}.";
+                return $"Track number at index {i} does not match. Expected {track.number}, got {trackOther.number}.";
             if (track.language != trackOther.language)
-                return $"Track language {i} does not match. Expected {track.language}, got {trackOther.language}.";
+                return $"Track language at index {i} does not match. Expected {track.language}, got {trackOther.language}.";
         }
 
         return null;
