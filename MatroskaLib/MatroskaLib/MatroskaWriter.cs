@@ -8,7 +8,7 @@ namespace MatroskaLib;
 
 public static class MatroskaWriter
 {
-    public static void WriteMkvFile(MkvFile mkfFile)
+    public static void WriteMkvFile(MkvFile mkfFile, bool dryRun = false)
     {
         using var dataStream = File.Open(mkfFile.filePath, FileMode.Open);
         dataStream.Seek(0, SeekOrigin.Begin);
@@ -25,6 +25,7 @@ public static class MatroskaWriter
             offset, lsBytes);
 
         // Write modified changes to file
+        if (dryRun) return;
         dataStream.Seek(0, SeekOrigin.Begin);
         dataStream.Write(lsBytes.ToArray(), 0, lsBytes.Count);
     }
@@ -71,10 +72,14 @@ public static class MatroskaWriter
             foreach (var s in seekList.Where(s =>
                          s.seekId is MatroskaElements.Tracks or MatroskaElements.SegmentInfo))
             {
-                int desiredLength = Convert.ToInt32(lsBytes[s.seekPositionByteNumber - 1] - 0x80);
                 List<byte> lsNewBytes = ByteHelper.ToBytes(s.seekPosition - (ulong)offset);
-                if (desiredLength != lsNewBytes.Count)
-                    throw new Exception("New seekposition doesn't fit into existing element");
+                if (lsNewBytes.Count > s.elementLength)
+                    throw new InvalidOperationException($"New seekPosition bytes are bigger than the old one. Trying to fit {lsNewBytes.Count} bytes into {s.elementLength} bytes");
+                if (lsNewBytes.Count < s.elementLength)
+                {
+                    // The new seekPosition is smaller than the old one, add padding
+                    lsNewBytes.AddRange(new byte[s.elementLength - lsNewBytes.Count]);
+                }
 
                 lsBytes.RemoveRange(s.seekPositionByteNumber, lsNewBytes.Count);
                 lsBytes.InsertRange(s.seekPositionByteNumber, lsNewBytes);
