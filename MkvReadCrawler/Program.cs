@@ -41,7 +41,7 @@ static class Program
             Console.WriteLine($"{x++}/{mkvFiles.Length} {Path.GetFileName(mkvFile)}");
         });
 
-        File.WriteAllText("OutputkvDefault.txt", mainStringBuilder.ToString());
-        Console.WriteLine("Done! Output written to OutputkvDefault.txt.");
+        File.WriteAllText("output.txt", mainStringBuilder.ToString());
+        Console.WriteLine("Done! Output written to output.txt");
     }
 }
