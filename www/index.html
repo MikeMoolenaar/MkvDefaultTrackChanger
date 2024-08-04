@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="output.css"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="preload">
+  <title>MkvDefaultTrackSwitcher</title>
+</head>
+<body>
+<div>
+  <section class="bg-primary text-primary-foreground py-8 md:py-12 lg:py-16">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="grid gap-4 lg:grid-cols-[1fr_450px] lg:gap-8 xl:grid-cols-[1fr_500px]">
+        <div class="flex flex-col justify-center space-y-4">
+          <div class="justify-center flex flex-col">
+            <h1 class="text-3xl font-bold tracking-tighter sm:text-5xl">MkvDefaultTrackSwitcher</h1>
+            <p class="mt-2 max-w-[500px] md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
+              A simple open-source tool to automatically set the default audio and subtitle tracks in MKV video files.
+            </p>
+            <div class="block mt-2 space-y-1 justify-center max-md:items-center flex flex-col max-md:text-center">
+                <a
+                  id="download"
+                  href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip"
+                  class="button w-fit mt-8 max-w-fit block h-12 items-center justify-center rounded-md bg-[#9b59b6] px-10 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-[#8e44ad] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" style="line-height: 2.7rem"
+                >
+                  Download for Windows
+                </a>
+              <a id="linkWindows" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip" class="hidden w-fit">Download for Windows</a>
+              <a id="linkLinux" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Linux-V1.2.0.zip" class="w-fit"> Download for Linux (GTK)</a>
+              <a id="linkMac" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-MacOS-V1.2.0.zip" class="w-fit"> Download for MacOS</a>
+            </div>
+            <div class="flex max-md:justify-center mt-12">
+              <a class="github-button" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger"
+                 data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star"
+                 data-size="large" data-show-count="true"
+                 aria-label="Star MikeMoolenaar/MkvDefaultTrackChanger on GitHub">Star on Github</a>
+            </div>
+          </div>
+
+        </div>
+        <img
+          src="./assets/Screenshot%20windows.jpg"
+          height="443"
+          width="286"
+          alt="MkvDefaultTrackSwitcher"
+          class="mx-auto overflow-hidden rounded-xl object-cover object-center lg:order-last"
+        />
+      </div>
+    </div>
+  </section>
+  <section class="py-8">
+    <div class="container mx-auto px-4 md:px-6">
+      <h2 class="text-2xl font-bold mb-8">Features</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-muted rounded-lg p-6 flex flex-col items-start space-y-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 384 512">
+            <!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M0 64C0 28.7 28.7 0 64 0L224 0l0 128c0 17.7 14.3 32 32 32l128 0 0 288c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 64zm384 64l-128 0L256 0 384 128z"/>
+          </svg>
+          <h3 class="text-lg font-semibold">Multiple files</h3>
+          <p class="text-muted-foreground">Batch process multiple MKV files at once, provided they have the same order
+            of subtitle / audio tracks</p>
+        </div>
+        <div class="bg-muted rounded-lg p-6 flex flex-col items-start space-y-4">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 576 512">
+            <!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M544 160l-.1 72.6c-.1 52.2-24 101-64 133.1c.1-1.9 .1-3.8 .1-5.7l0-8c0-71.8-37-138.6-97.9-176.7l-60.2-37.6c-8.6-5.4-17.9-8.4-27.3-9.4L248.7 48.8c-6.6-11.5-2.7-26.2 8.8-32.8s26.2-2.7 32.8 8.8l78 135.1c3.3 5.7 10.7 7.7 16.4 4.4s7.7-10.7 4.4-16.4l-62-107.4c-6.6-11.5-2.7-26.2 8.8-32.8S362 5 368.6 16.5l68 117.8s0 0 0 0s0 0 0 0l43.3 75L480 160c0-17.7 14.4-32 32-32s32 14.4 32 32zM243.9 88.5L268.5 131c-13.9 4.5-26.4 13.7-34.7 27c-.9 1.4-1.7 2.9-2.5 4.4l-28.9-50c-6.6-11.5-2.7-26.2 8.8-32.8s26.2-2.7 32.8 8.8zm-46.4 63.7l26.8 46.4c.6 6 2.1 11.8 4.3 17.4l-4.7 0-13.3 0s0 0 0 0L179 216l-23-39.8c-6.6-11.5-2.7-26.2 8.8-32.8s26.2-2.7 32.8 8.8zM260.9 175c9.4-15 29.1-19.5 44.1-10.2l60.2 37.6C416.7 234.7 448 291.2 448 352l0 8c0 83.9-68.1 152-152 152l-176 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l92 0c6.6 0 12-5.4 12-12s-5.4-12-12-12L88 440c-13.3 0-24-10.7-24-24s10.7-24 24-24l124 0c6.6 0 12-5.4 12-12s-5.4-12-12-12L56 368c-13.3 0-24-10.7-24-24s10.7-24 24-24l156 0c6.6 0 12-5.4 12-12s-5.4-12-12-12L88 296c-13.3 0-24-10.7-24-24s10.7-24 24-24l136 0s0 0 0 0s0 0 0 0l93.2 0L271 219.1c-15-9.4-19.5-29.1-10.2-44.1z"/>
+          </svg>
+          <h3 class="text-lg font-semibold">Easy to use</h3>
+          <p class="text-muted-foreground">Simple UI, no bells and whistles</p>
+        </div>
+        <div class="bg-muted rounded-lg p-6 flex flex-col items-start space-y-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 448 512">
+            <!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+            <path
+              d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288l111.5 0L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7l-111.5 0L349.4 44.6z"/>
+          </svg>
+          <h3 class="text-lg font-semibold">Fast</h3>
+          <p class="text-muted-foreground">Great performance because it doesn't need to process the whole file.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script>
+  let button = document.getElementById("download");
+
+  if (navigator.platform.includes("Linux")) {
+    button.innerHTML = "Download for Linux (GTK)";
+    button.href = "https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Linux-V1.2.0.zip";
+    document.getElementById("linkLinux").classList.add("hidden");
+    document.getElementById("linkWindows").classList.remove("hidden");
+  } else if (navigator.platform.includes("Mac")) {
+    button.innerText = "Download for macOS";
+    button.href = "https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-MacOS-V1.2.0.zip";
+    document.getElementById("linkMax").classList.add("hidden");
+    document.getElementById("linkWindows").classList.remove("hidden");
+  } else {
+    button.innerText = "Download for Windows";
+    button.href = "https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip";
+  }
+</script>
+</body>
+</html>

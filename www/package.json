@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "scripts": {
+    "tailwind": "npx tailwindcss -i main.css -c tailwind.config.js -o output.css --watch",
+    "tailwind:build": "npx tailwindcss -i main.css -c tailwind.config.js -o output.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.7",
+    "tailwindcss-animate": "1.0.7"
+  }
+}
