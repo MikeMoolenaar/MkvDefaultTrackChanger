@@ -5,7 +5,6 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="main.css"/>
   <link rel="stylesheet" href="output.css"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,18 +25,17 @@
             </p>
             <div class="block mt-2 space-y-1 justify-center max-md:items-center flex flex-col max-md:text-center">
               <div>
-
-                <button
+                <a
                   id="download"
-                  class="mt-8 max-w-fit block h-12 items-center justify-center rounded-md bg-[#9b59b6] px-10 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-[#8e44ad] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                  href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip"
+                  class="button leading-10 mt-8 max-w-fit block h-12 items-center justify-center rounded-md bg-[#9b59b6] px-10 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-[#8e44ad] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                 >
                   Download for Windows
-                </button>
-                <p></p>
+                </a>
               </div>
-              <a id="linkWindows" href="#" class="hidden">Download for Windows</a>
-              <a id="linkLinux" href="#">Download for Linux (GTK)</a>
-              <a id="linkMac" href="#">Download for MacOS</a>
+              <a id="linkWindows" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip" class="hidden">Download for Windows</a>
+              <a id="linkLinux" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Linux-V1.2.0.zip"> Download for Linux (GTK)</a>
+              <a id="linkMac" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-MacOS-V1.2.0.zip"> Download for MacOS</a>
             </div>
             <div class="flex max-md:justify-center mt-12">
               <a class="github-button" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger"
@@ -100,17 +98,17 @@
 
   if (navigator.platform.includes("Linux")) {
     button.innerHTML = "Download for Linux (GTK)";
-    button.href = "";
+    button.href = "https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Linux-V1.2.0.zip";
     document.getElementById("linkLinux").classList.add("hidden");
     document.getElementById("linkWindows").classList.remove("hidden");
   } else if (navigator.platform.includes("Mac")) {
     button.innerText = "Download for macOS";
-    button.href = "";
+    button.href = "https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-MacOS-V1.2.0.zip";
     document.getElementById("linkMax").classList.add("hidden");
     document.getElementById("linkWindows").classList.remove("hidden");
   } else {
     button.innerText = "Download for Windows";
-    button.href = "";
+    button.href = "https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip";
   }
 </script>
 </body>

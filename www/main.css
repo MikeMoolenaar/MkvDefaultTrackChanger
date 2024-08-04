@@ -45,7 +45,7 @@ body {
         @apply font-heading;
     }
     
-    a {
+    a:not(.button) {
         text-decoration: underline;
     }
 }
