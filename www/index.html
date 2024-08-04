@@ -9,7 +9,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="preload">
   <title>MkvDefaultTrackSwitcher</title>
 </head>
 <body>
@@ -24,18 +24,16 @@
               A simple open-source tool to automatically set the default audio and subtitle tracks in MKV video files.
             </p>
             <div class="block mt-2 space-y-1 justify-center max-md:items-center flex flex-col max-md:text-center">
-              <div>
                 <a
                   id="download"
                   href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip"
-                  class="button mt-8 max-w-fit block h-12 items-center justify-center rounded-md bg-[#9b59b6] px-10 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-[#8e44ad] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" style="line-height: 2.7rem"
+                  class="button w-fit mt-8 max-w-fit block h-12 items-center justify-center rounded-md bg-[#9b59b6] px-10 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-[#8e44ad] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" style="line-height: 2.7rem"
                 >
                   Download for Windows
                 </a>
-              </div>
-              <a id="linkWindows" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip" class="hidden">Download for Windows</a>
-              <a id="linkLinux" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Linux-V1.2.0.zip"> Download for Linux (GTK)</a>
-              <a id="linkMac" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-MacOS-V1.2.0.zip"> Download for MacOS</a>
+              <a id="linkWindows" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Windows-V1.2.0.zip" class="hidden w-fit">Download for Windows</a>
+              <a id="linkLinux" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-Linux-V1.2.0.zip" class="w-fit"> Download for Linux (GTK)</a>
+              <a id="linkMac" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases/download/V1.2.0/MkvDefaultTrackChanger-MacOS-V1.2.0.zip" class="w-fit"> Download for MacOS</a>
             </div>
             <div class="flex max-md:justify-center mt-12">
               <a class="github-button" href="https://github.com/MikeMoolenaar/MkvDefaultTrackChanger"
