@@ -6,6 +6,12 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+#download {
+    font-size: 1rem;
+    line-height: 1.8;
+    padding: 0.5rem 1rem;
+}
+
 @layer base {
     :root {
         --background: 0 0% 100%;
