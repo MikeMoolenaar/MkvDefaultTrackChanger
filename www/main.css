@@ -12,6 +12,11 @@ body {
     padding: 0.5rem 1rem;
 }
 
+#githubContainer {
+    display: block;
+    min-height: 34px;
+}
+
 @layer base {
     :root {
         --background: 0 0% 100%;
