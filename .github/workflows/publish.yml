@@ -26,9 +26,10 @@ jobs:
     - name: Build Windows
       run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/MkvDefaultTrackChanger.WinForms.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Linux
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj -c Release -r linux-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj -c Release -r linux-x64 -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:PublishTrimmed=true -p:Version=${{ github.event.inputs.version }}
     - name: Build Mac
       run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/MkvDefaultTrackChanger.Mac.csproj -c Release -r osx-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
+    # Maybe zipping the MacOS app works with this https://stackoverflow.com/a/49462106/5922994 + in GH actions with wslbash.exe https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md#shells
     - name: Zip releases
       run: |
         powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultTrackChanger.WinForms.exe MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.exe
