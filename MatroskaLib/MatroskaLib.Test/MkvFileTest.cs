@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using MatroskaLib.Types;
 using Xunit;
 

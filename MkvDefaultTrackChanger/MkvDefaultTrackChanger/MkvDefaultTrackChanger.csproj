@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <NoWarn>CS8618;CS0649</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.8.2" />
-    <PackageReference Include="Eto.Serialization.Xaml" Version="2.8.2" />
+    <PackageReference Include="Eto.Forms" Version="2.10.2" />
+    <PackageReference Include="Eto.Serialization.Xaml" Version="2.10.2" />
   </ItemGroup>
   
   <ItemGroup>

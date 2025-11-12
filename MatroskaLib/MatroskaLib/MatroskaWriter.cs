@@ -14,7 +14,7 @@ public static class MatroskaWriter
         dataStream.Seek(0, SeekOrigin.Begin);
 
         byte[] bytes = new byte[mkfFile.endPosition];
-        dataStream.Read(bytes, 0, bytes.Length);
+        dataStream.ReadExactly(bytes);
         List<byte> lsBytes = new List<byte>(bytes);
 
         int offset = 0;
