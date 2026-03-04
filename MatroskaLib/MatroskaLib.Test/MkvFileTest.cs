@@ -22,7 +22,7 @@ public class MkvFileTest
             voidPosition = 40
         };
 
-        string json = mkvFile.ToString();
+        string json = mkvFile.ToString().Replace("\r\n", "\n");
 
         json.Should().Be("""
                          {
@@ -35,10 +35,21 @@ public class MkvFileTest
                                "flagDefaultByteNumber": 0,
                                "flagForced": true,
                                "flagForcedByteNumber": 0,
+                               "flagHearingImpaired": false,
+                               "flagHearingImpairedByteNumber": 0,
+                               "flagVisualImpaired": false,
+                               "flagVisualImpairedByteNumber": 0,
+                               "flagTextDescriptions": false,
+                               "flagTextDescriptionsByteNumber": 0,
+                               "flagOriginal": false,
+                               "flagOriginalByteNumber": 0,
+                               "flagCommentary": false,
+                               "flagCommentaryByteNumber": 0,
                                "flagTypebytenumber": 0,
                                "type": "subtitle",
                                "name": "",
-                               "language": "eng"
+                               "language": "eng",
+                               "codecId": null,
                              }
                            ],
                            "seekList": [],

@@ -12,9 +12,30 @@ static class Program
 {
     static void Main(string[] args)
     {
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Usage: MkvReadCrawler <path-to-mkv-file-or-folder>");
+            Console.WriteLine("\nTo test MediaInfo on a single file:");
+            Console.WriteLine("  MkvReadCrawler \"C:\\path\\to\\file.mkv\"");
+            return;
+        }
+
         string path = args[0];
 
-        Console.WriteLine("Processing...");
+        if (File.Exists(path) && path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+        {
+            Console.WriteLine("Testing single file with MediaInfo...");
+            MediaInfoTest.TestMediaInfo(path);
+            return;
+        }
+
+        if (!Directory.Exists(path))
+        {
+            Console.WriteLine($"Path not found: {path}");
+            return;
+        }
+
+        Console.WriteLine("Processing folder...");
         string[] mkvFiles = Directory.GetFiles(path, "*.mkv", SearchOption.AllDirectories);
         var mainStringBuilder = new StringBuilder();
 

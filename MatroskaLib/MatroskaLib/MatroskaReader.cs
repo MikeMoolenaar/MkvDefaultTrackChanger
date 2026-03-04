@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MatroskaLib.Helpers;
 using MatroskaLib.Types;
 using NEbml.Core;
 using NEbml.Matroska;
@@ -17,7 +19,7 @@ public static class MatroskaReader
             var tracks = new List<Track>();
             var seekList = new List<Seek>();
 
-            using var fileStream = File.Open(filePath, FileMode.Open);
+            using var fileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             var reader = new EbmlReader(fileStream);
 
             int? seekHeadCheckSum = _ReadSeekHead(reader, fileStream, seekList);
@@ -43,6 +45,23 @@ public static class MatroskaReader
         }
 
         return mkvFiles;
+    }
+    
+    public static void LoadMediaInfoForFile(MkvFile mkvFile)
+    {
+        if (mkvFile.mediaInfoLoaded)
+            return;
+        
+        try
+        {
+            using var fileStream = File.Open(mkvFile.filePath, FileMode.Open, FileAccess.Read, FileShare.Read);           
+            MediaInfoHelper.GetAllTrackFormats(fileStream, mkvFile.tracks);
+            mkvFile.mediaInfoLoaded = true;
+        }
+        catch (System.Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to load MediaInfo for {mkvFile.filePath}: {ex.Message}");
+        }
     }
 
     private static int? _ReadSeekHead(EbmlReader reader, FileStream fileStream, List<Seek> seekList)

@@ -17,10 +17,16 @@ public class MainForm : Form
     DropDown dropdownSubtitles;
     Button btnApply;
     Label lblStatus;
+    Button btnPrevious;
+    Button btnNext;
+    Label lblCurrentFile;
+    Label lblCurrentAudio;
+    Label lblCurrentSubtitles;
 
-    MkvFilesContainer mkvContainer;
+    List<MkvFile> mkvFiles;
+    int currentFileIndex;
     OpenFileDialog fileDialog;
-    private (string audio, string subtitles)? appliedConfig;
+    private Dictionary<string, (string audio, string subtitles)> appliedConfigs;
 
     public MainForm()
     {
@@ -30,6 +36,7 @@ public class MainForm : Form
         fileDialog = new OpenFileDialog();
         fileDialog.Filters.Add(new FileFilter("MKV files", "*.mkv"));
         fileDialog.MultiSelect = true;
+        appliedConfigs = new Dictionary<string, (string audio, string subtitles)>();
     }
 
     private void BtnBrowseFilesClick(object sender, EventArgs e)
@@ -43,7 +50,7 @@ public class MainForm : Form
             
             btnApply.Enabled = true;
             lblStatus.Text = string.Empty;
-            appliedConfig = null;
+            appliedConfigs.Clear();
         }
         catch (Exception exception)
         {
@@ -55,28 +62,64 @@ public class MainForm : Form
     {
         string[] filePaths = fileDialog.Filenames.ToArray();
 
-        mkvContainer = new MkvFilesContainer(filePaths);
-        if (mkvContainer.MkFilesRejected.Count > 0)
-        {
-            var sourceFile = Path.GetFileName(filePaths[0]);
-            
-            string rejectedFiles = Environment.NewLine + Environment.NewLine;
-            mkvContainer.MkFilesRejected.ForEach((x) =>
-            {
-                rejectedFiles += $"- {Path.GetFileName(x.file.filePath)}: {x.error} {Environment.NewLine}{Environment.NewLine}";
-            });
-            MessageBox.Show($"The following files have different tracks or the order is different than {sourceFile}: {rejectedFiles}These files cannot be processed.", 
-                MessageBoxType.Warning);
-        }
+        mkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
+        currentFileIndex = 0;
+        
+        string files = filePaths.Length == 1 ? "file" : "files";
+        lblFilesSelected.Text = $"{filePaths.Length} {files} selected";
+        
+        LoadCurrentFile();
+        UpdateNavigationButtons();
+    }
 
-        var lsSubtitleTracks = mkvContainer.GetSubtitleTracks();
-        var lsAudioTracks = mkvContainer.GetAudioTracks();
+    private void LoadCurrentFile()
+    {
+        if (mkvFiles == null || mkvFiles.Count == 0) return;
+
+        var currentFile = mkvFiles[currentFileIndex];
+        
+        MatroskaReader.LoadMediaInfoForFile(currentFile);
+        
+        var lsSubtitleTracks = currentFile.tracks
+            .Where(x => x.type == TrackTypeEnum.subtitle)
+            .ToList();
+        var lsAudioTracks = currentFile.tracks
+            .Where(x => x.type == TrackTypeEnum.audio)
+            .ToList();
+
+        lsSubtitleTracks.Insert(0, new TrackDisable());
 
         FillDropdown(dropdownSubtitles, lsSubtitleTracks);
         FillDropdown(dropdownAudio, lsAudioTracks);
         
-        string files = filePaths.Length == 1 ? "file" : "files";
-        lblFilesSelected.Text = $"{filePaths.Length} {files} selected";
+        UpdateCurrentTrackLabels(lsAudioTracks, lsSubtitleTracks);
+        
+        lblCurrentFile.Text = $"File {currentFileIndex + 1} of {mkvFiles.Count}: {Path.GetFileName(currentFile.filePath)}";
+
+        if (appliedConfigs.TryGetValue(currentFile.filePath, out var config))
+        {
+            dropdownAudio.SelectedKey = config.audio;
+            dropdownSubtitles.SelectedKey = config.subtitles;
+        }
+    }
+
+    private void UpdateCurrentTrackLabels(List<Track> audioTracks, List<Track> subtitleTracks)
+    {
+        var defaultAudio = audioTracks.FirstOrDefault(x => x.flagDefault);
+        lblCurrentAudio.Text = defaultAudio != null 
+            ? $"Current default: {defaultAudio.ToUiString()}"
+            : "Current default: None";
+        
+        var defaultSubtitle = subtitleTracks.FirstOrDefault(x => x.flagDefault);
+        lblCurrentSubtitles.Text = defaultSubtitle != null 
+            ? $"Current default: {defaultSubtitle.ToUiString()}"
+            : "Current default: None";
+    }
+
+    private void UpdateNavigationButtons()
+    {
+        btnPrevious.Enabled = currentFileIndex > 0;
+        btnNext.Enabled = currentFileIndex < mkvFiles.Count - 1;
     }
 
     private void FillDropdown(DropDown dropDown, List<Track> lsTracks)
@@ -87,7 +130,7 @@ public class MainForm : Form
             .FirstOrDefault(x => x.flagDefault || x.flagForced)
             ?.number.ToString();
         dropDown.Enabled = true;
-        if (dropDown.SelectedKey is null)
+        if (dropDown.SelectedKey is null && lsTracks.Count > 0)
             dropDown.SelectedKey = lsTracks[0].number.ToString();
     }
 
@@ -96,16 +139,25 @@ public class MainForm : Form
         try
         {
             btnApply.Enabled = false;
-            mkvContainer.WriteChanges(track =>
+            
+            var currentFile = mkvFiles[currentFileIndex];
+            
+            currentFile.tracks.ForEach(track =>
             {
                 string key = track.number.ToString();
                 track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
             });
             
-            LoadFiles();
+            MatroskaWriter.WriteMkvFile(currentFile);
             
-            appliedConfig = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
-            lblStatus.Text = "Done!";
+            appliedConfigs[currentFile.filePath] = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
+            
+            mkvFiles[currentFileIndex] = MatroskaReader.ReadMkvFiles([currentFile.filePath])[0];
+            LoadCurrentFile();
+            
+            int completed = appliedConfigs.Count;
+            int total = mkvFiles.Count;
+            lblStatus.Text = $"Saved! ({completed}/{total} files processed)";
         }
         catch (Exception exception)
         {
@@ -114,19 +166,51 @@ public class MainForm : Form
         }
     }
 
+    protected void BtnPreviousClicked(object sender, EventArgs e)
+    {
+        if (currentFileIndex > 0)
+        {
+            currentFileIndex--;
+            LoadCurrentFile();
+            UpdateNavigationButtons();
+            UpdateApplyButtonState();
+        }
+    }
+
+    protected void BtnNextClicked(object sender, EventArgs e)
+    {
+        if (currentFileIndex < mkvFiles.Count - 1)
+        {
+            currentFileIndex++;
+            LoadCurrentFile();
+            UpdateNavigationButtons();
+            UpdateApplyButtonState();
+        }
+    }
+
     private void OnDropdownSelectionChanged(object? sender, EventArgs e)
     {
-        if (appliedConfig != (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey))
+        UpdateApplyButtonState();
+    }
+
+    private void UpdateApplyButtonState()
+    {
+        if (mkvFiles == null || mkvFiles.Count == 0) return;
+
+        var currentFile = mkvFiles[currentFileIndex];
+        if (appliedConfigs.TryGetValue(currentFile.filePath, out var config) &&
+            config == (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey))
+        {
+            btnApply.Enabled = false;
+            int completed = appliedConfigs.Count;
+            int total = mkvFiles.Count;
+            lblStatus.Text = $"Saved! ({completed}/{total} files processed)";
+        }
+        else
         {
             btnApply.Enabled = true;
             lblStatus.Text = string.Empty;
         }
-        else
-        {
-            btnApply.Enabled = false;
-            lblStatus.Text = "Done!";
-        }
-       
     }
 
     protected void HandleAbout(object sender, EventArgs e)
@@ -147,6 +231,7 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
 
     private void HandleException(Exception ex)
     {
-        new ErrorForm(ex, mkvContainer?.ToString(), Icon).Show();
+        var filePath = mkvFiles?[currentFileIndex]?.filePath;
+        new ErrorForm(ex, filePath ?? "Unknown file", Icon).Show();
     }
 }

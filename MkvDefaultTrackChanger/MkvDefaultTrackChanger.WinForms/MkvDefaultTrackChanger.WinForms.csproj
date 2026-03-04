@@ -5,6 +5,13 @@
     <TargetFramework>net9.0-Windows</TargetFramework>
     <RootNamespace>MkvDefaultTrackChanger.WinForms</RootNamespace>
     <ApplicationIcon>..\MkvDefaultTrackChanger\logo.ico</ApplicationIcon>
+    
+    <!-- Single File Publishing Options -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
   
   <ItemGroup>

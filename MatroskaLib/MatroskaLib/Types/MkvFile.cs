@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -17,27 +15,9 @@ public record MkvFile
     public required int endPosition { get; init; }
     public required int tracksPosition { get; init; }
     public required int beginHeaderPosition { get; init; }
-
-    public string? CompareToGetError(MkvFile? other)
-    {
-        if (other is null)
-            throw new ArgumentNullException(nameof(other));
-
-        for (int i = 0; i < tracks.Count; i++)
-        {
-            var track = tracks[i];
-            var trackOther = other.tracks.ElementAtOrDefault(i);
-            
-            if (trackOther is null)
-                return $"Track at index {i} does not exist, expected {track.type} with language {track.language}.";
-            if (track.number != trackOther.number)
-                return $"Track number at index {i} does not match. Expected {track.number}, got {trackOther.number}.";
-            if (track.language != trackOther.language)
-                return $"Track language at index {i} does not match. Expected {track.language}, got {trackOther.language}.";
-        }
-
-        return null;
-    }
+    
+    [JsonIgnore]
+    public bool mediaInfoLoaded { get; set; }
 
     public override string ToString() => 
         JsonSerializer.Serialize(this with { filePath = string.Empty }, SourceGeneratedMkvFile.Default.MkvFile);
