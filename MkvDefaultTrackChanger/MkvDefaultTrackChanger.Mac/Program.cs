@@ -9,6 +9,6 @@ static class MainClass
     public static void Main(string[] args)
     {
         var platform = new Eto.Mac.Platform();
-        new Application(platform).Run(new MainForm());
+        new Application(platform).Run(new MainForm(args));
     }
 }
