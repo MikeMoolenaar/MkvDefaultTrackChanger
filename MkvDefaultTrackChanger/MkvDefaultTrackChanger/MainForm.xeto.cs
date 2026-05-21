@@ -16,6 +16,7 @@ public class MainForm : Form
     DropDown dropdownAudio;
     DropDown dropdownSubtitles;
     Button btnApply;
+    Button btnApplyAll;
     Label lblStatus;
     Button btnPrevious;
     Button btnNext;
@@ -70,7 +71,7 @@ public class MainForm : Form
     void RunCommandLine(int indexaudio, int indexsubtitles, string[] filepaths)
     {
         LoadFilesSub(filepaths);
-        for (int currentFileIndex = 0; currentFileIndex < filepaths.Length; currentFileIndex++)
+        for (currentFileIndex = 0; currentFileIndex < filepaths.Length; currentFileIndex++)
         {
             LoadCurrentFile();
 
@@ -110,6 +111,7 @@ public class MainForm : Form
             LoadFiles();
 
             btnApply.Enabled = true;
+            btnApplyAll.Enabled = true;
             lblStatus.Text = string.Empty;
             appliedConfigs.Clear();
         }
@@ -204,6 +206,46 @@ public class MainForm : Form
     protected void BtnApplyClicked(object sender, EventArgs e)
     {
         BtnApplyClickedSub();
+    }
+
+    protected void BtnApplyAllClicked(object sender, EventArgs e)
+    {
+        int indexaudio = dropdownAudio.SelectedIndex;
+        int indexsubtitles = dropdownSubtitles.SelectedIndex;
+
+        btnApply.Enabled = false;
+        btnApplyAll.Enabled = false;
+
+        for (currentFileIndex = 0; currentFileIndex < mkvFiles.Count; currentFileIndex++)
+        {
+            LoadCurrentFile();
+            UpdateNavigationButtons();
+
+            if (indexaudio < 0 || indexaudio > dropdownAudio.Items.Count - 1)
+            {
+                MessageBox.Show($"Invalid audio track index", MessageBoxType.Error);
+                return;
+            }
+            else
+            {
+                dropdownAudio.SelectedIndex = indexaudio;
+            }
+
+            if (indexsubtitles < 0 || indexsubtitles > dropdownSubtitles.Items.Count - 1)
+            {
+                MessageBox.Show($"Invalid subtitle track index", MessageBoxType.Error);
+                return;
+            }
+            else
+            {
+                dropdownSubtitles.SelectedIndex = indexsubtitles;
+            }
+
+            BtnApplyClickedSub();
+
+        }
+        btnApply.Enabled = true;
+        btnApplyAll.Enabled = true;
     }
 
     protected void BtnApplyClickedSub()

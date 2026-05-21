@@ -33,6 +33,7 @@
         
         <StackLayout Spacing="5" HorizontalContentAlignment="Center">
             <Button x:Name="btnApply" Enabled="false" Click="BtnApplyClicked">Apply</Button>
+            <Button x:Name="btnApplyAll" Enabled="false" Click="BtnApplyAllClicked">Apply All</Button>
             <Label x:Name="lblStatus" Text=""></Label>
         </StackLayout>
 
