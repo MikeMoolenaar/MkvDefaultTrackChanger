@@ -97,6 +97,7 @@ public class MainForm : Form
             BtnApplyClickedSub();
 
         }
+        Environment.Exit(0);
     }
 
     private void BtnBrowseFilesClick(object sender, EventArgs e)
