@@ -218,13 +218,14 @@ public class MainForm : Form
 
         for (currentFileIndex = 0; currentFileIndex < mkvFiles.Count; currentFileIndex++)
         {
+            bool processfile = true;
             LoadCurrentFile();
             UpdateNavigationButtons();
 
             if (indexaudio < 0 || indexaudio > dropdownAudio.Items.Count - 1)
             {
                 MessageBox.Show($"Invalid audio track index", MessageBoxType.Error);
-                return;
+                processfile = false;
             }
             else
             {
@@ -234,14 +235,17 @@ public class MainForm : Form
             if (indexsubtitles < 0 || indexsubtitles > dropdownSubtitles.Items.Count - 1)
             {
                 MessageBox.Show($"Invalid subtitle track index", MessageBoxType.Error);
-                return;
+                processfile = false;
             }
             else
             {
                 dropdownSubtitles.SelectedIndex = indexsubtitles;
             }
 
-            BtnApplyClickedSub();
+            if (processfile)
+            {
+                BtnApplyClickedSub();
+            }
 
         }
         btnApply.Enabled = true;
