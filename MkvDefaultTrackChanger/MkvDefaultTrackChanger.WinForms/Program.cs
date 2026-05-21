@@ -16,7 +16,7 @@ static class MainClass
             dropdown.DrawMode = swf.DrawMode.Normal;
         });
         
-        new Application(platform).Run(new MainForm());
+        new Application(platform).Run(new MainForm(args));
 
     }
 }

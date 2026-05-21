@@ -28,15 +28,75 @@ public class MainForm : Form
     OpenFileDialog fileDialog;
     private Dictionary<string, (string audio, string subtitles)> appliedConfigs;
 
-    public MainForm()
+    public MainForm(String[] args)
     {
+        int indexaudio;
+        int indexsubtitles;
+        string[] filepaths;
+        int i;
+
         Icon = Icon.FromResource("MkvDefaultTrackChanger.logo.ico");
         XamlReader.Load(this);
 
-        fileDialog = new OpenFileDialog();
-        fileDialog.Filters.Add(new FileFilter("MKV files", "*.mkv"));
-        fileDialog.MultiSelect = true;
         appliedConfigs = new Dictionary<string, (string audio, string subtitles)>();
+
+        if (args.Length >= 3)
+        {
+            indexaudio = int.Parse(args[0]) - 1;
+            indexsubtitles = int.Parse(args[1]);
+            List<string> templist = new List<string>();
+            for (i = 2; i < args.Length; i++)
+            {
+                templist.Add(args[i]);
+            }
+            filepaths = templist.ToArray();
+            RunCommandLine(indexaudio, indexsubtitles, filepaths);
+        }
+        else if (args.Length > 0)
+        {
+            MessageBox.Show($"There must be at least three command line arguments if they are used.",
+                MessageBoxType.Error);
+            return;
+        }
+        else
+        {
+            fileDialog = new OpenFileDialog();
+            fileDialog.Filters.Add(new FileFilter("MKV files", "*.mkv"));
+            fileDialog.MultiSelect = true;
+        }
+
+    }
+
+    void RunCommandLine(int indexaudio, int indexsubtitles, string[] filepaths)
+    {
+        LoadFilesSub(filepaths);
+        for (int currentFileIndex = 0; currentFileIndex < filepaths.Length; currentFileIndex++)
+        {
+            LoadCurrentFile();
+
+            if (indexaudio < 0 || indexaudio > dropdownAudio.Items.Count - 1)
+            {
+                MessageBox.Show($"Invalid audio track index", MessageBoxType.Error);
+                return;
+            }
+            else
+            {
+                dropdownAudio.SelectedIndex = indexaudio;
+            }
+
+            if (indexsubtitles < 0 || indexsubtitles > dropdownSubtitles.Items.Count - 1)
+            {
+                MessageBox.Show($"Invalid subtitle track index", MessageBoxType.Error);
+                return;
+            }
+            else
+            {
+                dropdownSubtitles.SelectedIndex = indexsubtitles;
+            }
+
+            BtnApplyClickedSub();
+
+        }
     }
 
     private void BtnBrowseFilesClick(object sender, EventArgs e)
@@ -47,7 +107,7 @@ public class MainForm : Form
         try
         {
             LoadFiles();
-            
+
             btnApply.Enabled = true;
             lblStatus.Text = string.Empty;
             appliedConfigs.Clear();
@@ -61,13 +121,19 @@ public class MainForm : Form
     private void LoadFiles()
     {
         string[] filePaths = fileDialog.Filenames.ToArray();
+        LoadFilesSub(filePaths);
+    }
+
+    private void LoadFilesSub(string[] filePaths)
+    {
+        //string[] filePaths = fileDialog.Filenames.ToArray();
 
         mkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
         currentFileIndex = 0;
-        
+
         string files = filePaths.Length == 1 ? "file" : "files";
         lblFilesSelected.Text = $"{filePaths.Length} {files} selected";
-        
+
         LoadCurrentFile();
         UpdateNavigationButtons();
     }
@@ -77,9 +143,9 @@ public class MainForm : Form
         if (mkvFiles == null || mkvFiles.Count == 0) return;
 
         var currentFile = mkvFiles[currentFileIndex];
-        
+
         MatroskaReader.LoadMediaInfoForFile(currentFile);
-        
+
         var lsSubtitleTracks = currentFile.tracks
             .Where(x => x.type == TrackTypeEnum.subtitle)
             .ToList();
@@ -91,9 +157,9 @@ public class MainForm : Form
 
         FillDropdown(dropdownSubtitles, lsSubtitleTracks);
         FillDropdown(dropdownAudio, lsAudioTracks);
-        
+
         UpdateCurrentTrackLabels(lsAudioTracks, lsSubtitleTracks);
-        
+
         lblCurrentFile.Text = $"File {currentFileIndex + 1} of {mkvFiles.Count}: {Path.GetFileName(currentFile.filePath)}";
 
         if (appliedConfigs.TryGetValue(currentFile.filePath, out var config))
@@ -106,12 +172,12 @@ public class MainForm : Form
     private void UpdateCurrentTrackLabels(List<Track> audioTracks, List<Track> subtitleTracks)
     {
         var defaultAudio = audioTracks.FirstOrDefault(x => x.flagDefault);
-        lblCurrentAudio.Text = defaultAudio != null 
+        lblCurrentAudio.Text = defaultAudio != null
             ? $"Current default: {defaultAudio.ToUiString()}"
             : "Current default: None";
-        
+
         var defaultSubtitle = subtitleTracks.FirstOrDefault(x => x.flagDefault);
-        lblCurrentSubtitles.Text = defaultSubtitle != null 
+        lblCurrentSubtitles.Text = defaultSubtitle != null
             ? $"Current default: {defaultSubtitle.ToUiString()}"
             : "Current default: None";
     }
@@ -136,25 +202,30 @@ public class MainForm : Form
 
     protected void BtnApplyClicked(object sender, EventArgs e)
     {
+        BtnApplyClickedSub();
+    }
+
+    protected void BtnApplyClickedSub()
+    {
         try
         {
             btnApply.Enabled = false;
-            
+
             var currentFile = mkvFiles[currentFileIndex];
-            
+
             currentFile.tracks.ForEach(track =>
             {
                 string key = track.number.ToString();
                 track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
             });
-            
+
             MatroskaWriter.WriteMkvFile(currentFile);
-            
+
             appliedConfigs[currentFile.filePath] = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
-            
+
             mkvFiles[currentFileIndex] = MatroskaReader.ReadMkvFiles([currentFile.filePath])[0];
             LoadCurrentFile();
-            
+
             int completed = appliedConfigs.Count;
             int total = mkvFiles.Count;
             lblStatus.Text = $"Saved! ({completed}/{total} files processed)";
@@ -233,5 +304,56 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
     {
         var filePath = mkvFiles?[currentFileIndex]?.filePath;
         new ErrorForm(ex, filePath ?? "Unknown file", Icon).Show();
+    }
+    protected void BtnHelpClicked(object sender, EventArgs e)
+    {
+        var msgBox = new CustomMessageBox(
+            "Command Line Usage Help",
+            "For command line usage, use the following:\n\n" +
+            "MkvDefaultTrackChanger  DefaultAudioTrack  DefaultSubtitleTrack  File(s)\n\n" +
+            "Where\n\n" +
+            "DefaultAudioTrack is the desired default audio track. The first audio track is track number one.\n\n" +
+            "DefaultSubtitleTrack is the desired default subtitle track.  The first subtitle track is track number one.  Use zero for no default subtitle track.\n\n" +
+            "File(s) is the list of files to modify.\n\n" +
+            "Command Line Example:\n\n" +
+            "MkvDefaultTrackChanger  2  1  file1.mkv  file2.mkv  file3.mkv\n\n" +
+            "Please note that files are overwritten.  Only use this program on copies of the original files if you want to keep the original unmodifed files."
+        );
+        msgBox.ShowModal(this);
+    }
+    public class CustomMessageBox : Dialog<DialogResult>
+    {
+        public CustomMessageBox(string title, string message)
+        {
+            Title = title;
+            //ClientSize = new Size(0,0); 
+            Resizable = false;
+
+            // Message label
+            var label = new Label
+            {
+                Text = message,
+                Wrap = WrapMode.Word,
+                VerticalAlignment = VerticalAlignment.Center,
+                //HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            // OK button
+            var okButton = new Button { Text = "OK" };
+            okButton.Click += (sender, e) => Close(DialogResult.Ok);
+
+            // Layout
+            Content = new StackLayout
+            {
+                Padding = 10,
+                Spacing = 10,
+                Items =
+            {
+                label,
+                new StackLayoutItem(okButton, HorizontalAlignment.Center)
+            }
+            };
+        }
+
     }
 }

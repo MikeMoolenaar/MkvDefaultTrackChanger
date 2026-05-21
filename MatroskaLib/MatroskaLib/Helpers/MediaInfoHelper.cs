@@ -20,7 +20,7 @@ public static class MediaInfoHelper
             if (!stream.CanSeek)
             {
                 Debug.WriteLine($"Stream is not seekable, cannot use MediaInfo");
-                return results;
+                return;
             }
             
             long originalPosition = stream.Position;
@@ -33,7 +33,7 @@ public static class MediaInfoHelper
             if (!mediaInfo.Success)
             {
                 Debug.WriteLine($"MediaInfo failed to read from stream");
-                return results;
+                return;
             }
             
             Debug.WriteLine($"MediaInfo found {mediaInfo.AudioStreams?.Count ?? 0} audio streams, {mediaInfo.Subtitles?.Count ?? 0} subtitle streams");

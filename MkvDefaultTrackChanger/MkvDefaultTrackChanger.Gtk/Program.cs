@@ -9,7 +9,7 @@ namespace MkvDefaultTrackChanger.GtkSharp
         public static void Main(string[] args)
         {
             var platform = new Eto.GtkSharp.Platform();
-            new Application(platform).Run(new MainForm());
+            new Application(platform).Run(new MainForm(args));
         }
     }
 }

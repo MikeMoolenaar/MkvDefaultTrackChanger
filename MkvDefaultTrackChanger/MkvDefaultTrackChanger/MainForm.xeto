@@ -35,6 +35,11 @@
             <Button x:Name="btnApply" Enabled="false" Click="BtnApplyClicked">Apply</Button>
             <Label x:Name="lblStatus" Text=""></Label>
         </StackLayout>
+
+        <StackLayout Spacing="5" HorizontalContentAlignment="Center">
+            <Button x:Name="btnHelp" Enabled="true" Click="BtnHelpClicked">Command Line Usage Help</Button>
+        </StackLayout>
+        
     </DynamicLayout>
 
 	<Form.Menu>

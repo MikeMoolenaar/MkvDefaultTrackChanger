@@ -2,7 +2,23 @@
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 # MkvDefaultTrackChanger
 Small GUI application to change the default subtitle and audio tracks in
-MKV video files. It can handle multiple files and runs on Windows, Linux and Mac OS. It's also really fast because it only changes the metadata of the MKV file and doesn't involve any remuxing. 
+MKV video files. It can handle multiple files and runs on Windows, Linux and Mac OS. It's also really fast because it only changes the metadata of the MKV file and doesn't involve any remuxing.  It can also be used via the command line.  Command line usage is as follows:
+
+MkvDefaultTrackChanger  DefaultAudioTrack  DefaultSubtitleTrack  File(s)
+
+Where
+
+DefaultAudioTrack is the desired default audio track. The first audio track is track number one.
+
+DefaultSubtitleTrack is the desired default subtitle track.  The first subtitle track is track number one.  Use zero for no default subtitle track.
+
+File(s) is the list of files to modify.
+
+Command Line Example:
+
+MkvDefaultTrackChanger 2 1 file1.mkv file2.mkv file3.mkv
+
+Please note that files are overwritten.  Only use this program on copies of the original files if you want to keep the original unmodifed files.
 
 ## What is MKV and what problem does this program solve?
 MKV is a multimedia container format and can store multiple
