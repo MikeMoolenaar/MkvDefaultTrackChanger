@@ -336,13 +336,13 @@ public class MainForm : Form
         var aboutDialog = new AboutDialog
         {
             Logo = Icon.WithSize(100, 200),
-            Website = new Uri("https://github.com/MikeMoolenaar/MkvDefaultTrackChanger"),
+            Website = new Uri("https://github.com/Ranft65/MkvDefaultTrackChanger/tree/feat/add-flags-and-command-line"),
             WebsiteLabel = "Github",
             ProgramDescription =
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
 MkvDefaultTrackChanger is licensed under the terms of the GNU General Public License version 3. A copy of this license can be obtained from <https://www.gnu.org/licenses/gpl-3.0.html>.",
-            Developers = ["Mike Moolenaar"]
+            Developers = ["Mike Moolenaar, IDisposable, Ranft65"]
         };
         aboutDialog.ShowDialog(this);
     }
