@@ -103,7 +103,7 @@ public class MainForm : Form
             dropdownSubtitles.SelectedIndex = indexsubtitles;
         }
 
-        ProcessAllFiles(true);
+        ProcessAllFiles(true,indexaudio,indexsubtitles);
         Environment.Exit(0);
     }
 
@@ -219,9 +219,9 @@ public class MainForm : Form
 
     protected void BtnApplyAllClicked(object sender, EventArgs e)
     {
-        ProcessAllFiles(false);
+        ProcessAllFiles(false,0,0);
     }
-    protected void ProcessAllFiles(bool batchmode)
+    protected void ProcessAllFiles(bool batchmode, int batchaudioindex, int batchsubtitleindex)
     { 
         int indexaudio = dropdownAudio.SelectedIndex;
         int indexsubtitles = dropdownSubtitles.SelectedIndex;
@@ -282,26 +282,42 @@ public class MainForm : Form
 
             if (processfile)
             {
-                if (lsAudioTracks[indexaudio].language != lsAudioTracksTest[indexaudio].language)
+                if (batchmode && batchaudioindex == -1) 
                 {
-                    processfile = false;
-                    errorlist.Add("Error: Audio track language is not the same for " + mkvFiles[currentFileIndex].filePath);
+                    // do not check the audio track in batch mode if it is not being changed
                 }
-                if (lsAudioTracks[indexaudio].name != lsAudioTracksTest[indexaudio].name)
+                else
                 {
-                    processfile = false;
-                    errorlist.Add("Error: Audio track name is not the same for " + mkvFiles[currentFileIndex].filePath);
+                    if (lsAudioTracks[indexaudio].language != lsAudioTracksTest[indexaudio].language)
+                    {
+                        processfile = false;
+                        errorlist.Add("Error: Audio track language is not the same for " + mkvFiles[currentFileIndex].filePath);
+                    }
+                    if (lsAudioTracks[indexaudio].name != lsAudioTracksTest[indexaudio].name)
+                    {
+                        processfile = false;
+                        errorlist.Add("Error: Audio track name is not the same for " + mkvFiles[currentFileIndex].filePath);
+                    }
                 }
-                if (lsSubtitleTracks[indexsubtitles].language != lsSubtitleTracksTest[indexsubtitles].language)
+
+                if (batchmode && batchsubtitleindex == -1)
                 {
-                    processfile = false;
-                    errorlist.Add("Error: Subtitle track language is not the same for " + mkvFiles[currentFileIndex].filePath);
+                    // do not check the subtitle track in batch mode if it is not being changed
                 }
-                if (lsSubtitleTracks[indexsubtitles].name != lsSubtitleTracksTest[indexsubtitles].name)
+                else
                 {
-                    processfile = false;
-                    errorlist.Add("Error: Subtitle track name is not the same for " + mkvFiles[currentFileIndex].filePath);
+                    if (lsSubtitleTracks[indexsubtitles].language != lsSubtitleTracksTest[indexsubtitles].language)
+                    {
+                        processfile = false;
+                        errorlist.Add("Error: Subtitle track language is not the same for " + mkvFiles[currentFileIndex].filePath);
+                    }
+                    if (lsSubtitleTracks[indexsubtitles].name != lsSubtitleTracksTest[indexsubtitles].name)
+                    {
+                        processfile = false;
+                        errorlist.Add("Error: Subtitle track name is not the same for " + mkvFiles[currentFileIndex].filePath);
+                    }
                 }
+
             }
 
             if (processfile)
