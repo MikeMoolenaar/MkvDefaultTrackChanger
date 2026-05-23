@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Serialization.Xaml;
 using MatroskaLib;
 using MatroskaLib.Types;
+using Microsoft.VisualBasic;
+using static System.Net.WebRequestMethods;
 
 namespace MkvDefaultTrackChanger;
 
@@ -24,7 +28,10 @@ public class MainForm : Form
     Label lblCurrentAudio;
     Label lblCurrentSubtitles;
 
-    List<MkvFile> mkvFiles;
+    List <Track> lsSubtitleTracks;
+    List <Track> lsAudioTracks;
+
+    List <MkvFile> mkvFiles;
     int currentFileIndex;
     OpenFileDialog fileDialog;
     private Dictionary<string, (string audio, string subtitles)> appliedConfigs;
@@ -43,7 +50,9 @@ public class MainForm : Form
 
         if (args.Length >= 3)
         {
-            indexaudio = int.Parse(args[0]) - 1;
+            indexaudio = int.Parse(args[0]);
+            if (indexaudio == -1) indexaudio = 0;
+            indexaudio = indexaudio - 1;
             indexsubtitles = int.Parse(args[1]);
             List<string> templist = new List<string>();
             for (i = 2; i < args.Length; i++)
@@ -71,33 +80,30 @@ public class MainForm : Form
     void RunCommandLine(int indexaudio, int indexsubtitles, string[] filepaths)
     {
         LoadFilesSub(filepaths);
-        for (currentFileIndex = 0; currentFileIndex < filepaths.Length; currentFileIndex++)
-        {
-            LoadCurrentFile();
+        currentFileIndex = 0;
+        LoadCurrentFile();
 
+        if (indexaudio != -1)
+        {
             if (indexaudio < 0 || indexaudio > dropdownAudio.Items.Count - 1)
             {
-                MessageBox.Show($"Invalid audio track index", MessageBoxType.Error);
+                Console.WriteLine("Error: Invalid audio track index");
                 return;
             }
-            else
-            {
-                dropdownAudio.SelectedIndex = indexaudio;
-            }
+            dropdownAudio.SelectedIndex = indexaudio;
+        }
 
+        if (indexsubtitles != -1)
+        {
             if (indexsubtitles < 0 || indexsubtitles > dropdownSubtitles.Items.Count - 1)
             {
-                MessageBox.Show($"Invalid subtitle track index", MessageBoxType.Error);
+                Console.WriteLine("Invalid subtitle track index");
                 return;
             }
-            else
-            {
-                dropdownSubtitles.SelectedIndex = indexsubtitles;
-            }
-
-            BtnApplyClickedSub();
-
+            dropdownSubtitles.SelectedIndex = indexsubtitles;
         }
+
+        ProcessAllFiles(true);
         Environment.Exit(0);
     }
 
@@ -149,10 +155,13 @@ public class MainForm : Form
 
         MatroskaReader.LoadMediaInfoForFile(currentFile);
 
-        var lsSubtitleTracks = currentFile.tracks
+        if (lsSubtitleTracks != null) lsSubtitleTracks.Clear();
+        lsSubtitleTracks = currentFile.tracks
             .Where(x => x.type == TrackTypeEnum.subtitle)
             .ToList();
-        var lsAudioTracks = currentFile.tracks
+
+        if (lsAudioTracks != null) lsAudioTracks.Clear();
+        lsAudioTracks = currentFile.tracks
             .Where(x => x.type == TrackTypeEnum.audio)
             .ToList();
 
@@ -210,21 +219,50 @@ public class MainForm : Form
 
     protected void BtnApplyAllClicked(object sender, EventArgs e)
     {
+        ProcessAllFiles(false);
+    }
+    protected void ProcessAllFiles(bool batchmode)
+    { 
         int indexaudio = dropdownAudio.SelectedIndex;
         int indexsubtitles = dropdownSubtitles.SelectedIndex;
 
+        string ProcessAllAudio;
+        string ProcessAllSubtitle;
+        string CurrentAudio;
+        string CurrentSubtitle;
+
         btnApply.Enabled = false;
         btnApplyAll.Enabled = false;
+
+        List <string> errorlist = new List<string>();
+
+        var currentFile = mkvFiles[currentFileIndex];
+
+        MatroskaReader.LoadMediaInfoForFile(currentFile);
+
+        var lsSubtitleTracksTest = currentFile.tracks
+            .Where(x => x.type == TrackTypeEnum.subtitle)
+            .ToList();
+        var lsAudioTracksTest = currentFile.tracks
+            .Where(x => x.type == TrackTypeEnum.audio)
+            .ToList();
+
+        lsSubtitleTracksTest.Insert(0, new TrackDisable());
+
+        ProcessAllAudio = dropdownAudio.Items[dropdownAudio.SelectedIndex].Text;
+        ProcessAllSubtitle = dropdownSubtitles.Items[dropdownAudio.SelectedIndex].Text;
 
         for (currentFileIndex = 0; currentFileIndex < mkvFiles.Count; currentFileIndex++)
         {
             bool processfile = true;
             LoadCurrentFile();
             UpdateNavigationButtons();
+            CurrentAudio = dropdownAudio.Items[dropdownAudio.SelectedIndex].Text;
+            CurrentSubtitle = dropdownSubtitles.Items[dropdownAudio.SelectedIndex].Text;
 
             if (indexaudio < 0 || indexaudio > dropdownAudio.Items.Count - 1)
             {
-                MessageBox.Show($"Invalid audio track index", MessageBoxType.Error);
+                errorlist.Add("Error: Invalid audio track index for " + mkvFiles[currentFileIndex].filePath);
                 processfile = false;
             }
             else
@@ -234,7 +272,7 @@ public class MainForm : Form
 
             if (indexsubtitles < 0 || indexsubtitles > dropdownSubtitles.Items.Count - 1)
             {
-                MessageBox.Show($"Invalid subtitle track index", MessageBoxType.Error);
+                errorlist.Add("Error: Invalid subtitle track index for " + mkvFiles[currentFileIndex].filePath);
                 processfile = false;
             }
             else
@@ -244,10 +282,52 @@ public class MainForm : Form
 
             if (processfile)
             {
+                if (lsAudioTracks[indexaudio].language != lsAudioTracksTest[indexaudio].language)
+                {
+                    processfile = false;
+                    errorlist.Add("Error: Audio track language is not the same for " + mkvFiles[currentFileIndex].filePath);
+                }
+                if (lsAudioTracks[indexaudio].name != lsAudioTracksTest[indexaudio].name)
+                {
+                    processfile = false;
+                    errorlist.Add("Error: Audio track name is not the same for " + mkvFiles[currentFileIndex].filePath);
+                }
+                if (lsSubtitleTracks[indexsubtitles].language != lsSubtitleTracksTest[indexsubtitles].language)
+                {
+                    processfile = false;
+                    errorlist.Add("Error: Subtitle track language is not the same for " + mkvFiles[currentFileIndex].filePath);
+                }
+                if (lsSubtitleTracks[indexsubtitles].name != lsSubtitleTracksTest[indexsubtitles].name)
+                {
+                    processfile = false;
+                    errorlist.Add("Error: Subtitle track name is not the same for " + mkvFiles[currentFileIndex].filePath);
+                }
+            }
+
+            if (processfile)
+            {
                 BtnApplyClickedSub();
             }
 
         }
+        if (errorlist.Count > 0)
+        {
+            int completed = appliedConfigs.Count;
+            int total = mkvFiles.Count;
+            errorlist.Add($"{completed} of {total} files processed");
+
+            string errormsg = string.Join(Environment.NewLine, errorlist);
+            if (batchmode)
+            {
+                Console.WriteLine(errormsg);
+            } 
+            else
+            {
+                var msgbox = new CustomMessageBox("Error List",errormsg);
+                msgbox.ShowModal(this);
+            }
+        }
+
         btnApply.Enabled = true;
         btnApplyAll.Enabled = true;
     }
@@ -262,8 +342,8 @@ public class MainForm : Form
 
             currentFile.tracks.ForEach(track =>
             {
-                string key = track.number.ToString();
-                track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
+                    string key = track.number.ToString();
+                    track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
             });
 
             MatroskaWriter.WriteMkvFile(currentFile);
@@ -275,7 +355,7 @@ public class MainForm : Form
 
             int completed = appliedConfigs.Count;
             int total = mkvFiles.Count;
-            lblStatus.Text = $"Saved! ({completed}/{total} files processed)";
+            lblStatus.Text = $"Saved! ({completed} of {total} files processed)";
         }
         catch (Exception exception)
         {
@@ -338,6 +418,7 @@ public class MainForm : Form
             Logo = Icon.WithSize(100, 200),
             Website = new Uri("https://github.com/Ranft65/MkvDefaultTrackChanger/tree/feat/add-flags-and-command-line"),
             WebsiteLabel = "Github",
+            Version = "1.1.0.0",
             ProgramDescription =
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
@@ -359,12 +440,18 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
             "For command line usage, use the following:\n\n" +
             "MkvDefaultTrackChanger  DefaultAudioTrack  DefaultSubtitleTrack  File(s)\n\n" +
             "Where\n\n" +
-            "DefaultAudioTrack is the desired default audio track. The first audio track is track number one.\n\n" +
-            "DefaultSubtitleTrack is the desired default subtitle track.  The first subtitle track is track number one.  Use zero for no default subtitle track.\n\n" +
+            "DefaultAudioTrack is the desired default audio track. The first audio track is track number one.\n" +
+            "Use -1 or 0 to not modify the default audio track\n\n" +
+            "DefaultSubtitleTrack is the desired default subtitle track.  The first subtitle track is track number one.\n" +
+            "Use -1 to not modifiy the default subtitle track\n" +
+            "Use 0 for no default subtitle track.\n\n" +
             "File(s) is the list of files to modify.\n\n" +
             "Command Line Example:\n\n" +
             "MkvDefaultTrackChanger  2  1  file1.mkv  file2.mkv  file3.mkv\n\n" +
-            "Please note that files are overwritten.  Only use this program on copies of the original files if you want to keep the original unmodifed files."
+            "The selected audio and subtitle tracks of the files must be the same.\n" +
+            "Files with different tracks than the first file will not be processed.\n\n" +
+            "Please note that files are overwritten.\n" +
+            "Only use this program on copies of the original files if you want to keep the original unmodifed files."
         );
         msgBox.ShowModal(this);
     }

@@ -8,9 +8,14 @@ MkvDefaultTrackChanger  DefaultAudioTrack  DefaultSubtitleTrack  File(s)
 
 Where
 
-DefaultAudioTrack is the desired default audio track. The first audio track is track number one.
+DefaultAudioTrack is the desired default audio track. 
+The first audio track is track number one.
+Use -1 or 0 to not modify the default audio track.
 
-DefaultSubtitleTrack is the desired default subtitle track.  The first subtitle track is track number one.  Use zero for no default subtitle track.
+DefaultSubtitleTrack is the desired default subtitle track.
+The first subtitle track is track number one.
+Use -1 to not modifiy the default subtitle track.
+Use zero for no default subtitle track.
 
 File(s) is the list of files to modify.
 
@@ -18,7 +23,11 @@ Command Line Example:
 
 MkvDefaultTrackChanger 2 1 file1.mkv file2.mkv file3.mkv
 
-Please note that files are overwritten.  Only use this program on copies of the original files if you want to keep the original unmodifed files.
+The selected audio and subtitle tracks of the files must be the same.
+Files with different tracks than the first file will not be processed.
+
+Please note that files are overwritten.
+Only use this program on copies of the original files if you want to keep the original unmodifed files.
 
 ## What is MKV and what problem does this program solve?
 MKV is a multimedia container format and can store multiple
