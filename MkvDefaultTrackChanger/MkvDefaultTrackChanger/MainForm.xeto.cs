@@ -68,7 +68,7 @@ public class MainForm : Form
             commandlinemode = true;
             if (args[0] == "-h" || args[0] == "-H")
             {
-                commandlinehelp(true);
+                commandlinehelp();
             }
             indexaudio = int.Parse(args[0]);
             if (indexaudio == -1) indexaudio = 0;
@@ -586,9 +586,9 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
     }
     protected void BtnHelpClicked(object sender, EventArgs e)
     {
-        commandlinehelp(false);
+        commandlinehelp();
     }
-    protected void commandlinehelp(bool batch)
+    protected void commandlinehelp()
     {
         string helpstring;
         helpstring = 
@@ -608,12 +608,13 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
             "File(s) is the list of files to modify.\n\n" +
             "Command Line Example:\n\n" +
             "MkvDefaultTrackChanger  2  1  file1.mkv  file2.mkv  file3.mkv\n\n" +
+            "MkvDefaultTrackChanger -h or MkvDefaultTrackChanger -H will display this help.\n\n" +
             "The selected audio and subtitle tracks of the files must be the same.\n" +
             "Files with different tracks than the first file will not be processed unless checks are disabled.\n\n" +
             "Please note that files are overwritten.\n" +
             "Only use this program on copies of the original files if you want to keep the original unmodifed files.";
 
-        if (batch)
+        if (commandlinemode)
         {
             Console.WriteLine(helpstring);
         }

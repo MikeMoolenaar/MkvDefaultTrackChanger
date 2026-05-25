@@ -29,6 +29,8 @@ Command Line Example:
 
 MkvDefaultTrackChanger 2 1 file1.mkv file2.mkv file3.mkv
 
+MkvDefaultTrackChanger -h or MkvDefaultTrackChanger -H will display this help.
+
 The selected audio and subtitle tracks of the files must be the same.
 Files with different tracks than the first file will not be processed unless checks are disabled.
 
