@@ -3,8 +3,8 @@
 	xmlns="http://schema.picoe.ca/eto.forms" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="MkvDefaultTrackChanger"
-	MinimumSize="500,550"
-  	Size="600, 550"
+	MinimumSize="500,625"
+  	Size="600, 625"
 	Padding="10">
 	<DynamicLayout Spacing="0,15" Padding="15,5,15,0">
         <StackLayout Spacing="5" HorizontalContentAlignment="Center">
@@ -25,15 +25,27 @@
             <Label x:Name="lblCurrentAudio" Text="" TextAlignment="Center" Font="SystemFont=Default, Size=8" TextColor="#666"></Label>
             <DropDown x:Name="dropdownAudio" Enabled="false" SelectedKeyChanged="OnDropdownSelectionChanged"></DropDown>
         </DynamicLayout>
+        
         <DynamicLayout Spacing="0,5">
             <Label TextAlignment="Center">Subtitles</Label>
             <Label x:Name="lblCurrentSubtitles" Text="" TextAlignment="Center" Font="SystemFont=Default, Size=8" TextColor="#666"></Label>
             <DropDown x:Name="dropdownSubtitles" Enabled="false" SelectedKeyChanged="OnDropdownSelectionChanged"></DropDown>
-        </DynamicLayout>
-        
+        </DynamicLayout> 
+     
         <StackLayout Spacing="5" HorizontalContentAlignment="Center">
             <Button x:Name="btnApply" Enabled="false" Click="BtnApplyClicked">Apply</Button>
             <Button x:Name="btnApplyAll" Enabled="false" Click="BtnApplyAllClicked">Apply All</Button>
+        </StackLayout> 
+        <StackLayout Spacing="5" HorizontalContentAlignment="Left">            
+            <CheckBox x:Name="donotmodifyaudiotracks" Text="Do not modify audio tracks for apply all"></CheckBox>
+            <CheckBox x:Name="donotmodifysubtitletracks" Text="Do not modify subtitles for apply all"></CheckBox>
+            <CheckBox x:Name="disableAudioLanguageCheck" Text="Disable language check for audio tracks for apply all"></CheckBox>
+            <CheckBox x:Name="disableAudioNameCheck" Text="Disable name check for audio tracks for apply all"></CheckBox>
+            <CheckBox x:Name="disableSubtitleLanguageCheck" Text="Disable language check for subtitles tracks for apply all"></CheckBox>
+            <CheckBox x:Name="disableSubtitleNameCheck" Text="Disable name check for subtiltes tracks for apply all"></CheckBox>
+        </StackLayout>
+        
+        <StackLayout Spacing="5" HorizontalContentAlignment="Center">
             <Label x:Name="lblStatus" Text=""></Label>
         </StackLayout>
 

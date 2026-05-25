@@ -245,3 +245,10 @@ public class TrackDisable : Track
     public override string ToUiString() => "Disable";
 }
 
+public class TrackDoNotModify : Track  // added
+{
+    public TrackDoNotModify() : base(null!) { }
+    public override string ToString() => "Do not modify";
+    public override string ToUiString() => "Do not modify";
+}
+
