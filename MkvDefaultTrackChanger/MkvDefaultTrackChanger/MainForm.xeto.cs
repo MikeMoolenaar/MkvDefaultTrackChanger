@@ -66,43 +66,58 @@ public class MainForm : Form
         if (args.Length >= 3)
         {
             commandlinemode = true;
-            if (args[0] == "-h" || args[0] == "-H")
+            try
+            {
+                if (args[0] == "-h" || args[0] == "-H")
+                {
+                    commandlinehelp();
+                }
+
+                indexaudio = int.Parse(args[0]);
+                if (indexaudio == -1) indexaudio = 0;
+                indexaudio = indexaudio - 1;
+                indexsubtitles = int.Parse(args[1]);
+                List<string> templist = new List<string>();
+
+                for (i = 2; i < args.Length; i++)
+                {
+                    if (args[i] == "-disable-all-track-sameness-checks")
+                    {
+                        disableAudioLanguageCheck.Checked = true;
+                        disableAudioNameCheck.Checked = true;
+                        disableSubtitleLanguageCheck.Checked = true;
+                        disableSubtitleNameCheck.Checked = true;
+                    }
+                    else if (args[i] == "-disable-audio-language-check")
+                    {
+                        disableAudioLanguageCheck.Checked = true;
+                    }
+                    else if (args[i] == "-disable-audio-name-check")
+                    {
+                        disableAudioNameCheck.Checked = true;
+                    }
+                    else if (args[i] == "-disable-subtitle-language-check")
+                    {
+                        disableSubtitleLanguageCheck.Checked = true;
+                    }
+                    else if (args[i] == "-disable-subtitle-name-check")
+                    {
+                        disableSubtitleNameCheck.Checked = true;
+                    }
+                    else
+                    {
+                        templist.Add(args[i]);
+                    }
+                }
+#pragma warning restore CS8602
+                filepaths = templist.ToArray();
+                RunCommandLine(indexaudio, indexsubtitles, filepaths);
+            }
+            catch
             {
                 commandlinehelp();
+                Environment.Exit(1);
             }
-            indexaudio = int.Parse(args[0]);
-            if (indexaudio == -1) indexaudio = 0;
-            indexaudio = indexaudio - 1;
-            indexsubtitles = int.Parse(args[1]);
-            List<string> templist = new List<string>();
-
-            for (i = 2; i < args.Length; i++)
-            {
-                if (args[i] == "-disable-audio-language-check")
-                {
-                    disableAudioLanguageCheck.Checked = true;
-                }
-                else if (args[i] == "-disable-audio-name-check")
-                {
-                     disableAudioNameCheck.Checked = true;
-                }
-                if (args[i] == "-disable-subtitle-language-check")
-                {
-                    disableSubtitleLanguageCheck.Checked = true;
-                }
-                else if (args[i] == "-disable-subtitle-name-check")
-                {
-                    disableSubtitleNameCheck.Checked = true;
-                }
-                else
-                {
-                    templist.Add(args[i]);
-                }
-
-            }
-#pragma warning restore CS8602
-            filepaths = templist.ToArray();
-            RunCommandLine(indexaudio, indexsubtitles, filepaths);
         }
         else if (args.Length > 0)
         {
@@ -600,7 +615,8 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
             "DefaultSubtitleTrack is the desired default subtitle track.  The first subtitle track is track number one.\n" +
             "Use -1 to not modifiy the default subtitle track\n" +
             "Use 0 for no default subtitle track.\n\n" +
-            "The following options are optional and disable checking when multiple files are processed:\n" +
+            "The following options are optional and disable track sameness checking when multiple files are processed:\n" +
+            "-disable-all-track-sameness-checks\n" +
             "-disable-audio-language-check\n" +
             "-disable-audio-name-check\n" + 
             "-disable-subtitle-language-check\n" +

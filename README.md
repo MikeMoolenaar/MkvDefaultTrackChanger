@@ -17,7 +17,8 @@ The first subtitle track is track number one.
 Use -1 to not modifiy the default subtitle track.
 Use zero for no default subtitle track.
 
-The following options are optional and disable checking when multiple files are processed:
+The following options are optional and disable track sameness checking when multiple files are processed:
+-disable-all-track-sameness-checks
 -disable-audio-language-check
 -disable-audio-name-check
 -disable-subtitle-language-check
