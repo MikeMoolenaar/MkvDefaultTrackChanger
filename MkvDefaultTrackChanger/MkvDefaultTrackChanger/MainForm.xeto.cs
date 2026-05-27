@@ -68,11 +68,6 @@ public class MainForm : Form
             commandlinemode = true;
             try
             {
-                if (args[0] == "-h" || args[0] == "-H")
-                {
-                    commandlinehelp();
-                }
-
                 indexaudio = int.Parse(args[0]);
                 if (indexaudio == -1) indexaudio = 0;
                 indexaudio = indexaudio - 1;
@@ -121,9 +116,11 @@ public class MainForm : Form
         }
         else if (args.Length > 0)
         {
-            MessageBox.Show($"There must be at least three command line arguments if they are used.",
-                MessageBoxType.Error);
-            return;
+            commandlinemode = true;
+            commandlinehelp();
+            Environment.Exit(1);
+            // MessageBox.Show($"There must be at least three command line arguments if they are used.",MessageBoxType.Error);
+            // return;
         }
         else
         {
@@ -324,6 +321,9 @@ public class MainForm : Form
         //string CurrentAudio;
         //string CurrentSubtitle;
 
+        int indexaudiocurrentfile;
+        int indexsubtitlescurrentfile;
+
         btnApply.Enabled = false;
         btnApplyAll.Enabled = false;
 
@@ -365,6 +365,10 @@ public class MainForm : Form
             bool processfile = true;
             LoadCurrentFile();
             UpdateNavigationButtons();
+
+            indexaudiocurrentfile = dropdownAudio.SelectedIndex;
+            indexsubtitlescurrentfile = dropdownSubtitles.SelectedIndex;
+
             //CurrentAudio = dropdownAudio.Items[dropdownAudio.SelectedIndex].Text;
             //CurrentSubtitle = dropdownSubtitles.Items[dropdownAudio.SelectedIndex].Text;
 
@@ -395,6 +399,16 @@ public class MainForm : Form
             {
                 dropdownSubtitles.SelectedIndex = indexsubtitles;
             }
+
+            if (indexaudio == indexaudiocurrentfile && indexsubtitles == indexsubtitlescurrentfile)
+            {
+                // We could put processfile = false here but if so then the file status count would be wrong.
+                // Logic to not write files that do not have any default track values changed
+                // has been put in the process a single file function BtnApplyClickedSub.
+                // 
+            }
+
+
 
             if (processfile)
             {
@@ -484,20 +498,24 @@ public class MainForm : Form
 
     protected void BtnApplyClickedSub()
     {
-        if (donotmodifyaudiotracks.Checked == true && donotmodifysubtitletracks.Checked == true)
-        {
-            return;
-        }
+        bool changed = false;
+        bool oldvalue;
         try
         {
             btnApply.Enabled = false;
 
             var currentFile = mkvFiles[currentFileIndex];
 
-            currentFile.tracks.ForEach(track =>
+            if (donotmodifyaudiotracks.Checked == true && donotmodifysubtitletracks.Checked == true)
             {
+                // Do nothing
+            }
+            else
+            {
+                currentFile.tracks.ForEach(track =>
+                {
                     if (track.@type == TrackTypeEnum.audio && donotmodifyaudiotracks.Checked == true)
-                    { 
+                    {
                         // do nothing since this is an audio track and audio tracks are not being modified
                     }
                     else if (track.@type == TrackTypeEnum.subtitle && donotmodifysubtitletracks.Checked == true)
@@ -507,12 +525,20 @@ public class MainForm : Form
                     else
                     {
                         string key = track.number.ToString();
+
+                        oldvalue = track.flagDefault;
+
                         track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
+
+                        if (track.flagDefault != oldvalue) changed = true;
+
                     }
 
-            });
+                });
 
-            MatroskaWriter.WriteMkvFile(currentFile);
+                if (changed) MatroskaWriter.WriteMkvFile(currentFile);
+                
+            }
 
             appliedConfigs[currentFile.filePath] = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
 
@@ -584,7 +610,7 @@ public class MainForm : Form
             Logo = Icon.WithSize(100, 200),
             Website = new Uri("https://github.com/Ranft65/MkvDefaultTrackChanger/tree/feat/add-flags-and-command-line"),
             WebsiteLabel = "Github",
-            Version = "1.2.0.0",
+            Version = "1.2.1.0",
             ProgramDescription =
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
