@@ -34,6 +34,8 @@ public class MainForm : Form
     CheckBox disableAudioNameCheck;
     CheckBox disableSubtitleLanguageCheck;
     CheckBox disableSubtitleNameCheck;
+    Label Label1;
+    Label Label2;
 
     bool commandlinemode = false;
 
@@ -54,6 +56,8 @@ public class MainForm : Form
 
         Icon = Icon.FromResource("MkvDefaultTrackChanger.logo.ico");
         XamlReader.Load(this);
+
+        AutoSize = true;
 
 #pragma warning disable CS8602
         disableAudioLanguageCheck.Checked = false;
@@ -240,6 +244,22 @@ public class MainForm : Form
         UpdateCurrentTrackLabels(lsAudioTracks, lsSubtitleTracks);
 
         lblCurrentFile.Text = $"File {currentFileIndex + 1} of {mkvFiles.Count}: {Path.GetFileName(currentFile.filePath)}";
+
+        String text1;
+        text1 = "Current file audio tracks:";
+        for (int i = 0; i < dropdownAudio.Items.Count; i++)
+        {
+            text1 = text1 + Environment.NewLine + dropdownAudio.Items[i].Text;
+        }
+        Label1.Text = text1;
+
+        String text2;
+        text2 = "Current file subtitle tracks:";
+        for (int i = 1; i < dropdownSubtitles.Items.Count; i++)
+        {
+            text2 = text2 + Environment.NewLine + dropdownSubtitles.Items[i].Text;
+        }
+        Label2.Text = text2;
 
         if (appliedConfigs.TryGetValue(currentFile.filePath, out var config))
         {
@@ -610,7 +630,7 @@ public class MainForm : Form
             Logo = Icon.WithSize(100, 200),
             Website = new Uri("https://github.com/Ranft65/MkvDefaultTrackChanger/tree/feat/add-flags-and-command-line"),
             WebsiteLabel = "Github",
-            Version = "1.2.1.0",
+            Version = "1.3.0",
             ProgramDescription =
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
