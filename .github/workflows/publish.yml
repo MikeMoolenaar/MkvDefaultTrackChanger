@@ -8,9 +8,9 @@ on:
         required: true
         default: ''
 env:
-  PUBLISH_WIN_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/bin/Release/net8.0-windows/win-x64/publish
-  PUBLISH_LINUX_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/bin/Release/net8.0/linux-x64/publish
-  PUBLISH_MAC_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/bin/Release/net8.0/osx-x64/publish
+  PUBLISH_WIN_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/bin/Release/net9.0-windows/win-x64/publish
+  PUBLISH_LINUX_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/bin/Release/net9.0/linux-x64/publish
+  PUBLISH_MAC_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/bin/Release/net9.0/osx-x64/publish
 jobs:
   build:
     runs-on: windows-latest
