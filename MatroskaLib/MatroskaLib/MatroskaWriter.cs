@@ -50,11 +50,12 @@ public static class MatroskaWriter
             }
 
             // Set forced flag to 0 if present
-            if (t.flagForcedByteNumber != 0)
-            {
-                int correction = t.flagForcedByteNumber < t.flagTypebytenumber ? 3 : 0;
-                lsBytes[offset + t.flagForcedByteNumber - correction] = 0x0;
-            }
+            // RANFT65 Do not change the forced flag since this seems to corrupt the files if you do.
+            //if (t.flagForcedByteNumber != 0)
+            //{
+            //    int correction = t.flagForcedByteNumber < t.flagTypebytenumber ? 3 : 0;
+            //    lsBytes[offset + t.flagForcedByteNumber - correction] = 0x0;
+            //}
         }
     }
 

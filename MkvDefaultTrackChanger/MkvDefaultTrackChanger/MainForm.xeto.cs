@@ -16,6 +16,15 @@ using static System.Net.WebRequestMethods;
 
 namespace MkvDefaultTrackChanger;
 
+/* 
+ *  Adding the option to set forced subtitles to be unforced caused the resulting mkv files to be unreadable.
+ *  Therefore this option been disabled and its code to do has been commented out.
+ *  
+ *  Further investigation has shown that the changing of the forced flag in MatroskaWrite.cs seems to be the 
+ *  cause of file corruption when the changes are made more than once.  Therefore the changing of the forced
+ *  flag has been disabled for now until a solution to the file corruption is found.
+ */
+
 public class MainForm : Form
 {
     Label lblFilesSelected;
@@ -35,6 +44,7 @@ public class MainForm : Form
     CheckBox disableAudioNameCheck;
     CheckBox disableSubtitleLanguageCheck;
     CheckBox disableSubtitleNameCheck;
+    // CheckBox NoForcedSubtitles;
     Label Label1;
     Label Label2;
 
@@ -65,6 +75,7 @@ public class MainForm : Form
         disableAudioNameCheck.Checked = false;
         disableSubtitleLanguageCheck.Checked = false;
         disableSubtitleNameCheck.Checked = false;
+        // NoForcedSubtitles.Checked = false;
 
         appliedConfigs = new Dictionary<string, (string audio, string subtitles)>();
 
@@ -104,6 +115,11 @@ public class MainForm : Form
                     {
                         disableSubtitleNameCheck.Checked = true;
                     }
+                    //else if (args[i] == "-no-forced-subtitles")
+                    //{
+                    //    NoForcedSubtitles.Checked = true;
+                    //    donotmodifysubtitletracks.Checked = false;
+                    //}
                     else
                     {
                         templist.Add(args[i]);
@@ -262,7 +278,7 @@ public class MainForm : Form
         }
         Label2.Text = text2;
 
-        Height = 500 + Label1.Height + Label2.Height;
+        Height = 520 + Label1.Height + Label2.Height;
 
         int newwidth;
         newwidth = lblFilesSelected.Width;
@@ -554,6 +570,7 @@ public class MainForm : Form
     {
         bool changed = false;
         bool oldvalue;
+
         try
         {
             btnApply.Enabled = false;
@@ -574,7 +591,7 @@ public class MainForm : Form
                     }
                     else if (track.@type == TrackTypeEnum.subtitle && donotmodifysubtitletracks.Checked == true)
                     {
-                        // do nothing since this is an audio track and audio tracks are not being modified
+                        // do nothing since this is an subtitle track and subtitle tracks are not being modified
                     }
                     else
                     {
@@ -584,8 +601,21 @@ public class MainForm : Form
 
                         track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
 
-                        if (track.flagDefault != oldvalue) changed = true;
+                        if (track.flagDefault != oldvalue)
+                        {
+                            changed = true;
+                        }
 
+                        /*
+                        if (track.@type == TrackTypeEnum.subtitle && track.flagForced == true && NoForcedSubtitles.Checked == true)
+                        {
+                            changed = true;   
+                            // We do not change the forced flag here since it will mess up the writting of the mkv file later.
+                            // Instead we force a write of the file.
+                            // During any write of the file, all the forced subtitle flags are all set to false.
+                            // track.flagForced = false;
+                        }
+                        */
                     }
 
                 });
@@ -657,6 +687,14 @@ public class MainForm : Form
         }
     }
 
+    protected void NoForcedSubtitlesChanged(object sender, EventArgs e)
+    {
+        //if (NoForcedSubtitles.Checked == true)
+        //{
+        //    donotmodifyaudiotracks.Checked = false;
+        //}
+    }
+
     protected void HandleAbout(object sender, EventArgs e)
     {
         var aboutDialog = new AboutDialog
@@ -664,7 +702,7 @@ public class MainForm : Form
             Logo = Icon.WithSize(100, 200),
             Website = new Uri("https://github.com/Ranft65/MkvDefaultTrackChanger/tree/feat/add-flags-and-command-line"),
             WebsiteLabel = "Github",
-            Version = "1.3.1",
+            Version = "1.4.0",
             ProgramDescription =
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
@@ -701,6 +739,7 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
             "-disable-audio-name-check\n" + 
             "-disable-subtitle-language-check\n" +
             "-disable-subtitle-name-check\n\n" +
+            // "The -no-forced-subtitles option will make all forced subtitles be unforced." +
             "File(s) is the list of files to modify.\n\n" +
             "Command Line Example:\n\n" +
             "MkvDefaultTrackChanger  2  1  file1.mkv  file2.mkv  file3.mkv\n\n" +

@@ -49,6 +49,14 @@
             <CheckBox x:Name="disableAudioNameCheck" Text="Disable name check for audio tracks for apply all"></CheckBox>
             <CheckBox x:Name="disableSubtitleLanguageCheck" Text="Disable language check for subtitles tracks for apply all"></CheckBox>
             <CheckBox x:Name="disableSubtitleNameCheck" Text="Disable name check for subtiltes tracks for apply all"></CheckBox>
+            <!--
+            <CheckBox
+                x:Name="NoForcedSubtitles"
+                Text="Set forced subtitles to be unforced even if there are no default subtitle changes (Overrides do not modify subtitles)"
+                CheckedChanged="NoForcedSubtitlesChanged"
+            >
+            </CheckBox>
+            -->
         </StackLayout>
 
         <StackLayout Spacing="3" HorizontalContentAlignment="Center">
