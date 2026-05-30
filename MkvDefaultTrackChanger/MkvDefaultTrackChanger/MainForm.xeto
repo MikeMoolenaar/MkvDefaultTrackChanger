@@ -5,12 +5,16 @@
 	Title="MkvDefaultTrackChanger"
     MinimumSize="800,450"
   	Size="800, 450"
-	Padding="10">
+	Padding="10"
+    AllowDrop="true"
+    DragEnter="OnDragEnter"
+    DragDrop="OnDragDrop"
+    >
 
     <DynamicLayout Spacing="3,3" Padding="3,3,3,3">
         
         <StackLayout Spacing="3" HorizontalContentAlignment="Center">
-            <Button x:Name="btnBrowse" Click="BtnBrowseFilesClick">Browse files</Button>
+            <Button x:Name="btnBrowse" Click="BtnBrowseFilesClick">Click here to browse files (Drag and drop can be used instead)</Button>
             <Label x:Name="lblFilesSelected" Text=""></Label>
         </StackLayout>
 

@@ -30,6 +30,7 @@ namespace MkvDefaultTrackChanger;
 
 public class MainForm : Form
 {
+    Button btnBrowse;
     Label lblFilesSelected;
     DropDown dropdownAudio;
     CheckBox donotmodifyaudiotracks;
@@ -50,6 +51,7 @@ public class MainForm : Form
     CheckBox NoForcedSubtitles;
     Label Label1;
     Label Label2;
+    // Panel dropZone;
 
     bool commandlinemode = false;
 
@@ -73,7 +75,18 @@ public class MainForm : Form
 
         // AutoSize = true;
 
+//        if (dropZone != null)
+//        {
+//            dropZone.Visible = true;
+//#pragma warning disable CS8622
+//            dropZone.DragDrop += OnDragDrop;
+//            dropZone.DragEnter += OnDragEnter;
+//#pragma warning restore CS8622
+//        }
+
+
 #pragma warning disable CS8602
+
         disableAudioLanguageCheck.Checked = false;
         disableAudioNameCheck.Checked = false;
         disableSubtitleLanguageCheck.Checked = false;
@@ -702,7 +715,7 @@ public class MainForm : Form
             Logo = Icon.WithSize(100, 200),
             Website = new Uri("https://github.com/Ranft65/MkvDefaultTrackChanger/tree/feat/add-flags-and-command-line"),
             WebsiteLabel = "Github",
-            Version = "1.5.0",
+            Version = "1.5.1",
             ProgramDescription =
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
@@ -795,4 +808,33 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
         }
 
     }
+
+    private void OnDragDrop(object sender, DragEventArgs e)
+    {
+        btnBrowse.Enabled = false;
+        if (e.Data.ContainsUris)
+        {
+            List<string> templist = new List<string>();
+            string[] filepaths;
+            var fileUris = e.Data.Uris;
+            foreach (var uri in fileUris)
+            {
+                if (uri.IsFile)
+                {
+                    templist.Add(uri.LocalPath);
+                }
+            }
+            filepaths = templist.ToArray();
+            LoadFilesSub(filepaths);
+        }
+        btnBrowse.Enabled = true;
+    }
+
+    private void OnDragEnter(object sender, DragEventArgs e)
+    {
+        // If you don't change this from None, the drop cursor will remain a "Blocked" sign
+        e.Effects = DragEffects.Move; // Or DragEffects.Copy / DragEffects.All
+    }
+
+
 }
