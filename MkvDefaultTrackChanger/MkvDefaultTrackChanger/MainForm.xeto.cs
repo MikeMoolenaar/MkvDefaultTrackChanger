@@ -17,6 +17,7 @@ public class MainForm : Form
     DropDown dropdownSubtitles;
     Button btnApply;
     Label lblStatus;
+    Label lblDragDrop;
 
     MkvFilesContainer mkvContainer;
     OpenFileDialog fileDialog;
@@ -33,6 +34,8 @@ public class MainForm : Form
         fileDialog.MultiSelect = true;
 
         AllowDrop = !Platform.IsGtk;
+
+        lblDragDrop!.Visible = !AllowDrop;
     }
 
     private void BtnBrowseFilesClick(object sender, EventArgs e)
@@ -110,6 +113,7 @@ public class MainForm : Form
         
         string files = filePaths.Count == 1 ? "file" : "files";
         lblFilesSelected.Text = $"{filePaths.Count} {files} selected";
+        lblDragDrop.Visible = false;
     }
 
     private void FillDropdown(DropDown dropDown, List<Track> lsTracks)
