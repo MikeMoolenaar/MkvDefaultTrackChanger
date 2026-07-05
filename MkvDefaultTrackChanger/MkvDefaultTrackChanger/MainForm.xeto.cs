@@ -10,7 +10,7 @@ using MatroskaLib.Types;
 
 namespace MkvDefaultTrackChanger;
 
-public class MainForm : Form
+public sealed class MainForm : Form
 {
     Label lblFilesSelected;
     DropDown dropdownAudio;
@@ -33,7 +33,7 @@ public class MainForm : Form
         fileDialog.Filters.Add(new FileFilter("MKV files", "*.mkv"));
         fileDialog.MultiSelect = true;
 
-        AllowDrop = !Platform.IsGtk;
+        AllowDrop = !Platform.IsGtk; // Can't seem to get this to work in Wayland...
 
         lblDragDrop!.Visible = !AllowDrop;
     }
@@ -48,17 +48,17 @@ public class MainForm : Form
 
     private void OnDragEnter(object sender, DragEventArgs e)
     {
-        e.Effects = GetMkvFilePaths(e).Count > 0 ? DragEffects.Copy : DragEffects.None;
+        e.Effects = GetDragEventFilePaths(e).Count > 0 ? DragEffects.Copy : DragEffects.None;
     }
 
     private void OnDragDrop(object sender, DragEventArgs e)
     {
-        var filePaths = GetMkvFilePaths(e);
+        var filePaths = GetDragEventFilePaths(e);
         if (filePaths.Count > 0)
             ProcessFiles(filePaths);
     }
 
-    private static List<string> GetMkvFilePaths(DragEventArgs e)
+    private static List<string> GetDragEventFilePaths(DragEventArgs e)
     {
         if (!e.Data.ContainsUris)
             return [];
@@ -128,7 +128,7 @@ public class MainForm : Form
             dropDown.SelectedKey = lsTracks[0].number.ToString();
     }
 
-    protected void BtnApplyClicked(object sender, EventArgs e)
+    private void BtnApplyClicked(object sender, EventArgs e)
     {
         try
         {
@@ -166,7 +166,7 @@ public class MainForm : Form
        
     }
 
-    protected void HandleAbout(object sender, EventArgs e)
+    private void HandleAbout(object sender, EventArgs e)
     {
         var aboutDialog = new AboutDialog
         {
