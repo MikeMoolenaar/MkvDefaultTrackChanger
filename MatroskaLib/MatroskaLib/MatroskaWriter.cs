@@ -19,7 +19,8 @@ public static class MatroskaWriter
 
         int offset = 0;
         _ChangeTrackElements(mkfFile.tracks, lsBytes, ref offset);
-        ByteHelper.ChangeLength(lsBytes, mkfFile.tracksPosition, MatroskaElements.Tracks, offset);
+        if (!ByteHelper.ChangeLength(lsBytes, mkfFile.tracksPosition, MatroskaElements.Tracks, offset))
+            throw new InvalidOperationException("New length of the tracks element is bigger than the old one, cannot write changes to file.");
 
         _ChangeVoidLengthAndHeaders(mkfFile.seekList, mkfFile.seekHeadCheckSum, mkfFile.tracksCheckSum, mkfFile.voidPosition, mkfFile.beginHeaderPosition,
             offset, lsBytes);
@@ -43,10 +44,13 @@ public static class MatroskaWriter
             else if (t.flagTypebytenumber != 0)
             {
                 // Default flag is not present, add it after the track entry element
-                ByteHelper.ChangeLength(lsBytes, offset + t.trackLengthByteNumber, TrackElements.Entry, 3);
-                lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
-                    new byte[] { 0x88, 0x81, defaultFlag });
-                offset += 3;
+                var success = ByteHelper.ChangeLength(lsBytes, offset + t.trackLengthByteNumber, TrackElements.Entry, 3);
+                if (success)
+                {
+                    lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
+                        new byte[] { 0x88, 0x81, defaultFlag });
+                    offset += 3;
+                }
             }
 
             // Set forced flag to 0 if present
@@ -95,7 +99,8 @@ public static class MatroskaWriter
         {
             // Void is after the header, change the length of the void element
             var lsVoidLength = lsBytes.GetRange(voidPosition + offset + 1, 8);
-            ByteHelper.ChangeLength(lsBytes, voidPosition + offset + 1, lsVoidLength, offset * -1);
+            if (!ByteHelper.ChangeLength(lsBytes, voidPosition + offset + 1, lsVoidLength, offset * -1))
+                throw new InvalidOperationException("New length of the void element is bigger than the old one, cannot write changes to file.");
         }
     }
 }

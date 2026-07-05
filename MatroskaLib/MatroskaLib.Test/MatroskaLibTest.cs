@@ -185,4 +185,18 @@ public class MatroskaLibTest
         
         MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
     }
+
+    
+    // Issue: https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/issues/18
+    [Fact]
+    public void BigBangTheoryGhIssue()
+    {
+        File.Copy("mkv files/TestFile7_SmallTrackEntryLength.mkv", TestFilePath, true);
+        List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles([TestFilePath]);
+        lsMkvFiles[0].tracks[2].flagDefault = true;
+        
+        MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
+        var mkvFile = MatroskaReader.ReadMkvFiles([TestFilePath])[0];
+        mkvFile.tracks[2].Should().BeEquivalentTo(new { flagDefault = true, flagForced = false });
+    }
 }

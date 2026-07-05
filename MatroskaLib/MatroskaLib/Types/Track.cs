@@ -91,7 +91,7 @@ public class Track
     }
 
     public override string ToString() =>
-        $"{number} ({language}) default={flagDefault}\t forced={flagForced}\t {name}";
+        $"{number} ({language}) type={type} default={flagDefault} forced={flagForced} {name}";
 
     public virtual string ToUiString() =>
         $"({language}) {name}";
