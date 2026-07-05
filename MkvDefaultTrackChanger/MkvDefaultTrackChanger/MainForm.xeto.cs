@@ -20,6 +20,7 @@ public class MainForm : Form
 
     MkvFilesContainer mkvContainer;
     OpenFileDialog fileDialog;
+    private List<string> currentFilePaths = new();
     private (string audio, string subtitles)? appliedConfig;
 
     public MainForm()
@@ -30,6 +31,8 @@ public class MainForm : Form
         fileDialog = new OpenFileDialog();
         fileDialog.Filters.Add(new FileFilter("MKV files", "*.mkv"));
         fileDialog.MultiSelect = true;
+
+        AllowDrop = !Platform.IsGtk;
     }
 
     private void BtnBrowseFilesClick(object sender, EventArgs e)
@@ -37,10 +40,40 @@ public class MainForm : Form
         var dialogResult = fileDialog.ShowDialog(this);
         if (dialogResult != DialogResult.Ok) return;
 
+        ProcessFiles(fileDialog.Filenames.ToList());
+    }
+
+    private void OnDragEnter(object sender, DragEventArgs e)
+    {
+        e.Effects = GetMkvFilePaths(e).Count > 0 ? DragEffects.Copy : DragEffects.None;
+    }
+
+    private void OnDragDrop(object sender, DragEventArgs e)
+    {
+        var filePaths = GetMkvFilePaths(e);
+        if (filePaths.Count > 0)
+            ProcessFiles(filePaths);
+    }
+
+    private static List<string> GetMkvFilePaths(DragEventArgs e)
+    {
+        if (!e.Data.ContainsUris)
+            return [];
+
+        return e.Data.Uris
+            .Where(uri => uri.IsFile)
+            .Select(uri => uri.LocalPath)
+            .Where(path => path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private void ProcessFiles(List<string> filePaths)
+    {
         try
         {
+            currentFilePaths = filePaths;
             LoadFiles();
-            
+
             btnApply.Enabled = true;
             lblStatus.Text = string.Empty;
             appliedConfig = null;
@@ -53,7 +86,7 @@ public class MainForm : Form
 
     private void LoadFiles()
     {
-        string[] filePaths = fileDialog.Filenames.ToArray();
+        var filePaths = currentFilePaths;
 
         mkvContainer = new MkvFilesContainer(filePaths);
         if (mkvContainer.MkFilesRejected.Count > 0)
@@ -75,8 +108,8 @@ public class MainForm : Form
         FillDropdown(dropdownSubtitles, lsSubtitleTracks);
         FillDropdown(dropdownAudio, lsAudioTracks);
         
-        string files = filePaths.Length == 1 ? "file" : "files";
-        lblFilesSelected.Text = $"{filePaths.Length} {files} selected";
+        string files = filePaths.Count == 1 ? "file" : "files";
+        lblFilesSelected.Text = $"{filePaths.Count} {files} selected";
     }
 
     private void FillDropdown(DropDown dropDown, List<Track> lsTracks)

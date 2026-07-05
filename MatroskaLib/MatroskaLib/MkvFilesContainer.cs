@@ -10,7 +10,7 @@ public class MkvFilesContainer
     public readonly List<MkvFile> MkvFiles = new();
     public readonly List<(MkvFile file, string error)> MkFilesRejected = new();
 
-    public MkvFilesContainer(string[] filePaths)
+    public MkvFilesContainer(List<string> filePaths)
     {
         var files = MatroskaReader.ReadMkvFiles(filePaths);
         MkvFiles.Add(files[0]);

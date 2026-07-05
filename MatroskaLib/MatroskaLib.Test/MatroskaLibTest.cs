@@ -25,7 +25,7 @@ public class MatroskaLibTest
     [InlineData("mkv files/TestFile1_MkvToolNix.mkv")]
     public void ReadTestFile1(string file)
     {
-        string[] filePaths = [file];
+        List<string> filePaths = [file];
 
         List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
         List<Track> lsTracks = lsMkvFiles[0].tracks;
@@ -62,7 +62,7 @@ public class MatroskaLibTest
     [InlineData("mkv files/TestFile2_MkvToolNix.mkv")]
     public void ReadTestFile2(string file)
     {
-        string[] filePaths = [file];
+        List<string> filePaths = [file];
 
         List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
         List<Track> lsTracks = lsMkvFiles[0].tracks;
@@ -103,7 +103,7 @@ public class MatroskaLibTest
     [InlineData("mkv files/TestFile3_HandBrake.mkv")]
     public void ReadTestFile3(string file)
     {
-        string[] filePaths = [file];
+        List<string> filePaths = [file];
 
         List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
         List<Track> lsTracks = lsMkvFiles[0].tracks;
@@ -143,7 +143,7 @@ public class MatroskaLibTest
     [InlineData("mkv files/TestFile5_MkvProEdit.mkv")]
     public void ReadTestFile4(string file)
     {
-        string[] filePaths = [file];
+        List<string> filePaths = [file];
 
         List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles(filePaths);
         List<Track> lsTracks = lsMkvFiles[0].tracks;
