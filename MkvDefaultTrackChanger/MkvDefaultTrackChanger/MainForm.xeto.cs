@@ -193,6 +193,24 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
 
     private void HandleException(Exception ex)
     {
+        if (ex is IOException { Message: {} message } && message.Contains("because it is being used by another process", StringComparison.OrdinalIgnoreCase))
+        {
+            MessageBox.Show($"One of the mkv files is currently in use by another process.{Environment.NewLine}Please close any applications that may be using the file and try again, for example video applications like VLC.", 
+                MessageBoxType.Error);
+            return;
+        }
+        
+        if (ex is UnauthorizedAccessException)
+        {
+            var additionalText = string.Empty;
+            if (Platform.IsWinForms) 
+                additionalText += $"{Environment.NewLine}{Environment.NewLine}Double check if the file is not set to Read-only via the properties.";
+            
+            MessageBox.Show($"You do not have permission to access one of the mkv files.{Environment.NewLine}Please check the file permissions and try again.{additionalText}", 
+                MessageBoxType.Error);
+            return;
+        }
+        
         new ErrorForm(ex, mkvContainer?.ToString(), Icon).Show();
     }
 }
