@@ -58,16 +58,24 @@ public sealed class MainForm : Form
             ProcessFiles(filePaths);
     }
 
-    private static List<string> GetDragEventFilePaths(DragEventArgs e)
+    private List<string> GetDragEventFilePaths(DragEventArgs e)
     {
-        if (!e.Data.ContainsUris)
-            return [];
+        try
+        {
+            if (!e.Data.ContainsUris)
+                return [];
 
-        return e.Data.Uris
-            .Where(uri => uri.IsFile)
-            .Select(uri => uri.LocalPath)
-            .Where(path => path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
-            .ToList();
+            return e.Data.Uris
+                .Where(uri => uri.IsFile)
+                .Select(uri => uri.LocalPath)
+                .Where(path => path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+            return [];
+        }
     }
 
     private void ProcessFiles(List<string> filePaths)
