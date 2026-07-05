@@ -140,7 +140,8 @@ public class MainForm : Form
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
 MkvDefaultTrackChanger is licensed under the terms of the GNU General Public License version 3. A copy of this license can be obtained from <https://www.gnu.org/licenses/gpl-3.0.html>.",
-            Developers = ["Mike Moolenaar"]
+            Developers = ["Mike Moolenaar"],
+            Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString()?[..^2] ?? "Unknown"
         };
         aboutDialog.ShowDialog(this);
     }
