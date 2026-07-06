@@ -8,19 +8,21 @@ on:
         required: true
         default: ''
 env:
-  PUBLISH_WIN_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/bin/Release/net8.0-windows/win-x64/publish
-  PUBLISH_LINUX_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/bin/Release/net8.0/linux-x64/publish
-  PUBLISH_MAC_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/bin/Release/net8.0/osx-x64/publish
+  PUBLISH_WIN_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/bin/Release/net10.0-Windows/win-x64/publish
+  PUBLISH_LINUX_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/bin/Release/net10.0/linux-x64/publish
+  PUBLISH_MAC_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/bin/Release/net10.0/osx-x64/publish
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 10.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows
@@ -39,40 +41,16 @@ jobs:
         powershell Rename-Item $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger.Mac.app ./MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
         powershell Compress-Archive $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
     - name: Create Draft Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v3
       with:
         tag_name: V${{ github.event.inputs.version }}
-        release_name: v${{ github.event.inputs.version }}
+        name: v${{ github.event.inputs.version }}
         body: TODO add description and rebuild MacOS locally
         draft: true
         prerelease: false
-    - name: Upload release Windows
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultTrackChanger-Windows-V${{ github.event.inputs.version }}.zip
-        asset_name: MkvDefaultTrackChanger-Windows-V${{ github.event.inputs.version }}.zip
-        asset_content_type: application/zip
-    - name: Upload release Linux
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
-        asset_name: MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
-        asset_content_type: application/zip
-    - name: Upload release Mac
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
-        asset_name: MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
-        asset_content_type: application/zip
+        generate_release_notes: true
+        fail_on_unmatched_files: true
+        files: |
+          ./MkvDefaultTrackChanger-Windows-V${{ github.event.inputs.version }}.zip
+          ./MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
+          ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
