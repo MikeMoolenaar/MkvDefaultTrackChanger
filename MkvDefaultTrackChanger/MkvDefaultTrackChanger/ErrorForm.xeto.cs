@@ -11,7 +11,7 @@ public class ErrorForm : Form
 {
     TextArea txaExceptionMessage;
     private Label lblTitle;
-    
+
     public ErrorForm(Exception ex, string? mkvFileInfo, Icon icon)
     {
         Icon = icon;

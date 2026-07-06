@@ -26,7 +26,7 @@ namespace MatroskaLib
             }
             lsValue.RemoveRange(0, endPositionPadding);
         }
-        
+
         public static void AddLeftZeroes(List<byte> lsValue, int totalLength)
         {
             int zeroesToAdd = totalLength - lsValue.Count;

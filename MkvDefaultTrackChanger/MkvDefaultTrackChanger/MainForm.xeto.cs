@@ -103,13 +103,13 @@ public sealed class MainForm : Form
         if (mkvContainer.MkFilesRejected.Count > 0)
         {
             var sourceFile = Path.GetFileName(filePaths[0]);
-            
+
             string rejectedFiles = Environment.NewLine + Environment.NewLine;
             mkvContainer.MkFilesRejected.ForEach((x) =>
             {
                 rejectedFiles += $"- {Path.GetFileName(x.file.filePath)}: {x.error} {Environment.NewLine}{Environment.NewLine}";
             });
-            MessageBox.Show($"The following files have different tracks or the order is different than {sourceFile}: {rejectedFiles}These files cannot be processed.", 
+            MessageBox.Show($"The following files have different tracks or the order is different than {sourceFile}: {rejectedFiles}These files cannot be processed.",
                 MessageBoxType.Warning);
         }
 
@@ -118,7 +118,7 @@ public sealed class MainForm : Form
 
         FillDropdown(dropdownSubtitles, lsSubtitleTracks);
         FillDropdown(dropdownAudio, lsAudioTracks);
-        
+
         string files = filePaths.Count == 1 ? "file" : "files";
         lblFilesSelected.Text = $"{filePaths.Count} {files} selected";
         lblDragDrop.Visible = false;
@@ -146,9 +146,9 @@ public sealed class MainForm : Form
                 string key = track.number.ToString();
                 track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
             });
-            
+
             LoadFiles();
-            
+
             appliedConfig = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
             lblStatus.Text = "Done!";
         }
@@ -171,7 +171,7 @@ public sealed class MainForm : Form
             btnApply.Enabled = false;
             lblStatus.Text = "Done!";
         }
-       
+
     }
 
     private void HandleAbout(object sender, EventArgs e)
@@ -193,24 +193,24 @@ MkvDefaultTrackChanger is licensed under the terms of the GNU General Public Lic
 
     private void HandleException(Exception ex)
     {
-        if (ex is IOException { Message: {} message } && message.Contains("because it is being used by another process", StringComparison.OrdinalIgnoreCase))
+        if (ex is IOException { Message: { } message } && message.Contains("because it is being used by another process", StringComparison.OrdinalIgnoreCase))
         {
-            MessageBox.Show($"One of the mkv files is currently in use by another process.{Environment.NewLine}Please close any applications that may be using the file and try again, for example video applications like VLC.", 
+            MessageBox.Show($"One of the mkv files is currently in use by another process.{Environment.NewLine}Please close any applications that may be using the file and try again, for example video applications like VLC.",
                 MessageBoxType.Error);
             return;
         }
-        
+
         if (ex is UnauthorizedAccessException)
         {
             var additionalText = string.Empty;
-            if (Platform.IsWinForms) 
+            if (Platform.IsWinForms)
                 additionalText += $"{Environment.NewLine}{Environment.NewLine}Double check if the file is not set to Read-only via the properties.";
-            
-            MessageBox.Show($"You do not have permission to access one of the mkv files.{Environment.NewLine}Please check the file permissions and try again.{additionalText}", 
+
+            MessageBox.Show($"You do not have permission to access one of the mkv files.{Environment.NewLine}Please check the file permissions and try again.{additionalText}",
                 MessageBoxType.Error);
             return;
         }
-        
+
         new ErrorForm(ex, mkvContainer?.ToString(), Icon).Show();
     }
 }

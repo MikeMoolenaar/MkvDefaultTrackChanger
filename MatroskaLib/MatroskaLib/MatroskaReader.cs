@@ -27,7 +27,7 @@ public static class MatroskaReader
             int? tracksCheckSum = _ReadTracks(reader, fileStream, tracks);
 
             int endPosition = _DetermineEndPosition(reader, beginHeaderPosition, voidPosition);
-            
+
             mkvFiles.Add(new MkvFile
             {
                 filePath = filePath,
