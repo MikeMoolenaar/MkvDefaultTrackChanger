@@ -35,13 +35,12 @@ public class MkvFilesContainer
 
     public List<Track> GetSubtitleTracks()
     {
-        var lsAudioTracks = MkvFiles.First()
+        var subtitleTracks = MkvFiles.First()
             .tracks
             .Where(x => x.type == TrackTypeEnum.subtitle)
             .ToList();
-
-        lsAudioTracks.Insert(0, new TrackDisable());
-        return lsAudioTracks;
+        
+        return [new TrackDisable(), ..subtitleTracks];
     }
 
     public List<Track> GetAudioTracks()
