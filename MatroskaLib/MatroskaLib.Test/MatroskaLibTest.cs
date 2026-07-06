@@ -176,27 +176,56 @@ public class MatroskaLibTest
         MkvValidator.Validate(TestFilePath);
     }
 
-    [Fact]
-    public void FileWithSeekHeadSizeOf2ShouldNotThrow()
+    [Theory]
+    [InlineData("mkv files/TestFile6_SmallSeekHead.mkv")]
+    public void FileWithSeekHeadSizeOf2ShouldNotThrow(string file)
     {
-        File.Copy("mkv files/TestFile6_SmallSeekHead.mkv", TestFilePath, true);
+        File.Copy(file, TestFilePath, true);
         List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles([TestFilePath]);
         lsMkvFiles[0].tracks[0].flagDefault = false;
         
         MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
+        
+        var mkvFile = MatroskaReader.ReadMkvFiles([TestFilePath])[0];
+        mkvFile.tracks[0].Should().BeEquivalentTo(new { flagDefault = false, flagForced = false });
     }
 
     
     // Issue: https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/issues/18
-    [Fact]
-    public void BigBangTheoryGhIssue()
+    [Theory]
+    [InlineData("mkv files/TestFile7_SmallTrackEntryLength.mkv")]
+    public void ByteLengthMismatchGhIssue(string file)
     {
-        File.Copy("mkv files/TestFile7_SmallTrackEntryLength.mkv", TestFilePath, true);
+        File.Copy(file, TestFilePath, true);
         List<MkvFile> lsMkvFiles = MatroskaReader.ReadMkvFiles([TestFilePath]);
         lsMkvFiles[0].tracks[2].flagDefault = true;
         
         MatroskaWriter.WriteMkvFile(lsMkvFiles[0]);
+        
         var mkvFile = MatroskaReader.ReadMkvFiles([TestFilePath])[0];
         mkvFile.tracks[2].Should().BeEquivalentTo(new { flagDefault = true, flagForced = false });
     }
+    
+    // Issue: https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/issues/32
+    [Theory]
+    [InlineData("mkv files/TestFile3_HandBrake.mkv")]
+    public void WriteTestFile3TwiceShouldNotThrow(string file)
+    {
+        File.Copy(file, TestFilePath, true);
+        var mkvFile = MatroskaReader.ReadMkvFiles([TestFilePath])[0];
+        mkvFile.tracks[2].flagDefault = true;
+        
+        // Modify and read
+        MatroskaWriter.WriteMkvFile(mkvFile);
+        mkvFile = MatroskaReader.ReadMkvFiles([TestFilePath])[0];
+        mkvFile.tracks[2].Should().BeEquivalentTo(new { flagDefault = true, flagForced = false });
+        MkvValidator.Validate(TestFilePath);
+        
+        // Modify again and read
+        mkvFile.tracks[2].flagDefault = true;
+        MatroskaWriter.WriteMkvFile(mkvFile);
+        mkvFile.tracks[2].Should().BeEquivalentTo(new { flagDefault = true, flagForced = false });
+        MkvValidator.Validate(TestFilePath);
+    }
+
 }
