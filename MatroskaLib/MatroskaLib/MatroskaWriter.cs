@@ -80,8 +80,8 @@ public static class MatroskaWriter
                     throw new InvalidOperationException($"New seekPosition bytes are bigger than the old one. Trying to fit {lsNewBytes.Count} bytes into {s.elementLength} bytes");
                 if (lsNewBytes.Count < s.elementLength)
                 {
-                    // The new seekPosition is smaller than the old one, add padding
-                    lsNewBytes.AddRange(new byte[s.elementLength - lsNewBytes.Count]);
+                    // The new seekPosition needs fewer bytes than the old one, pad with leading zeroes
+                    ByteHelper.AddLeftZeroes(lsNewBytes, s.elementLength);
                 }
 
                 lsBytes.RemoveRange(s.seekPositionByteNumber, lsNewBytes.Count);
