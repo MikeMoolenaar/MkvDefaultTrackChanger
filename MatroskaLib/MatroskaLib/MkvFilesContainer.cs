@@ -10,7 +10,7 @@ public class MkvFilesContainer
     public readonly List<MkvFile> MkvFiles = new();
     public readonly List<(MkvFile file, string error)> MkFilesRejected = new();
 
-    public MkvFilesContainer(string[] filePaths)
+    public MkvFilesContainer(List<string> filePaths)
     {
         var files = MatroskaReader.ReadMkvFiles(filePaths);
         MkvFiles.Add(files[0]);
@@ -35,13 +35,12 @@ public class MkvFilesContainer
 
     public List<Track> GetSubtitleTracks()
     {
-        var lsAudioTracks = MkvFiles.First()
+        var subtitleTracks = MkvFiles.First()
             .tracks
             .Where(x => x.type == TrackTypeEnum.subtitle)
             .ToList();
-
-        lsAudioTracks.Insert(0, new TrackDisable());
-        return lsAudioTracks;
+        
+        return [new TrackDisable(), ..subtitleTracks];
     }
 
     public List<Track> GetAudioTracks()

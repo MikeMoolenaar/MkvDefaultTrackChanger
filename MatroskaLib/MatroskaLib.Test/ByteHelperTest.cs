@@ -5,12 +5,12 @@ namespace MatroskaLib.Test;
 
 public class ByteHelperTest
 {
-    public static TheoryData<ulong, List<byte>> TestData1 = new() {
+    public static TheoryData<ulong, List<byte>> ToBytesData = new() {
         { 2UL, [0x2] },
         { 909UL, [0x3, 0x8D] },
         { 1_800_70UL, [0x2, 0xBF, 0x66] },
     };
-    [Theory, MemberData(nameof(TestData1))]
+    [Theory, MemberData(nameof(ToBytesData))]
     public void ToBytesTest(ulong value, List<byte> lsBytesExpected)
     {
         List<byte> lsResult = ByteHelper.ToBytes(value);
@@ -18,13 +18,13 @@ public class ByteHelperTest
         Assert.Equal(lsBytesExpected, lsResult);
     }
 
-    public static TheoryData<List<byte>, List<byte>> TestData2 = new() {
+    public static TheoryData<List<byte>, List<byte>> RemoveLeftZeroesData = new() {
         { [0x0, 0x0, 0x0, 0x96], [0x96] },
         { [0x0, 0x0, 0x5, 0x0, 0x9], [0x5, 0x0, 0x9] },
         { [0x9], [0x9] },
         { [], [] }
     };
-    [Theory, MemberData(nameof(TestData2))]
+    [Theory, MemberData(nameof(RemoveLeftZeroesData))]
     public void RemoveLeftZeroesTest(List<byte> lsBytes, List<byte> lsBytesExpected)
     {
         ByteHelper.RemoveLeftZeroes(lsBytes);
@@ -32,7 +32,21 @@ public class ByteHelperTest
         Assert.Equal(lsBytes, lsBytesExpected);
     }
 
-    public static IEnumerable<object[]> Data()
+    public static TheoryData<List<byte>, List<byte>, int> AddLeftZeroesData = new() {
+        { [0x96], [0x0, 0x0, 0x96], 3 },
+        { [0x0, 0x0, 0x96], [0x0, 0x0, 0x0, 0x96], 4 },
+        { [0x9], [0x9], 1 },
+        { [], [], 0 }
+    };
+    [Theory, MemberData(nameof(AddLeftZeroesData))]
+    public void AddLeftZeroesTest(List<byte> lsBytes, List<byte> lsBytesExpected, int length)
+    {
+        ByteHelper.AddLeftZeroes(lsBytes, length);
+
+        Assert.Equal(lsBytes, lsBytesExpected);
+    }
+
+    public static IEnumerable<object[]> ChangeLengthData()
     {
         yield return
         [
@@ -63,8 +77,7 @@ public class ByteHelperTest
             3
         ];
     }
-    [Theory, MemberData(nameof(Data))]
-
+    [Theory, MemberData(nameof(ChangeLengthData))]
     public void TestChangeLength(List<byte> inputData, List<byte> expectedData, int position, int newAddition)
     {
         ByteHelper.ChangeLength(inputData, position, 0xAE, newAddition);

@@ -27,7 +27,16 @@ namespace MatroskaLib
             lsValue.RemoveRange(0, endPositionPadding);
         }
 
-        public static void ChangeLength(List<byte> lsBytes, int position, ulong elementId, int newAdition)
+        public static void AddLeftZeroes(List<byte> lsValue, int totalLength)
+        {
+            int zeroesToAdd = totalLength - lsValue.Count;
+            if (zeroesToAdd > 0)
+            {
+                lsValue.InsertRange(0, new byte[zeroesToAdd]);
+            }
+        }
+
+        public static bool ChangeLength(List<byte> lsBytes, int position, ulong elementId, int newAddition)
         {
             List<byte> elementIdBytes = ToBytes(elementId);
 
@@ -42,28 +51,33 @@ namespace MatroskaLib
             }
             lsLengthBytes.Reverse();
 
-            ChangeLength(lsBytes, position - lsLengthBytes.Count, lsLengthBytes, newAdition);
+            return ChangeLength(lsBytes, position - lsLengthBytes.Count, lsLengthBytes, newAddition);
         }
 
-        public static void ChangeLength(List<byte> lsBytes, int position, List<byte> lsLengthBytes, int newAdition)
+        public static bool ChangeLength(List<byte> lsBytes, int position, List<byte> lsLengthBytes, int newAddition)
         {
             ulong ret = FromBytesToUlong(lsLengthBytes);
 
             // Apply addition or negative
-            if (newAdition > 0)
-                ret += Convert.ToUInt32(newAdition);
+            if (newAddition > 0)
+                ret += Convert.ToUInt32(newAddition);
             else
-                ret -= Convert.ToUInt32(newAdition * -1);
+                ret -= Convert.ToUInt32(newAddition * -1);
 
             // Convert new length to bytes and strip bytes
             List<byte> lsNewBytes = ToBytes(ret);
-            if (lsNewBytes.Count != lsLengthBytes.Count) 
-                throw new InvalidOperationException($"New length bytes are not the same length as the old ones. Old length: {lsLengthBytes.Count}, new length: {lsNewBytes.Count}");
+            if (lsNewBytes.Count < lsLengthBytes.Count)
+            {
+                AddLeftZeroes(lsNewBytes, lsLengthBytes.Count);
+            }
+            else if (lsNewBytes.Count > lsLengthBytes.Count)
+                return false;
 
             // Replace old length with new length bytes
             lsBytes.RemoveRange(position, lsNewBytes.Count);
             lsBytes.InsertRange(position, lsNewBytes);
 
+            return true;
         }
 
         public static ulong FromBytesToUlong(List<byte> lsLengthBytes)

@@ -14,12 +14,13 @@ public static class MatroskaWriter
         dataStream.Seek(0, SeekOrigin.Begin);
 
         byte[] bytes = new byte[mkfFile.endPosition];
-        dataStream.Read(bytes, 0, bytes.Length);
+        dataStream.ReadExactly(bytes);
         List<byte> lsBytes = new List<byte>(bytes);
 
         int offset = 0;
         _ChangeTrackElements(mkfFile.tracks, lsBytes, ref offset);
-        ByteHelper.ChangeLength(lsBytes, mkfFile.tracksPosition, MatroskaElements.Tracks, offset);
+        if (!ByteHelper.ChangeLength(lsBytes, mkfFile.tracksPosition, MatroskaElements.Tracks, offset))
+            throw new InvalidOperationException("New length of the tracks element is bigger than the old one, cannot write changes to file.");
 
         _ChangeVoidLengthAndHeaders(mkfFile.seekList, mkfFile.seekHeadCheckSum, mkfFile.tracksCheckSum, mkfFile.voidPosition, mkfFile.beginHeaderPosition,
             offset, lsBytes);
@@ -34,6 +35,12 @@ public static class MatroskaWriter
     {
         foreach (Track t in tracks.Where(x => x.type is TrackTypeEnum.audio or TrackTypeEnum.subtitle))
         {
+            // Set forced flag to 0 if present
+            if (t.flagForcedByteNumber != 0)
+            {
+                lsBytes[offset + t.flagForcedByteNumber] = 0x0;
+            }
+
             byte defaultFlag = (byte)(t.flagDefault ? 0x1 : 0x0);
             if (t.flagDefaultByteNumber != 0)
             {
@@ -43,17 +50,13 @@ public static class MatroskaWriter
             else if (t.flagTypebytenumber != 0)
             {
                 // Default flag is not present, add it after the track entry element
-                ByteHelper.ChangeLength(lsBytes, offset + t.trackLengthByteNumber, TrackElements.Entry, 3);
-                lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
-                    new byte[] { 0x88, 0x81, defaultFlag });
-                offset += 3;
-            }
-
-            // Set forced flag to 0 if present
-            if (t.flagForcedByteNumber != 0)
-            {
-                int correction = t.flagForcedByteNumber < t.flagTypebytenumber ? 3 : 0;
-                lsBytes[offset + t.flagForcedByteNumber - correction] = 0x0;
+                var success = ByteHelper.ChangeLength(lsBytes, offset + t.trackLengthByteNumber, TrackElements.Entry, 3);
+                if (success)
+                {
+                    lsBytes.InsertRange(offset + t.flagTypebytenumber + 1,
+                        new byte[] { 0x88, 0x81, defaultFlag });
+                    offset += 3;
+                }
             }
         }
     }
@@ -77,8 +80,8 @@ public static class MatroskaWriter
                     throw new InvalidOperationException($"New seekPosition bytes are bigger than the old one. Trying to fit {lsNewBytes.Count} bytes into {s.elementLength} bytes");
                 if (lsNewBytes.Count < s.elementLength)
                 {
-                    // The new seekPosition is smaller than the old one, add padding
-                    lsNewBytes.AddRange(new byte[s.elementLength - lsNewBytes.Count]);
+                    // The new seekPosition needs fewer bytes than the old one, pad with leading zeroes
+                    ByteHelper.AddLeftZeroes(lsNewBytes, s.elementLength);
                 }
 
                 lsBytes.RemoveRange(s.seekPositionByteNumber, lsNewBytes.Count);
@@ -95,7 +98,8 @@ public static class MatroskaWriter
         {
             // Void is after the header, change the length of the void element
             var lsVoidLength = lsBytes.GetRange(voidPosition + offset + 1, 8);
-            ByteHelper.ChangeLength(lsBytes, voidPosition + offset + 1, lsVoidLength, offset * -1);
+            if (!ByteHelper.ChangeLength(lsBytes, voidPosition + offset + 1, lsVoidLength, offset * -1))
+                throw new InvalidOperationException("New length of the void element is bigger than the old one, cannot write changes to file.");
         }
     }
 }

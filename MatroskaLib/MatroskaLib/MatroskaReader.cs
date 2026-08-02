@@ -9,7 +9,7 @@ namespace MatroskaLib;
 
 public static class MatroskaReader
 {
-    public static List<MkvFile> ReadMkvFiles(string[] filePaths)
+    public static List<MkvFile> ReadMkvFiles(List<string> filePaths)
     {
         var mkvFiles = new List<MkvFile>();
         foreach (var filePath in filePaths)
@@ -27,7 +27,7 @@ public static class MatroskaReader
             int? tracksCheckSum = _ReadTracks(reader, fileStream, tracks);
 
             int endPosition = _DetermineEndPosition(reader, beginHeaderPosition, voidPosition);
-            
+
             mkvFiles.Add(new MkvFile
             {
                 filePath = filePath,

@@ -10,16 +10,18 @@ using MatroskaLib.Types;
 
 namespace MkvDefaultTrackChanger;
 
-public class MainForm : Form
+public sealed class MainForm : Form
 {
     Label lblFilesSelected;
     DropDown dropdownAudio;
     DropDown dropdownSubtitles;
     Button btnApply;
     Label lblStatus;
+    Label lblDragDrop;
 
     MkvFilesContainer mkvContainer;
     OpenFileDialog fileDialog;
+    private List<string> currentFilePaths = new();
     private (string audio, string subtitles)? appliedConfig;
 
     public MainForm()
@@ -30,6 +32,10 @@ public class MainForm : Form
         fileDialog = new OpenFileDialog();
         fileDialog.Filters.Add(new FileFilter("MKV files", "*.mkv"));
         fileDialog.MultiSelect = true;
+
+        AllowDrop = !Platform.IsGtk; // Can't seem to get this to work in Wayland...
+
+        lblDragDrop!.Visible = AllowDrop;
     }
 
     private void BtnBrowseFilesClick(object sender, EventArgs e)
@@ -37,10 +43,48 @@ public class MainForm : Form
         var dialogResult = fileDialog.ShowDialog(this);
         if (dialogResult != DialogResult.Ok) return;
 
+        ProcessFiles(fileDialog.Filenames.ToList());
+    }
+
+    private void OnDragEnter(object sender, DragEventArgs e)
+    {
+        e.Effects = GetDragEventFilePaths(e).Count > 0 ? DragEffects.Copy : DragEffects.None;
+    }
+
+    private void OnDragDrop(object sender, DragEventArgs e)
+    {
+        var filePaths = GetDragEventFilePaths(e);
+        if (filePaths.Count > 0)
+            ProcessFiles(filePaths);
+    }
+
+    private List<string> GetDragEventFilePaths(DragEventArgs e)
+    {
         try
         {
+            if (!e.Data.ContainsUris)
+                return [];
+
+            return e.Data.Uris
+                .Where(uri => uri.IsFile)
+                .Select(uri => uri.LocalPath)
+                .Where(path => path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+            return [];
+        }
+    }
+
+    private void ProcessFiles(List<string> filePaths)
+    {
+        try
+        {
+            currentFilePaths = filePaths;
             LoadFiles();
-            
+
             btnApply.Enabled = true;
             lblStatus.Text = string.Empty;
             appliedConfig = null;
@@ -53,19 +97,19 @@ public class MainForm : Form
 
     private void LoadFiles()
     {
-        string[] filePaths = fileDialog.Filenames.ToArray();
+        var filePaths = currentFilePaths;
 
         mkvContainer = new MkvFilesContainer(filePaths);
         if (mkvContainer.MkFilesRejected.Count > 0)
         {
             var sourceFile = Path.GetFileName(filePaths[0]);
-            
+
             string rejectedFiles = Environment.NewLine + Environment.NewLine;
             mkvContainer.MkFilesRejected.ForEach((x) =>
             {
                 rejectedFiles += $"- {Path.GetFileName(x.file.filePath)}: {x.error} {Environment.NewLine}{Environment.NewLine}";
             });
-            MessageBox.Show($"The following files have different tracks or the order is different than {sourceFile}: {rejectedFiles}These files cannot be processed.", 
+            MessageBox.Show($"The following files have different tracks or the order is different than {sourceFile}: {rejectedFiles}These files cannot be processed.",
                 MessageBoxType.Warning);
         }
 
@@ -74,9 +118,11 @@ public class MainForm : Form
 
         FillDropdown(dropdownSubtitles, lsSubtitleTracks);
         FillDropdown(dropdownAudio, lsAudioTracks);
-        
-        string files = filePaths.Length == 1 ? "file" : "files";
-        lblFilesSelected.Text = $"{filePaths.Length} {files} selected";
+
+        string files = filePaths.Count == 1 ? "file" : "files";
+        lblFilesSelected.Text = $"{filePaths.Count} {files} selected";
+        lblFilesSelected.ToolTip = string.Join(Environment.NewLine, filePaths.Select(x => Path.GetFileName(x)));
+        lblDragDrop.Visible = false;
     }
 
     private void FillDropdown(DropDown dropDown, List<Track> lsTracks)
@@ -91,7 +137,7 @@ public class MainForm : Form
             dropDown.SelectedKey = lsTracks[0].number.ToString();
     }
 
-    protected void BtnApplyClicked(object sender, EventArgs e)
+    private void BtnApplyClicked(object sender, EventArgs e)
     {
         try
         {
@@ -101,9 +147,9 @@ public class MainForm : Form
                 string key = track.number.ToString();
                 track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
             });
-            
+
             LoadFiles();
-            
+
             appliedConfig = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
             lblStatus.Text = "Done!";
         }
@@ -126,10 +172,10 @@ public class MainForm : Form
             btnApply.Enabled = false;
             lblStatus.Text = "Done!";
         }
-       
+
     }
 
-    protected void HandleAbout(object sender, EventArgs e)
+    private void HandleAbout(object sender, EventArgs e)
     {
         var aboutDialog = new AboutDialog
         {
@@ -140,13 +186,32 @@ public class MainForm : Form
                 "MkvDefaultTrackChanger is a small application to change the default subtitle and audio tracks in MKV video files. ",
             License = @"Copyright (C) 2021 Mike Moolenaar
 MkvDefaultTrackChanger is licensed under the terms of the GNU General Public License version 3. A copy of this license can be obtained from <https://www.gnu.org/licenses/gpl-3.0.html>.",
-            Developers = ["Mike Moolenaar"]
+            Developers = ["Mike Moolenaar"],
+            Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString()?[..^2] ?? "Unknown"
         };
         aboutDialog.ShowDialog(this);
     }
 
     private void HandleException(Exception ex)
     {
+        if (ex is IOException { Message: { } message } && message.Contains("because it is being used by another process", StringComparison.OrdinalIgnoreCase))
+        {
+            MessageBox.Show($"One of the mkv files is currently in use by another process.{Environment.NewLine}Please close any applications that may be using the file and try again, for example video applications like VLC.",
+                MessageBoxType.Error);
+            return;
+        }
+
+        if (ex is UnauthorizedAccessException)
+        {
+            var additionalText = string.Empty;
+            if (Platform.IsWinForms)
+                additionalText += $"{Environment.NewLine}{Environment.NewLine}Double check if the file is not set to Read-only via the properties.";
+
+            MessageBox.Show($"You do not have permission to access one of the mkv files.{Environment.NewLine}Please check the file permissions and try again.{additionalText}",
+                MessageBoxType.Error);
+            return;
+        }
+
         new ErrorForm(ex, mkvContainer?.ToString(), Icon).Show();
     }
 }

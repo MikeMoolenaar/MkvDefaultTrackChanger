@@ -27,7 +27,7 @@ public record MkvFile
         {
             var track = tracks[i];
             var trackOther = other.tracks.ElementAtOrDefault(i);
-            
+
             if (trackOther is null)
                 return $"Track at index {i} does not exist, expected {track.type} with language {track.language}.";
             if (track.number != trackOther.number)
@@ -39,7 +39,7 @@ public record MkvFile
         return null;
     }
 
-    public override string ToString() => 
+    public override string ToString() =>
         JsonSerializer.Serialize(this with { filePath = string.Empty }, SourceGeneratedMkvFile.Default.MkvFile);
 }
 

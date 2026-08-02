@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using MatroskaLib.Types;
 using Xunit;
 
@@ -9,7 +9,7 @@ public class MkvFileTest
     [Fact]
     public void TestToString()
     {
-        var mkvFile = new MkvFile()
+        var mkvFile = new MkvFile
         {
             filePath = "/home/some-path",
             tracks = [new Track(null!) { type = TrackTypeEnum.subtitle, flagForced = true }],
