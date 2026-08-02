@@ -121,6 +121,7 @@ public sealed class MainForm : Form
 
         string files = filePaths.Count == 1 ? "file" : "files";
         lblFilesSelected.Text = $"{filePaths.Count} {files} selected";
+        lblFilesSelected.ToolTip = string.Join(Environment.NewLine, filePaths.Select(x => Path.GetFileName(x)));
         lblDragDrop.Visible = false;
     }
 
