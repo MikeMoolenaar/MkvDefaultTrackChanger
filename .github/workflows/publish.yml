@@ -8,17 +8,23 @@ on:
         required: true
         default: ''
 env:
-  PUBLISH_WIN_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/bin/Release/net10.0-Windows/win-x64/publish
+  VERSION: ${{ github.event.inputs.version }}
+  PUBLISH_WIN_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/bin/Release/net10.0-windows/win-x64/publish
   PUBLISH_LINUX_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/bin/Release/net10.0/linux-x64/publish
   PUBLISH_MAC_PATH: ./MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/bin/Release/net10.0/osx-x64/publish
+  WIN_EXE: MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.exe
+  LINUX_BIN: MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Gtk
+  MAC_APP: MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
     - uses: actions/checkout@v7
+    - name: Validate version input
+      run: echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
@@ -26,20 +32,24 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/MkvDefaultTrackChanger.WinForms.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.WinForms/MkvDefaultTrackChanger.WinForms.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:EnableWindowsTargeting=true
     - name: Build Linux
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj -c Release -r linux-x64 -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:PublishTrimmed=true -p:Version=${{ github.event.inputs.version }}
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Gtk/MkvDefaultTrackChanger.Gtk.csproj -c Release -r linux-x64 -p:PublishSingleFile=true
     - name: Build Mac
-      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/MkvDefaultTrackChanger.Mac.csproj -c Release -r osx-x64 -p:PublishSingleFile=true -p:Version=${{ github.event.inputs.version }}
-    # Maybe zipping the MacOS app works with this https://stackoverflow.com/a/49462106/5922994 + in GH actions with wslbash.exe https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md#shells
+      run: dotnet publish MkvDefaultTrackChanger/MkvDefaultTrackChanger.Mac/MkvDefaultTrackChanger.Mac.csproj -c Release -r osx-x64 -p:PublishSingleFile=true
     - name: Zip releases
       run: |
-        powershell Rename-Item $env:PUBLISH_WIN_PATH/MkvDefaultTrackChanger.WinForms.exe MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.exe
-        powershell Compress-Archive $env:PUBLISH_WIN_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.exe ./MkvDefaultTrackChanger-Windows-V${{ github.event.inputs.version }}.zip
-        powershell Rename-Item $env:PUBLISH_LINUX_PATH/MkvDefaultTrackChanger.Gtk MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Gtk
-        powershell Compress-Archive $env:PUBLISH_LINUX_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Gtk ./MkvDefaultTrackChanger-Linux-V${{ github.event.inputs.version }}.zip
-        powershell Rename-Item $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger.Mac.app ./MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app
-        powershell Compress-Archive $env:PUBLISH_MAC_PATH/MkvDefaultTrackChanger-V${{ github.event.inputs.version }}.Mac.app ./MkvDefaultTrackChanger-MacOS-V${{ github.event.inputs.version }}.zip
+        mv $PUBLISH_WIN_PATH/MkvDefaultTrackChanger.WinForms.exe $PUBLISH_WIN_PATH/$WIN_EXE
+        zip -j -9 ./MkvDefaultTrackChanger-Windows-V$VERSION.zip $PUBLISH_WIN_PATH/$WIN_EXE
+
+        mv $PUBLISH_LINUX_PATH/MkvDefaultTrackChanger.Gtk $PUBLISH_LINUX_PATH/$LINUX_BIN
+        chmod +x $PUBLISH_LINUX_PATH/$LINUX_BIN
+        zip -j -9 ./MkvDefaultTrackChanger-Linux-V$VERSION.zip $PUBLISH_LINUX_PATH/$LINUX_BIN
+
+        mv $PUBLISH_MAC_PATH/MkvDefaultTrackChanger.Mac.app $PUBLISH_MAC_PATH/$MAC_APP
+        chmod +x $PUBLISH_MAC_PATH/$MAC_APP/Contents/MacOS/MkvDefaultTrackChanger.Mac
+        # zip from inside the publish dir so the .app bundle sits at the root of the archive
+        cd $PUBLISH_MAC_PATH && zip -r -9 --symlinks $GITHUB_WORKSPACE/MkvDefaultTrackChanger-MacOS-V$VERSION.zip $MAC_APP
     - name: Create Draft Release
       uses: softprops/action-gh-release@v3
       with:
