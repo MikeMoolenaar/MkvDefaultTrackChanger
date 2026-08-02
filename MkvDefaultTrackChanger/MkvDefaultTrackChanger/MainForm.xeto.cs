@@ -35,7 +35,7 @@ public sealed class MainForm : Form
 
         AllowDrop = !Platform.IsGtk; // Can't seem to get this to work in Wayland...
 
-        lblDragDrop!.Visible = !AllowDrop;
+        lblDragDrop!.Visible = AllowDrop;
     }
 
     private void BtnBrowseFilesClick(object sender, EventArgs e)
