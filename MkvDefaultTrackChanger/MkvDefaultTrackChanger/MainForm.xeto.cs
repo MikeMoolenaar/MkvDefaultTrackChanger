@@ -22,6 +22,10 @@ public sealed class MainForm : Form
     MkvFilesContainer mkvContainer;
     OpenFileDialog fileDialog;
     private List<string> currentFilePaths = new();
+    private List<MkvFileGroup> groups = new();
+    private int currentGroupIndex;
+    private List<Track> currentAudioTracks = new();
+    private List<Track> currentSubtitleTracks = new();
     private (string audio, string subtitles)? appliedConfig;
 
     public MainForm()
@@ -83,11 +87,9 @@ public sealed class MainForm : Form
         try
         {
             currentFilePaths = filePaths;
-            LoadFiles();
-
-            btnApply.Enabled = true;
-            lblStatus.Text = string.Empty;
-            appliedConfig = null;
+            currentGroupIndex = 0;
+            RebuildGroups();
+            ShowGroup(preferredAudio: null, preferredSubtitle: null);
         }
         catch (Exception exception)
         {
@@ -95,46 +97,60 @@ public sealed class MainForm : Form
         }
     }
 
-    private void LoadFiles()
+    private void RebuildGroups()
     {
-        var filePaths = currentFilePaths;
-
-        mkvContainer = new MkvFilesContainer(filePaths);
-        if (mkvContainer.MkFilesRejected.Count > 0)
-        {
-            var sourceFile = Path.GetFileName(filePaths[0]);
-
-            string rejectedFiles = Environment.NewLine + Environment.NewLine;
-            mkvContainer.MkFilesRejected.ForEach((x) =>
-            {
-                rejectedFiles += $"- {Path.GetFileName(x.file.filePath)}: {x.error} {Environment.NewLine}{Environment.NewLine}";
-            });
-            MessageBox.Show($"The following files have different tracks or the order is different than {sourceFile}: {rejectedFiles}These files cannot be processed.",
-                MessageBoxType.Warning);
-        }
-
-        var lsSubtitleTracks = mkvContainer.GetSubtitleTracks();
-        var lsAudioTracks = mkvContainer.GetAudioTracks();
-
-        FillDropdown(dropdownSubtitles, lsSubtitleTracks);
-        FillDropdown(dropdownAudio, lsAudioTracks);
-
-        string files = filePaths.Count == 1 ? "file" : "files";
-        lblFilesSelected.Text = $"{filePaths.Count} {files} selected";
-        lblFilesSelected.ToolTip = string.Join(Environment.NewLine, filePaths.Select(x => Path.GetFileName(x)));
-        lblDragDrop.Visible = false;
+        mkvContainer = new MkvFilesContainer(currentFilePaths);
+        groups = mkvContainer.Groups;
+        if (currentGroupIndex >= groups.Count)
+            currentGroupIndex = groups.Count - 1;
     }
 
-    private void FillDropdown(DropDown dropDown, List<Track> lsTracks)
+    private void ShowGroup(Track? preferredAudio, Track? preferredSubtitle)
+    {
+        var group = groups[currentGroupIndex];
+
+        currentAudioTracks = mkvContainer.GetAudioTracks(group);
+        currentSubtitleTracks = mkvContainer.GetSubtitleTracks(group);
+
+        FillDropdown(dropdownAudio, currentAudioTracks, preferredAudio);
+        FillDropdown(dropdownSubtitles, currentSubtitleTracks, preferredSubtitle);
+
+        var fileNames = group.Files.Select(f => Path.GetFileName(f.filePath)).ToList();
+        string filesWord = fileNames.Count == 1 ? "file" : "files";
+        string groupPrefix = groups.Count > 1 ? $"Group {currentGroupIndex + 1}/{groups.Count} — " : "";
+
+        const int maxNamesInline = 3;
+        string namesInline = fileNames.Count <= maxNamesInline
+            ? string.Join(", ", fileNames)
+            : string.Join(", ", fileNames.Take(maxNamesInline)) + $", +{fileNames.Count - maxNamesInline} more";
+
+        lblFilesSelected.Text = $"{groupPrefix}{fileNames.Count} {filesWord}: {namesInline}";
+        lblFilesSelected.ToolTip = string.Join(Environment.NewLine, fileNames);
+        lblDragDrop.Visible = false;
+
+        btnApply.Enabled = true;
+        lblStatus.Text = string.Empty;
+        appliedConfig = null;
+    }
+
+    private void FillDropdown(DropDown dropDown, List<Track> lsTracks, Track? preferred)
     {
         dropDown.Items.Clear();
         dropDown.Items.AddRange(lsTracks.ToEnoListItems());
-        dropDown.SelectedKey = lsTracks
+
+        string? selectedKey = preferred switch
+        {
+            TrackDisable => lsTracks.OfType<TrackDisable>().FirstOrDefault()?.number.ToString(),
+            not null => lsTracks.FirstOrDefault(x => x is not TrackDisable && x.language == preferred.language)?.number.ToString(),
+            null => null
+        };
+
+        selectedKey ??= lsTracks
             .FirstOrDefault(x => x.flagDefault || x.flagForced)
             ?.number.ToString();
+
+        dropDown.SelectedKey = selectedKey ?? lsTracks[0].number.ToString();
         dropDown.Enabled = true;
-        if (dropDown.SelectedKey is null)
-            dropDown.SelectedKey = lsTracks[0].number.ToString();
     }
 
     private void BtnApplyClicked(object sender, EventArgs e)
@@ -142,16 +158,31 @@ public sealed class MainForm : Form
         try
         {
             btnApply.Enabled = false;
-            mkvContainer.WriteChanges(track =>
+            var group = groups[currentGroupIndex];
+            string selectedAudioKey = dropdownAudio.SelectedKey;
+            string selectedSubtitleKey = dropdownSubtitles.SelectedKey;
+
+            Track? preferredAudio = currentAudioTracks.FirstOrDefault(t => t.number.ToString() == selectedAudioKey);
+            Track? preferredSubtitle = currentSubtitleTracks.FirstOrDefault(t => t.number.ToString() == selectedSubtitleKey);
+
+            mkvContainer.WriteChanges(group, track =>
             {
                 string key = track.number.ToString();
-                track.flagDefault = dropdownAudio.SelectedKey == key || dropdownSubtitles.SelectedKey == key;
+                track.flagDefault = selectedAudioKey == key || selectedSubtitleKey == key;
             });
 
-            LoadFiles();
+            bool isLastGroup = currentGroupIndex >= groups.Count - 1;
+            RebuildGroups();
+            if (!isLastGroup)
+                currentGroupIndex++;
 
-            appliedConfig = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
-            lblStatus.Text = "Done!";
+            ShowGroup(preferredAudio, preferredSubtitle);
+
+            if (isLastGroup)
+            {
+                appliedConfig = (dropdownAudio.SelectedKey, dropdownSubtitles.SelectedKey);
+                lblStatus.Text = "Done!";
+            }
         }
         catch (Exception exception)
         {
