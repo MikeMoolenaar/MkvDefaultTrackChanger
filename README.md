@@ -35,11 +35,11 @@ xattr -d com.apple.quarantine ./MkvDefaultTrackChanger-V1.3.0.Mac.app
 
 ### FAQ: How do I extract it on Linux?
 The ZIP file for Linux contains the GTK application which you must run from the command
-line, for example:
+line:
 ```sh
-unzip MkvDefaultTrackChanger-Linux-V1.1.0.zip
-chmod +x MkvDefaultTrackChanger-V1.1.0.Gtk
-./MkvDefaultTrackChanger-V1.1.0.Gtk
+unzip MkvDefaultTrackChanger-Linux-V1.3.0.zip
+chmod +x MkvDefaultTrackChanger-Linux-V1.3.0.Gtk
+./MkvDefaultTrackChanger-Linux-V1.3.0.Gtk
 ```
 
 ## Credits
