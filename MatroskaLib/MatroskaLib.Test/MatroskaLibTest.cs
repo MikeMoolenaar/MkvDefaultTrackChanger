@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using AwesomeAssertions;
 using MatroskaLib.Test.Helpers;
 using MatroskaLib.Types;
@@ -226,6 +227,40 @@ public class MatroskaLibTest
         MatroskaWriter.WriteMkvFile(mkvFile);
         mkvFile.tracks[2].Should().BeEquivalentTo(new { flagDefault = true, flagForced = false });
         MkvValidator.Validate(TestFilePath);
+    }
+
+    [Fact]
+    public void FilesWithDifferentTracksAreGroupedSeparately()
+    {
+        List<string> filePaths =
+        [
+            "mkv files/TestFile1_MkvToolNix.mkv",
+            "mkv files/TestFile4_MkvProEdit.mkv",
+            "mkv files/TestFile3_HandBrake.mkv"
+        ];
+
+        var container = new MkvFilesContainer(filePaths);
+
+        container.Groups.Should().HaveCount(2);
+        container.Groups[0].Files.Select(f => f.filePath).Should().BeEquivalentTo(filePaths[0], filePaths[1]);
+        container.Groups[1].Files.Select(f => f.filePath).Should().BeEquivalentTo(filePaths[2]);
+    }
+
+    [Fact]
+    public void GetAudioAndSubtitleTracksUseTheGroupsOwnReferenceFile()
+    {
+        List<string> filePaths = ["mkv files/TestFile1_MkvToolNix.mkv", "mkv files/TestFile3_HandBrake.mkv"];
+        var container = new MkvFilesContainer(filePaths);
+
+        container.Groups.Should().HaveCount(2);
+
+        var audioTracks = container.GetAudioTracks(container.Groups[1]);
+        var subtitleTracks = container.GetSubtitleTracks(container.Groups[1]);
+
+        audioTracks.Should().HaveCount(1);
+        audioTracks[0].Should().BeEquivalentTo(new { language = "und", name = "Stereo", type = TrackTypeEnum.audio });
+        subtitleTracks.Should().HaveCount(3); // TrackDisable + 2 subtitle tracks
+        subtitleTracks[0].Should().BeOfType<TrackDisable>();
     }
 
 }

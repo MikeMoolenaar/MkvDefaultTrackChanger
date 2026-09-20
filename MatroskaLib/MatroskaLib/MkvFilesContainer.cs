@@ -7,50 +7,48 @@ namespace MatroskaLib;
 
 public class MkvFilesContainer
 {
-    public readonly List<MkvFile> MkvFiles = new();
-    public readonly List<(MkvFile file, string error)> MkFilesRejected = new();
+    public readonly List<MkvFileGroup> Groups = new();
 
     public MkvFilesContainer(List<string> filePaths)
     {
         var files = MatroskaReader.ReadMkvFiles(filePaths);
-        MkvFiles.Add(files[0]);
-        for (int i = 1; i < files.Count; i++)
+        foreach (var file in files)
         {
-            string? error = files[0].CompareToGetError(files[i]);
-            if (error is null)
-                MkvFiles.Add(files[i]);
+            var group = Groups.FirstOrDefault(g => g.Reference.CompareToGetError(file) is null);
+            if (group is not null)
+                group.Files.Add(file);
             else
-                MkFilesRejected.Add((files[i], error));
+                Groups.Add(new MkvFileGroup(file));
         }
     }
 
-    public void WriteChanges(Action<Track> setDefaultIfSelected)
+    public void WriteChanges(MkvFileGroup group, Action<Track> setDefaultIfSelected)
     {
-        foreach (MkvFile file in MkvFiles)
+        foreach (MkvFile file in group.Files)
         {
             file.tracks.ForEach(setDefaultIfSelected);
             MatroskaWriter.WriteMkvFile(file);
         }
     }
 
-    public List<Track> GetSubtitleTracks()
+    public List<Track> GetSubtitleTracks(MkvFileGroup group)
     {
-        var subtitleTracks = MkvFiles.First()
+        var subtitleTracks = group.Reference
             .tracks
             .Where(x => x.type == TrackTypeEnum.subtitle)
             .ToList();
-        
+
         return [new TrackDisable(), ..subtitleTracks];
     }
 
-    public List<Track> GetAudioTracks()
+    public List<Track> GetAudioTracks(MkvFileGroup group)
     {
-        return MkvFiles.First()
+        return group.Reference
             .tracks
             .Where(x => x.type == TrackTypeEnum.audio)
             .ToList();
     }
 
     public override string ToString() =>
-        MkvFiles.Any() ? MkvFiles.First().ToString() : "No MKV files.";
+        Groups.Count > 0 ? Groups[0].Reference.ToString() : "No MKV files.";
 }
