@@ -26,13 +26,20 @@ Aditional screenshots for each platform: [Linux](https://github.com/MikeMoolenaa
 Go to the [releases page](https://github.com/MikeMoolenaar/MkvDefaultTrackChanger/releases) to download the latest version for your platform. Download
 and extract the ZIP archive to start using the application.
 
-### Additional instructions for linux
-The ZIP file for Linux contains the GTK application which you must run from the command
-line, for example:
+### FAQ: On macOS I get an error "app is damaged and can't be opened"
+Make sure you extract the ZIP file first. Then remove the quarantine flag:
+
 ```sh
-unzip MkvDefaultTrackChanger-Linux-V1.1.0.zip
-chmod +x MkvDefaultTrackChanger-V1.1.0.Gtk
-./MkvDefaultTrackChanger-V1.1.0.Gtk
+xattr -d com.apple.quarantine ./MkvDefaultTrackChanger-V1.3.0.Mac.app
+```
+
+### FAQ: How do I extract it on Linux?
+The ZIP file for Linux contains the GTK application which you must run from the command
+line:
+```sh
+unzip MkvDefaultTrackChanger-Linux-V1.3.0.zip
+chmod +x MkvDefaultTrackChanger-Linux-V1.3.0.Gtk
+./MkvDefaultTrackChanger-Linux-V1.3.0.Gtk
 ```
 
 ## Credits
