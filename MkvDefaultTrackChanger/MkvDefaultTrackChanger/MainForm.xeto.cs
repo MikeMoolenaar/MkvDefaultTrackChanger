@@ -12,6 +12,7 @@ namespace MkvDefaultTrackChanger;
 
 public sealed class MainForm : Form
 {
+    Label lblGroupHeader;
     Label lblFilesSelected;
     DropDown dropdownAudio;
     DropDown dropdownSubtitles;
@@ -32,6 +33,8 @@ public sealed class MainForm : Form
     {
         Icon = Icon.FromResource("MkvDefaultTrackChanger.logo.ico");
         XamlReader.Load(this);
+
+        lblGroupHeader!.Font = new Font(lblGroupHeader.Font.Family, lblGroupHeader.Font.Size, FontStyle.Bold);
 
         fileDialog = new OpenFileDialog();
         fileDialog.Filters.Add(new FileFilter("MKV files", "*.mkv"));
@@ -124,7 +127,8 @@ public sealed class MainForm : Form
             ? string.Join(", ", fileNames)
             : string.Join(", ", fileNames.Take(maxNamesInline)) + $", +{fileNames.Count - maxNamesInline} more";
 
-        lblFilesSelected.Text = $"{groupPrefix}{fileNames.Count} {filesWord}: {namesInline}";
+        lblGroupHeader.Text = $"{groupPrefix}{fileNames.Count} {filesWord}:";
+        lblFilesSelected.Text = namesInline;
         lblFilesSelected.ToolTip = string.Join(Environment.NewLine, fileNames);
         lblDragDrop.Visible = false;
 

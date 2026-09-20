@@ -9,9 +9,10 @@
     DragEnter="OnDragEnter"
     DragDrop="OnDragDrop">
 	<DynamicLayout Spacing="0,15" Padding="15,5,15,0">
-        <StackLayout Spacing="5" HorizontalContentAlignment="Center">
+        <StackLayout Spacing="8" HorizontalContentAlignment="Center">
             <Button x:Name="btnBrowse" Click="BtnBrowseFilesClick">Browse files</Button>
             <Label x:Name="lblDragDrop" Text="or drag and drop files to this window" TextAlignment="Center"></Label>
+            <Label x:Name="lblGroupHeader" Text="" Wrap="Word" TextAlignment="Center"></Label>
             <Label x:Name="lblFilesSelected" Text="" Wrap="Word" TextAlignment="Center"></Label>
         </StackLayout>
         
